@@ -268,26 +268,44 @@ def _parse_fantasy_players(data) -> list:
 
     players = []
     for raw in raw_list:
+        if raw.get("status") == "transferred":
+            continue
+
         pos_raw = raw.get("position") or raw.get("positionId") or raw.get("pos") or "MID"
         position = POSITION_MAP.get(pos_raw, POSITION_MAP.get(str(pos_raw), "MID"))
         team_code = _parse_team_code(raw)
         if not team_code:
             continue
 
-        # Price normalisation — API may return in 100k or 1M units
+        # Name: knownName (display alias) if set, else firstName + lastName
+        known = raw.get("knownName")
+        if known:
+            name = known
+        else:
+            first = raw.get("firstName") or raw.get("name") or ""
+            last = raw.get("lastName") or ""
+            name = f"{first} {last}".strip() or raw.get("playerName") or ""
+
+        # Price: players.json already in millions; only divide if suspiciously large
         price_raw = raw.get("price") or raw.get("cost") or raw.get("value") or 0
         price = float(price_raw)
         if price > 200:
-            price /= 10  # convert from 100k units to millions
+            price /= 10
+
+        # Ownership: real field is percentSelected
+        ownership = float(
+            raw.get("percentSelected") or raw.get("ownership") or
+            raw.get("ownershipPercent") or raw.get("selectedBy") or 0.0
+        )
 
         players.append(Player(
             id=str(raw.get("id") or raw.get("playerId") or ""),
-            name=raw.get("name") or raw.get("knownName") or raw.get("playerName") or "",
+            name=name,
             position=position,
             team_code=team_code,
             club=raw.get("clubName") or raw.get("club") or "",
             price=price,
-            ownership_pct=float(raw.get("ownership") or raw.get("ownershipPercent") or raw.get("selectedBy") or 0.0),
+            ownership_pct=ownership,
         ))
     return players
 
