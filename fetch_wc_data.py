@@ -115,17 +115,17 @@ def _get(endpoint: str, params: dict, cache: dict, cache_key: str | None = None)
     return {}
 
 
-# ── Step 1: Get all 48 WC 2026 team IDs from fixtures (1 API call) ───────────
+# ── Step 1: Get all 48 WC 2026 team IDs (fixtures → teams fallback) ──────────
 
 def get_team_ids_from_fixtures(cache: dict) -> dict[str, int]:
     """
-    Fetch WC 2026 fixtures. Each fixture has home/away team with id and name.
-    Extract all 48 team IDs in a single API call.
-    Returns {team_name_lower: team_id}.
+    Try fixtures endpoint first. If WC fixtures aren't published yet,
+    fall back to the teams endpoint. Returns {team_name_lower: team_id}.
     """
-    print("Step 1/3 — Fetching WC 2026 fixture list to extract team IDs...")
-    data = _get("fixtures", {"league": 1, "season": 2026}, cache, "fixtures_wc2026")
+    print("Step 1/3 — Fetching WC 2026 team IDs...")
 
+    # Try fixtures first (available after draw / closer to tournament)
+    data = _get("fixtures", {"league": 1, "season": 2026}, cache, "fixtures_wc2026")
     id_by_name: dict[str, int] = {}
     for fix in data.get("response", []):
         for side in ("home", "away"):
@@ -135,7 +135,21 @@ def get_team_ids_from_fixtures(cache: dict) -> dict[str, int]:
             if tid and name:
                 id_by_name[name] = tid
 
-    print(f"  Found {len(id_by_name)} teams from fixtures.")
+    if id_by_name:
+        print(f"  Found {len(id_by_name)} teams from fixtures.")
+        return id_by_name
+
+    # Fixtures not published yet — try teams endpoint
+    print("  No fixtures yet. Trying teams endpoint...")
+    data = _get("teams", {"league": 1, "season": 2026}, cache, "teams_wc2026")
+    for entry in data.get("response", []):
+        t = entry.get("team", {})
+        tid  = t.get("id")
+        name = (t.get("name") or "").lower().strip()
+        if tid and name:
+            id_by_name[name] = tid
+
+    print(f"  Found {len(id_by_name)} teams from teams endpoint.")
     return id_by_name
 
 
@@ -266,8 +280,8 @@ def main():
     print(f"  Matched {len(team_ids)}/48 codes. Missing: {missing or 'none'}")
 
     if not team_ids:
-        print("\nERROR: Could not match any teams. WC 2026 fixture data may not be")
-        print("available yet. Try again after June 11 2026, or contact API-Sports.")
+        print("\nERROR: Could not match any teams from fixtures or teams endpoint.")
+        print("API-Football may not have WC 2026 data yet. Try again closer to June 11 2026.")
         sys.exit(1)
 
     # ── Step 2 + 3: Squads + lineups ─────────────────────────────────────────
