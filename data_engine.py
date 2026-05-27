@@ -156,6 +156,18 @@ POSITION_MAP = {
     "Forward": "FWD", "Attacker": "FWD",
 }
 
+# FIFA Fantasy team ID → 3-letter code (from play.fifa.com/json/fantasy/squads.json)
+FIFA_TEAM_ID_TO_CODE: dict[int, str] = {
+    1: "ALG",  2: "ARG",  3: "AUS",  4: "AUT",  5: "BEL",  6: "BIH",
+    7: "BRA",  8: "CPV",  9: "CAN", 10: "COL", 11: "COD", 12: "CIV",
+   13: "CRO", 14: "CUW", 15: "CZE", 16: "ECU", 17: "EGY", 18: "ENG",
+   19: "FRA", 20: "GER", 21: "GHA", 22: "HAI", 23: "IRN", 24: "IRQ",
+   25: "JPN", 26: "JOR", 27: "KOR", 28: "MEX", 29: "MAR", 30: "NED",
+   31: "NZL", 32: "NOR", 33: "PAN", 34: "PAR", 35: "POR", 36: "QAT",
+   37: "KSA", 38: "SCO", 39: "SEN", 40: "RSA", 41: "ESP", 42: "SWE",
+   43: "SUI", 44: "TUN", 45: "TUR", 46: "URU", 47: "USA", 48: "UZB",
+}
+
 # Static 3-letter country code map for FIFA Fantasy API nationality field
 NATIONALITY_TO_CODE = {
     "spain": "ESP", "germany": "GER", "brazil": "BRA", "france": "FRA",
@@ -179,10 +191,17 @@ NATIONALITY_TO_CODE = {
 
 def _parse_team_code(raw: dict) -> str:
     """Extract 3-letter team code from a FIFA Fantasy player record."""
-    for f in ("teamCode", "countryCode", "nationalityCode", "team_code"):
+    # Most reliable: FIFA internal team ID
+    for f in ("teamId", "team_id", "squadId", "squad_id"):
+        tid = raw.get(f)
+        if isinstance(tid, int) and tid in FIFA_TEAM_ID_TO_CODE:
+            return FIFA_TEAM_ID_TO_CODE[tid]
+    # Fallback: explicit code fields
+    for f in ("teamCode", "countryCode", "nationalityCode", "team_code", "abbr"):
         val = raw.get(f, "")
         if val and len(val) <= 4:
-            return val.upper()
+            return str(val).upper()
+    # Last resort: name lookup
     for f in ("teamName", "nationality", "countryName", "national_team"):
         val = (raw.get(f) or "").lower().strip()
         if val in NATIONALITY_TO_CODE:
