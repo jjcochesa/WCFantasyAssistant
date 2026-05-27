@@ -128,21 +128,63 @@ def fmt(sub: pd.DataFrame):
 
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
 def _greedy_squad(df, budget, sort_col, country_cap):
-    selected, country_counts, rem = [], {}, budget
-    for pos, n in SQUAD_SLOTS.items():
-        cands = df[df["pos"] == pos].sort_values(sort_col, ascending=False)
+    """
+    Budget-aware greedy squad builder.
+    Before selecting each player, reserves the minimum cost needed to fill
+    all remaining position slots — guarantees all 15 slots are filled.
+    """
+    POS_ORDER = ["GK", "DEF", "MID", "FWD"]
+
+    # Pre-compute cheapest possible cost to fill each position with n players
+    min_pos_cost = {}
+    for pos in POS_ORDER:
+        cheapest = df[df["pos"] == pos].sort_values("price")["price"].tolist()
+        n = SQUAD_SLOTS[pos]
+        min_pos_cost[pos] = cheapest[:n] if len(cheapest) >= n else cheapest
+
+    selected = []
+    selected_ids = set()
+    country_counts = {}
+    rem = budget
+
+    for i, pos in enumerate(POS_ORDER):
+        n = SQUAD_SLOTS[pos]
+
+        # Minimum budget needed for ALL positions that come after this one
+        future_reserve = sum(
+            sum(min_pos_cost[fp]) for fp in POS_ORDER[i + 1:]
+        )
+
+        cands = df[
+            (df["pos"] == pos) & (~df["id"].isin(selected_ids))
+        ].sort_values(sort_col, ascending=False)
+
         added = 0
         for _, r in cands.iterrows():
             if added >= n:
                 break
-            if r["price"] > rem:
+
+            # Minimum cost to fill remaining slots in THIS position after this pick
+            slots_left_here = n - added - 1
+            if slots_left_here > 0:
+                pool = df[
+                    (df["pos"] == pos) & (~df["id"].isin(selected_ids | {r["id"]}))
+                ].sort_values("price")["price"].tolist()
+                pos_reserve = sum(pool[:slots_left_here]) if len(pool) >= slots_left_here else float("inf")
+            else:
+                pos_reserve = 0
+
+            if r["price"] + pos_reserve + future_reserve > rem:
                 continue
             if country_counts.get(r["team_code"], 0) >= country_cap:
                 continue
+
             selected.append(r)
+            selected_ids.add(r["id"])
             rem -= r["price"]
             country_counts[r["team_code"]] = country_counts.get(r["team_code"], 0) + 1
             added += 1
+
     if not selected:
         return None
     result = pd.DataFrame(selected)
@@ -318,10 +360,13 @@ with tab4:
                   5: "background-color:#8b0000;color:white"}
         return colors.get(val, "")
 
-    st.dataframe(
-        fdr_df.style.applymap(color_fdr, subset=["FDR1", "FDR2", "FDR3"]),
-        use_container_width=True, height=600,
-    )
+    # pandas >= 2.1 renamed applymap → map
+    styler = fdr_df.style
+    try:
+        styler = styler.map(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
+    except AttributeError:
+        styler = styler.applymap(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
+    st.dataframe(styler, use_container_width=True, height=600)
 
     st.subheader("Drill into a Country")
     sel_country = st.selectbox("Select country", sorted(TEAM_NAMES.values()))

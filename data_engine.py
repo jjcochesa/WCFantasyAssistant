@@ -656,6 +656,27 @@ def get_demo_players() -> list:
         Player("58", "Memphis Depay", "FWD", "NED", "Atletico Madrid", 7.5, 4.5,
                PlayerStats(9, 810, 5, 2, 18, 0, 0, 0, 0, 1, 0, 0, 0),
                PlayerStats(25, 2250, 12, 4, 48, 0, 0, 0, 0, 3, 0, 0, 0)),
+        # Budget DEF fillers
+        Player("61", "Lucas Digne", "DEF", "FRA", "Aston Villa", 4.5, 2.0,
+               PlayerStats(6, 540, 0, 1, 0, 0, 10, 2, 0, 1, 0, 5, 0),
+               PlayerStats(24, 2160, 2, 5, 0, 0, 42, 8, 0, 3, 0, 18, 0)),
+        Player("62", "Jonathan Tah", "DEF", "GER", "Bayer Leverkusen", 4.5, 1.5,
+               PlayerStats(7, 630, 0, 0, 0, 0, 15, 3, 0, 1, 0, 4, 0),
+               PlayerStats(28, 2520, 1, 1, 0, 0, 55, 12, 0, 4, 0, 20, 0)),
+        # Budget MID filler
+        Player("63", "Sofyan Amrabat", "MID", "MAR", "Fiorentina", 5.0, 2.5,
+               PlayerStats(8, 720, 0, 1, 0, 8, 30, 0, 0, 3, 0, 0, 0),
+               PlayerStats(28, 2520, 1, 2, 0, 22, 88, 0, 0, 7, 0, 0, 0)),
+        # Budget FWD fillers
+        Player("64", "Santiago Gimenez", "FWD", "MEX", "Feyenoord", 5.5, 3.0,
+               PlayerStats(8, 720, 4, 1, 14, 0, 0, 0, 0, 1, 0, 0, 0),
+               PlayerStats(28, 2520, 18, 4, 62, 0, 0, 0, 0, 2, 0, 0, 0)),
+        Player("65", "Jhon Duran", "FWD", "COL", "Aston Villa", 5.5, 2.8,
+               PlayerStats(7, 420, 3, 0, 10, 0, 0, 0, 0, 1, 0, 0, 0),
+               PlayerStats(26, 1560, 12, 2, 38, 0, 0, 0, 0, 3, 0, 0, 0)),
+        Player("66", "Chris Wood", "FWD", "NZL", "Nottm Forest", 5.0, 1.2,
+               PlayerStats(6, 540, 3, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0),
+               PlayerStats(30, 2700, 14, 2, 50, 0, 0, 0, 0, 2, 0, 0, 0)),
     ]
 
 
