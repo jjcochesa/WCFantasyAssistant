@@ -190,44 +190,53 @@ def _parse_team_code(raw: dict) -> str:
     return ""
 
 
+FIFA_PLAYERS_URL = "https://play.fifa.com/json/fantasy/players.json"
+FIFA_SQUADS_URL  = "https://play.fifa.com/json/fantasy/squads.json"
+
+
 def fetch_fantasy_players(session_token: Optional[str] = None) -> list:
     """
-    Load players from FIFA Fantasy API. Falls back to cache if no token.
-    session_token: Bearer token from play.fifa.com browser DevTools (Authorization header).
+    Load players from the public FIFA Fantasy JSON endpoint.
+    No authentication required — Access-Control-Allow-Origin: * confirmed.
+    session_token kept for API compatibility but not used.
     """
     cached = _from_cache("fifa_fantasy_players_raw")
-    if cached is not None and not session_token:
-        return _parse_fantasy_players(cached)
 
     headers = {
         "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (WC Fantasy Assistant)",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15",
+        "Referer": "https://play.fifa.com/fantasy/",
     }
-    if session_token:
-        headers["Authorization"] = f"Bearer {session_token}"
 
-    # Try multiple known endpoint patterns
-    endpoints = [
-        f"{FIFA_FANTASY_BASE}/v2/players",
-        f"{FIFA_FANTASY_BASE}/players",
-        "https://play.fifa.com/json/fantasy/players.json",
-        "https://play.fifa.com/fantasy/en/players",
-    ]
-    for url in endpoints:
+    # Public static JSON — no auth needed
+    for url in [FIFA_PLAYERS_URL, f"{FIFA_FANTASY_BASE}/v2/players"]:
         try:
-            resp = requests.get(url, headers=headers, timeout=15)
+            resp = requests.get(url, headers=headers, timeout=20)
             if resp.status_code == 200:
                 data = resp.json()
                 _to_cache("fifa_fantasy_players_raw", data)
+                print(f"[FIFA Fantasy] Loaded {_count_players(data)} players from {url}")
                 return _parse_fantasy_players(data)
-        except Exception:
+        except Exception as e:
+            print(f"[FIFA Fantasy] {url}: {e}")
             continue
 
     if cached:
-        print("[FIFA Fantasy] Live fetch failed, using cached data.")
+        print("[FIFA Fantasy] Using cached player data.")
         return _parse_fantasy_players(cached)
 
     return []
+
+
+def _count_players(data) -> int:
+    if isinstance(data, list):
+        return len(data)
+    if isinstance(data, dict):
+        for k in ("players", "data", "response"):
+            v = data.get(k)
+            if isinstance(v, list):
+                return len(v)
+    return 0
 
 
 def _parse_fantasy_players(data) -> list:
