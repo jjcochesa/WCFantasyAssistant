@@ -13,6 +13,8 @@ Usage:
 import io
 import json
 import os
+import shutil
+import subprocess
 import sys
 import time
 import unicodedata
@@ -20,17 +22,10 @@ import unicodedata
 import pandas as pd
 import requests
 
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "en-US,en;q=0.9",
-    "Accept-Encoding": "gzip, deflate, br",
-    "Referer": "https://fbref.com/",
-}
+# curl bypasses Cloudflare's TLS fingerprint check; requests gets 403
+_HAS_CURL = shutil.which("curl") is not None
 
-DELAY       = 3.5   # seconds between requests (FBref rate-limit guard)
+DELAY       = 4.0   # seconds between requests (FBref rate-limit guard)
 CACHE_FILE  = "data/fbref_cache.json"
 OUTPUT_FILE = "data/fbref_stats.json"
 
@@ -88,26 +83,79 @@ def _save_cache(cache: dict) -> None:
 
 # ── HTTP ──────────────────────────────────────────────────────────────────────
 
+_CURL_HEADERS = [
+    "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language: en-US,en;q=0.9",
+    "Accept-Encoding: gzip, deflate, br",
+    "sec-ch-ua: \"Chromium\";v=\"120\", \"Google Chrome\";v=\"120\"",
+    "sec-ch-ua-mobile: ?0",
+    "sec-ch-ua-platform: \"macOS\"",
+    "sec-fetch-dest: document",
+    "sec-fetch-mode: navigate",
+    "sec-fetch-site: none",
+    "sec-fetch-user: ?1",
+    "upgrade-insecure-requests: 1",
+]
+
+
+def _fetch_with_curl(url: str) -> str:
+    """Use system curl — different TLS fingerprint bypasses Cloudflare."""
+    cmd = [
+        "curl", "-s", "--compressed", "--http2",
+        "-A", ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+               "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"),
+        "--max-time", "30",
+    ]
+    for h in _CURL_HEADERS:
+        cmd += ["-H", h]
+    cmd.append(url)
+
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=35)
+        html = result.stdout
+        if "Just a moment" in html or "cf-browser-verification" in html:
+            print(f"    [Cloudflare JS challenge] — try again in 60s")
+            time.sleep(60)
+            return ""
+        if not html.strip():
+            print(f"    [curl] empty response (code={result.returncode})")
+        return html
+    except subprocess.TimeoutExpired:
+        print(f"    [curl timeout] {url}")
+        return ""
+    except Exception as e:
+        print(f"    [curl error] {e}")
+        return ""
+
+
+def _fetch_with_requests(url: str) -> str:
+    """Fallback: plain requests (may get 403 from Cloudflare)."""
+    headers = {
+        "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"),
+        "Accept-Language": "en-US,en;q=0.9",
+        "Referer": "https://fbref.com/",
+    }
+    try:
+        r = requests.get(url, headers=headers, timeout=30)
+        if r.status_code == 429:
+            print(f"    Rate-limited. Waiting 60s ...")
+            time.sleep(60)
+            return ""
+        r.raise_for_status()
+        return r.text
+    except Exception as e:
+        print(f"    [requests] {e}")
+        return ""
+
+
 def _fetch_html(url: str) -> str:
-    """GET with rate-limit delay and retries. Returns HTML string or empty."""
+    """Fetch with delay. Uses curl (preferred) or requests as fallback."""
     time.sleep(DELAY)
-    for attempt in range(3):
-        try:
-            r = requests.get(url, headers=HEADERS, timeout=30)
-            if r.status_code == 429:
-                wait = 60 * (attempt + 1)
-                print(f"    Rate-limited. Waiting {wait}s ...")
-                time.sleep(wait)
-                continue
-            r.raise_for_status()
-            return r.text
-        except requests.exceptions.HTTPError as e:
-            print(f"    [HTTP {r.status_code}] {url}: {e}")
-            return ""
-        except Exception as e:
-            print(f"    [ERROR] {url}: {e}")
-            return ""
-    return ""
+    if _HAS_CURL:
+        return _fetch_with_curl(url)
+    print("    [WARN] curl not found, trying requests (may hit 403)")
+    return _fetch_with_requests(url)
 
 
 # ── Table parsing ─────────────────────────────────────────────────────────────
