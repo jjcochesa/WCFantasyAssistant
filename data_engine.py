@@ -1010,6 +1010,9 @@ def load_from_wc_squads() -> list:
     return players
 
 
+PLAYER_SOURCE: str = "unknown"  # 'api', 'squads', 'squads_fallback', 'local', 'demo'
+
+
 def load_data(
     session_token: Optional[str] = None,
     players_file: Optional[str] = None,
@@ -1018,18 +1021,28 @@ def load_data(
     enrich_with_api: bool = True,
 ) -> pd.DataFrame:
     """Main entry point. Fetches players + stats, returns ranked DataFrame."""
+    global PLAYER_SOURCE
+
     if use_demo:
+        PLAYER_SOURCE = "demo"
         players = get_demo_players()
     elif use_squads:
+        PLAYER_SOURCE = "squads"
         players = load_from_wc_squads() or get_demo_players()
     elif players_file:
+        PLAYER_SOURCE = "local"
         players = load_players_from_json(players_file)
     else:
-        # Priority: FIFA Fantasy API → wc_squads.json → demo
+        # Always try the live FIFA Fantasy API first
         players = fetch_fantasy_players(session_token)
-        if not players:
+        if players:
+            PLAYER_SOURCE = "api"
+        else:
+            # API unreachable — fall back to static squad data
+            PLAYER_SOURCE = "squads_fallback"
             players = load_from_wc_squads()
         if not players:
+            PLAYER_SOURCE = "demo"
             players = get_demo_players()
 
     if enrich_with_api and API_FOOTBALL_KEY and not use_demo:

@@ -4,6 +4,7 @@ import datetime
 import streamlit as st
 import pandas as pd
 
+import data_engine as _de
 from data_engine import load_data, fetch_live_player_data, _norm_name
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
@@ -34,40 +35,39 @@ with st.sidebar:
     st.title("⚽ WC Fantasy 2026")
     st.caption("Official FIFA World Cup Fantasy assistant")
 
-    st.subheader("Data Source")
-    data_mode = st.radio("Load from", [
-        "WC Squads (offline, all players)",
-        "FIFA Fantasy API (live)",
-        "Local JSON export",
-        "Demo data (40 players)",
-    ])
+    # Live API is the only source that matches the real game
+    # Fallback to offline only when FIFA API is unreachable
+    with st.expander("Data source (advanced)", expanded=False):
+        data_mode = st.radio("Load from", [
+            "FIFA Fantasy API (live)",
+            "WC Squads (offline, all players)",
+            "Local JSON export",
+            "Demo data (40 players)",
+        ], index=0)
+    # Keep data_mode default consistent without expander state across reloads
+    if "data_mode" not in st.session_state:
+        st.session_state.data_mode = "FIFA Fantasy API (live)"
 
     players_file = None
     _sidebar_token = ""
 
-    if data_mode == "FIFA Fantasy API (live)":
-        if _SECRET_TOKEN:
-            st.success("Session token loaded from Streamlit secrets")
-        else:
-            st.info(
-                "**One-time setup:** add your token to Streamlit secrets "
-                "(`FIFA_SESSION_TOKEN = \"Bearer ...\"`) so you never paste it again.\n\n"
-                "**Get it now:** log into play.fifa.com/fantasy → DevTools → "
-                "Network tab → copy the `Authorization` header."
-            )
-            _sidebar_token = st.text_input("Session token (temporary)", type="password")
-        api_key = st.text_input("API-Football key (optional)", type="password")
-        if api_key:
-            os.environ["API_FOOTBALL_KEY"] = api_key
-    elif data_mode == "Local JSON export":
+    if data_mode == "Local JSON export":
         players_file = st.text_input("JSON file path", "data/players_export.json")
-    elif data_mode != "Demo data (40 players)":
-        if not _SECRET_TOKEN:
-            with st.expander("FIFA session token (optional — for live prices & ownership)"):
-                _sidebar_token = st.text_input(
-                    "Bearer token", type="password", key="wc_token",
-                    help="Set FIFA_SESSION_TOKEN in Streamlit secrets to skip this forever.",
-                )
+
+    # Token only needed if API starts requiring auth (currently public)
+    if _SECRET_TOKEN:
+        pass  # Secret already loaded — no prompt needed
+    else:
+        with st.expander("Session token (optional)", expanded=False):
+            _sidebar_token = st.text_input(
+                "Bearer token", type="password", key="wc_token",
+                help="Paste from play.fifa.com DevTools → Authorization header. "
+                     "Or set FIFA_SESSION_TOKEN in Streamlit secrets to never paste again.",
+            )
+
+    api_key = st.text_input("API-Football key (optional)", type="password")
+    if api_key:
+        os.environ["API_FOOTBALL_KEY"] = api_key
 
     # Resolved token: secret beats sidebar input
     session_token = _SECRET_TOKEN or _sidebar_token or None
@@ -87,7 +87,7 @@ with st.sidebar:
 # ── Cached loaders ────────────────────────────────────────────────────────────
 
 # Heavy load: stats + projections. Long TTL — stats don't change between loads.
-@st.cache_data(ttl=21600, show_spinner="Scoring players...")
+@st.cache_data(ttl=21600, show_spinner="Loading players from FIFA Fantasy...")
 def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     import config as cfg_mod
     cfg_mod.NATIONAL_TEAM_WEIGHT = iw
@@ -164,15 +164,28 @@ if df is None or df.empty:
 
 # Sidebar live data status badge
 with live_status_placeholder:
-    if st.session_state.live_refreshed_at:
+    source = _de.PLAYER_SOURCE
+    # Detect static fallback from player IDs (reliable even on cache hits)
+    if df is not None and not df.empty:
+        has_static_ids = df["id"].astype(str).str.contains("_").any()
+        if has_static_ids and source not in ("squads", "local", "demo"):
+            source = "squads_fallback"
+
+    if source == "squads_fallback":
+        st.warning(
+            "FIFA API unreachable — showing **offline squad data**. "
+            "Players and prices may not match the live game."
+        )
+    elif source in ("squads", "local"):
+        st.info("Offline data loaded.")
+    elif st.session_state.live_refreshed_at:
         mins_ago = int((datetime.datetime.now() - st.session_state.live_refreshed_at).total_seconds() / 60)
-        st.success(f"Live prices & ownership: {mins_ago}m ago")
-    else:
-        st.warning("Prices & ownership: using estimates (no API)")
+        st.success(f"Live from FIFA Fantasy ({mins_ago}m ago)")
 
 # ── KPI strip ─────────────────────────────────────────────────────────────────
 k1, k2, k3, k4, k5 = st.columns(5)
-k1.metric("Players", len(df))
+_src = _de.PLAYER_SOURCE
+k1.metric("Players", len(df), delta="live" if _src == "api" else "offline", delta_color="normal" if _src == "api" else "off")
 k2.metric("Countries", df["country"].nunique())
 k3.metric("Scout candidates", int(df["scout"].sum()))
 best = df.iloc[0]
