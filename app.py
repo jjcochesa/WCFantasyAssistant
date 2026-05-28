@@ -295,6 +295,9 @@ with tab1:
     display_cols = [c for c in COL_MAP if c in view.columns]
     disp = view[display_cols].rename(columns=COL_MAP)
 
+    # Set Name as index so it stays frozen when scrolling right
+    disp = disp.set_index("Name")
+
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
     pts_cols   = ["MD1 Pts", "MD2 Pts", "Total Pts"]

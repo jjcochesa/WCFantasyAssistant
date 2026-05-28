@@ -34,16 +34,18 @@ WC_2026_SEASON = 2026
 CLUB_SEASON = 2024
 
 CACHE_DIR = "data/cache"
-FBREF_MAP_PATH   = "data/fbref_player_map.json"
+FBREF_MAP_PATH    = "data/fbref_player_map.json"
 MANUAL_STATS_PATH = "data/manual_stats.json"
+MANUAL_NT_PATH    = "data/manual_nt_stats.json"
 
 # FBref/manual stats keyed two ways for fast lookup
 _FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> stats
-_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> stats
+_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> club stats
+_NT_BY_NAME:    dict[str, dict] = {}  # norm_name      -> NT per-90 stats
 
 
 def _load_fbref_map() -> None:
-    global _FBREF_BY_ID, _FBREF_BY_NAME
+    global _FBREF_BY_ID, _FBREF_BY_NAME, _NT_BY_NAME
 
     # 1. Load manual stats (norm_name keyed) — baseline for all key WC players
     if os.path.exists(MANUAL_STATS_PATH):
@@ -59,7 +61,18 @@ def _load_fbref_map() -> None:
         except Exception as e:
             print(f"[Stats] Could not load manual_stats.json: {e}")
 
-    # 2. Load name_match output (may override manual with fresher data)
+    # 2. Load manual NT stats (per-90 international form for ~200 key players)
+    if os.path.exists(MANUAL_NT_PATH):
+        try:
+            with open(MANUAL_NT_PATH) as f:
+                nt_data: dict[str, dict] = json.load(f)
+            for norm_key, stats in nt_data.items():
+                _NT_BY_NAME[norm_key] = stats
+            print(f"[Stats] Loaded {len(nt_data)} manual NT records")
+        except Exception as e:
+            print(f"[Stats] Could not load manual_nt_stats.json: {e}")
+
+    # 3. Load name_match output (may override manual with fresher data)
     if os.path.exists(FBREF_MAP_PATH):
         try:
             with open(FBREF_MAP_PATH) as f:
@@ -474,34 +487,58 @@ def _compute_per90(p: Player) -> None:
     cl_kp  = _per90(cl.chances_created,  cl_mins)
     cl_tk  = _per90(cl.tackles,          cl_mins)
 
-    # Override club stats with FBref data when available.
-    # FBref uses xG/xAG (expected, more predictive) rather than actual goals/assists.
+    # Override club stats from FBref/manual data (xG/kp90/tackles90 not in API raw counts).
     fbref = _FBREF_BY_ID.get(p.id) or _FBREF_BY_NAME.get(_norm_name(p.name))
     if fbref:
-        if fbref.get("xg90",  0.0) > 0: cl_xg  = fbref["xg90"]
-        if fbref.get("xa90",  0.0) > 0: cl_xa  = fbref["xa90"]
-        if fbref.get("sot90", 0.0) > 0: cl_sot = fbref["sot90"]
-        # Populate club_stats.matches so nt_weight logic works correctly
+        if fbref.get("xg90",     0.0) > 0: cl_xg  = fbref["xg90"]
+        if fbref.get("xa90",     0.0) > 0: cl_xa  = fbref["xa90"]
+        if fbref.get("sot90",    0.0) > 0: cl_sot = fbref["sot90"]
+        if fbref.get("kp90",     0.0) > 0: cl_kp  = fbref["kp90"]
+        if fbref.get("tackles90",0.0) > 0: cl_tk  = fbref["tackles90"]
         if p.club_stats.matches == 0 and fbref.get("mp", 0) > 0:
             p.club_stats.matches = fbref["mp"]
         sr = fbref.get("starter_rate", 0.0)
         if sr > 0:
             p.starter_rate = sr
 
-    nt_w, cl_w = (0.65, 0.35) if nt.matches >= 5 else (0.35, 0.65)
+    # Override NT stats from manual_nt_stats.json when available.
+    nt_manual = _NT_BY_NAME.get(_norm_name(p.name))
+    if nt_manual:
+        if nt_manual.get("xg90",     0.0) > 0 or nt_manual.get("mp", 0) >= 5:
+            nt_xg  = nt_manual.get("xg90",  nt_xg)
+            nt_xa  = nt_manual.get("xa90",  nt_xa)
+            nt_sot = nt_manual.get("sot90", nt_sot)
+            nt_kp  = nt_manual.get("kp90",  nt_kp)
+            nt_tk  = nt_manual.get("tackles90", nt_tk)
+        # Ensure nt.matches reflects real NT experience so nt_weight logic fires
+        if p.national_stats.matches == 0 and nt_manual.get("mp", 0) > 0:
+            p.national_stats.matches = nt_manual["mp"]
+        if nt_manual.get("starter_rate", 0.0) > 0 and p.starter_rate == 1.0:
+            p.starter_rate = nt_manual["starter_rate"]
+
+    # Position-based fallback for KP and tackles when no data available
+    _DEF_KP  = {"GK": 0.2, "DEF": 0.6, "MID": 1.8, "FWD": 0.8}
+    _DEF_TK  = {"GK": 0.1, "DEF": 1.8, "MID": 2.0, "FWD": 0.5}
+    pos = p.position
+    if cl_kp == 0.0:  cl_kp = _DEF_KP.get(pos, 1.0)
+    if cl_tk == 0.0:  cl_tk = _DEF_TK.get(pos, 1.0)
+    if nt_kp == 0.0:  nt_kp = _DEF_KP.get(pos, 1.0)
+    if nt_tk == 0.0:  nt_tk = _DEF_TK.get(pos, 1.0)
+
+    nt_w, cl_w = (0.65, 0.35) if p.national_stats.matches >= 5 else (0.35, 0.65)
 
     # Club split
-    p.xg90_club     = cl_xg
-    p.xa90_club     = cl_xa
-    p.sot90_club    = cl_sot
-    p.kp90_club     = cl_kp
+    p.xg90_club      = cl_xg
+    p.xa90_club      = cl_xa
+    p.sot90_club     = cl_sot
+    p.kp90_club      = cl_kp
     p.tackles90_club = cl_tk
 
     # NT split
-    p.xg90_nt     = nt_xg
-    p.xa90_nt     = nt_xa
-    p.sot90_nt    = nt_sot
-    p.kp90_nt     = nt_kp
+    p.xg90_nt      = nt_xg
+    p.xa90_nt      = nt_xa
+    p.sot90_nt     = nt_sot
+    p.kp90_nt      = nt_kp
     p.tackles90_nt = nt_tk
 
     # Blended
