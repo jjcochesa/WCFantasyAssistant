@@ -1,0 +1,7381 @@
+{
+  "generated": "2025-05-28",
+  "teams": {
+    "ALG": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "ALG_1",
+          "name": "Rais M'Bolhi",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ALG_2",
+          "name": "Alexandre Oukidja",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "ALG_3",
+          "name": "Ramy Bensebaini",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "ALG_4",
+          "name": "Aissa Mandi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Villarreal"
+        },
+        {
+          "id": "ALG_5",
+          "name": "Djamel Benlamri",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "ALG_6",
+          "name": "Mehdi Zeffane",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "ALG_7",
+          "name": "Yacine Adli",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Fiorentina"
+        },
+        {
+          "id": "ALG_8",
+          "name": "Said Benrahma",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "Lyon"
+        },
+        {
+          "id": "ALG_9",
+          "name": "Hossem Aouar",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Lyon"
+        },
+        {
+          "id": "ALG_10",
+          "name": "Billal Brahimi",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ALG_11",
+          "name": "Sofiane Feghouli",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "ALG_12",
+          "name": "Mohamed Amine Amoura",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Stuttgart"
+        },
+        {
+          "id": "ALG_13",
+          "name": "Youcef Belaili",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "ALG_14",
+          "name": "Baghdad Bounedjah",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Al Sadd"
+        },
+        {
+          "id": "ALG_15",
+          "name": "Andy Delort",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ALG_16",
+          "name": "Ilyes Azza",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "ARG": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "ARG_1",
+          "name": "Emiliano Martinez",
+          "position": "GK",
+          "price": 6.0,
+          "ownership_pct": 18.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "ARG_2",
+          "name": "Geronimo Rulli",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 1.5,
+          "club": "Marseille"
+        },
+        {
+          "id": "ARG_3",
+          "name": "Cristian Romero",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "ARG_4",
+          "name": "Lisandro Martinez",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 6.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ARG_5",
+          "name": "Nicolas Otamendi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Benfica"
+        },
+        {
+          "id": "ARG_6",
+          "name": "Nahuel Molina",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "ARG_7",
+          "name": "Marcos Acuna",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Sevilla"
+        },
+        {
+          "id": "ARG_8",
+          "name": "Nicolas Tagliafico",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Lyon"
+        },
+        {
+          "id": "ARG_9",
+          "name": "Rodrigo De Paul",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 12.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "ARG_10",
+          "name": "Alexis Mac Allister",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 18.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "ARG_11",
+          "name": "Enzo Fernandez",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ARG_12",
+          "name": "Guido Rodriguez",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Betis"
+        },
+        {
+          "id": "ARG_13",
+          "name": "Giovanni Lo Celso",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Villarreal"
+        },
+        {
+          "id": "ARG_14",
+          "name": "Paulo Dybala",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Roma"
+        },
+        {
+          "id": "ARG_15",
+          "name": "Angel Di Maria",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "ARG_16",
+          "name": "Lionel Messi",
+          "position": "FWD",
+          "price": 10.5,
+          "ownership_pct": 20.0,
+          "club": "Inter Miami"
+        },
+        {
+          "id": "ARG_17",
+          "name": "Lautaro Martinez",
+          "position": "FWD",
+          "price": 10.0,
+          "ownership_pct": 35.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "ARG_18",
+          "name": "Julian Alvarez",
+          "position": "FWD",
+          "price": 9.5,
+          "ownership_pct": 25.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "ARG_19",
+          "name": "Alejandro Garnacho",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 10.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ARG_20",
+          "name": "Thiago Almada",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 4.0,
+          "club": "Lyon"
+        },
+        {
+          "id": "ARG_21",
+          "name": "Valentin Carboni",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 3.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "ARG_22",
+          "name": "Franco Mastantuono",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 4.0,
+          "club": "Real Madrid"
+        }
+      ]
+    },
+    "AUS": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "AUS_1",
+          "name": "Mat Ryan",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 6.0,
+          "club": "Real Sociedad"
+        },
+        {
+          "id": "AUS_2",
+          "name": "Danny Vukovic",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_3",
+          "name": "Harry Souttar",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Leicester"
+        },
+        {
+          "id": "AUS_4",
+          "name": "Milos Degenek",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_5",
+          "name": "Aziz Behich",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_6",
+          "name": "Nathaniel Atkinson",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_7",
+          "name": "Fran Karacic",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_8",
+          "name": "Jackson Irvine",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "St Pauli"
+        },
+        {
+          "id": "AUS_9",
+          "name": "Aaron Mooy",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_10",
+          "name": "Riley McGree",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Middlesbrough"
+        },
+        {
+          "id": "AUS_11",
+          "name": "Keanu Baccus",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_12",
+          "name": "Martin Boyle",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Panathinaikos"
+        },
+        {
+          "id": "AUS_13",
+          "name": "Mitch Duke",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_14",
+          "name": "Adam Taggart",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_15",
+          "name": "Bruno Fornaroli",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "AUS_16",
+          "name": "Jordan Bos",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_17",
+          "name": "Thomas Deng",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "AUS_18",
+          "name": "Nestory Irankunda",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Bayern Munich"
+        }
+      ]
+    },
+    "AUT": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "AUT_1",
+          "name": "Patrick Pentz",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 4.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "AUT_2",
+          "name": "Alexander Schlager",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "AUT_3",
+          "name": "David Alaba",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "AUT_4",
+          "name": "Stefan Posch",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Bologna"
+        },
+        {
+          "id": "AUT_5",
+          "name": "Kevin Danso",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Lens"
+        },
+        {
+          "id": "AUT_6",
+          "name": "Phillipp Mwene",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "AUT_7",
+          "name": "Gernot Trauner",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "AUT_8",
+          "name": "Marcel Sabitzer",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 12.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "AUT_9",
+          "name": "Konrad Laimer",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "AUT_10",
+          "name": "Christoph Baumgartner",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "RB Leipzig"
+        },
+        {
+          "id": "AUT_11",
+          "name": "Florian Grillitsch",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "AUT_12",
+          "name": "Nicolas Seiwald",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "RB Leipzig"
+        },
+        {
+          "id": "AUT_13",
+          "name": "Romano Schmid",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Werder Bremen"
+        },
+        {
+          "id": "AUT_14",
+          "name": "Patrick Wimmer",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Wolfsburg"
+        },
+        {
+          "id": "AUT_15",
+          "name": "Michael Gregoritsch",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Freiburg"
+        },
+        {
+          "id": "AUT_16",
+          "name": "Marko Arnautovic",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "AUT_17",
+          "name": "Andreas Weimann",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "West Brom"
+        },
+        {
+          "id": "AUT_18",
+          "name": "Junior Adamu",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        }
+      ]
+    },
+    "BEL": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "BEL_1",
+          "name": "Koen Casteels",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Wolfsburg"
+        },
+        {
+          "id": "BEL_2",
+          "name": "Simon Mignolet",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Club Brugge"
+        },
+        {
+          "id": "BEL_3",
+          "name": "Timothy Castagne",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Fulham"
+        },
+        {
+          "id": "BEL_4",
+          "name": "Jan Vertonghen",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "BEL_5",
+          "name": "Wout Faes",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Leicester"
+        },
+        {
+          "id": "BEL_6",
+          "name": "Arthur Theate",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Rennes"
+        },
+        {
+          "id": "BEL_7",
+          "name": "Maxim De Cuyper",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Club Brugge"
+        },
+        {
+          "id": "BEL_8",
+          "name": "Zeno Debast",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 3.5,
+          "club": "Anderlecht"
+        },
+        {
+          "id": "BEL_9",
+          "name": "Kevin De Bruyne",
+          "position": "MID",
+          "price": 9.0,
+          "ownership_pct": 25.0,
+          "club": "Man City"
+        },
+        {
+          "id": "BEL_10",
+          "name": "Youri Tielemans",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "BEL_11",
+          "name": "Amadou Onana",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "BEL_12",
+          "name": "Jeremy Doku",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Man City"
+        },
+        {
+          "id": "BEL_13",
+          "name": "Alexis Saelemaekers",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "BEL_14",
+          "name": "Leandro Trossard",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "BEL_15",
+          "name": "Charles De Ketelaere",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Atalanta"
+        },
+        {
+          "id": "BEL_16",
+          "name": "Romelu Lukaku",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 20.0,
+          "club": "Napoli"
+        },
+        {
+          "id": "BEL_17",
+          "name": "Loïs Openda",
+          "position": "FWD",
+          "price": 8.5,
+          "ownership_pct": 12.0,
+          "club": "RB Leipzig"
+        },
+        {
+          "id": "BEL_18",
+          "name": "Johan Bakayoko",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "PSV"
+        },
+        {
+          "id": "BEL_19",
+          "name": "Dante Vanzeir",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "BEL_20",
+          "name": "Julien Duranville",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 4.0,
+          "club": "Borussia Dortmund"
+        }
+      ]
+    },
+    "BIH": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "BIH_1",
+          "name": "Nikola Vasilj",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "BIH_2",
+          "name": "Ibrahim Sehic",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "BIH_3",
+          "name": "Sead Kolasinac",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Atalanta"
+        },
+        {
+          "id": "BIH_4",
+          "name": "Anel Ahmedhodžić",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Sheffield Utd"
+        },
+        {
+          "id": "BIH_5",
+          "name": "Ermin Bicakcic",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "BIH_6",
+          "name": "Petar Sucic",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "BIH_7",
+          "name": "Dario Saric",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Mallorca"
+        },
+        {
+          "id": "BIH_8",
+          "name": "Miralem Pjanic",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "BIH_9",
+          "name": "Edin Dzeko",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "BIH_10",
+          "name": "Ermedin Demirovic",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Stuttgart"
+        },
+        {
+          "id": "BIH_11",
+          "name": "Sasa Kalajdzic",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Wolves"
+        },
+        {
+          "id": "BIH_12",
+          "name": "Haris Vuckic",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "BIH_13",
+          "name": "Benjamin Tahirovic",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Ajax"
+        },
+        {
+          "id": "BIH_14",
+          "name": "Amir Hadziahmetovic",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Sheffield Utd"
+        },
+        {
+          "id": "BIH_15",
+          "name": "Nikola Katic",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "BIH_16",
+          "name": "Armin Hodžić",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "BRA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "BRA_1",
+          "name": "Alisson Becker",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 14.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "BRA_2",
+          "name": "Ederson",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Man City"
+        },
+        {
+          "id": "BRA_3",
+          "name": "Eder Militao",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "BRA_4",
+          "name": "Marquinhos",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "PSG"
+        },
+        {
+          "id": "BRA_5",
+          "name": "Gabriel Magalhaes",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 7.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "BRA_6",
+          "name": "Danilo",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "BRA_7",
+          "name": "Renan Lodi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "BRA_8",
+          "name": "Alex Sandro",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "BRA_9",
+          "name": "Casemiro",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "BRA_10",
+          "name": "Bruno Guimaraes",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "BRA_11",
+          "name": "Lucas Paqueta",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "BRA_12",
+          "name": "Raphinha",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "BRA_13",
+          "name": "Vinicius Jr",
+          "position": "FWD",
+          "price": 11.0,
+          "ownership_pct": 45.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "BRA_14",
+          "name": "Rodrygo",
+          "position": "FWD",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "BRA_15",
+          "name": "Martinelli",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "BRA_16",
+          "name": "Richarlison",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "BRA_17",
+          "name": "Endrick",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "BRA_18",
+          "name": "Gabriel Jesus",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "BRA_19",
+          "name": "Neymar",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 12.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "BRA_20",
+          "name": "Andreas Pereira",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Fulham"
+        },
+        {
+          "id": "BRA_21",
+          "name": "Gerson",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Flamengo"
+        },
+        {
+          "id": "BRA_22",
+          "name": "Savinho",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 8.0,
+          "club": "Man City"
+        }
+      ]
+    },
+    "CAN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CAN_1",
+          "name": "Maxime Crepeau",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "LA Galaxy"
+        },
+        {
+          "id": "CAN_2",
+          "name": "Milan Borjan",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "CAN_3",
+          "name": "Alistair Johnston",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Celtic"
+        },
+        {
+          "id": "CAN_4",
+          "name": "Richie Laryea",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "CAN_5",
+          "name": "Sam Adekugbe",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CAN_6",
+          "name": "Kamal Miller",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "CAN_7",
+          "name": "Ismaël Koné",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Watford"
+        },
+        {
+          "id": "CAN_8",
+          "name": "Stephen Eustaquio",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Porto"
+        },
+        {
+          "id": "CAN_9",
+          "name": "Tajon Buchanan",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "CAN_10",
+          "name": "Jonathan Osorio",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Toronto FC"
+        },
+        {
+          "id": "CAN_11",
+          "name": "Alphonso Davies",
+          "position": "DEF",
+          "price": 8.0,
+          "ownership_pct": 22.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "CAN_12",
+          "name": "Jonathan David",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 25.0,
+          "club": "Lille"
+        },
+        {
+          "id": "CAN_13",
+          "name": "Cyle Larin",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Club Brugge"
+        },
+        {
+          "id": "CAN_14",
+          "name": "Theo Corbeanu",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CAN_15",
+          "name": "Liam Millar",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CAN_16",
+          "name": "Ali Ahmed",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CAN_17",
+          "name": "Jacob Shaffelburg",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CAN_18",
+          "name": "Atiba Hutchinson",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "CIV": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CIV_1",
+          "name": "Badra Ali Sangare",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_2",
+          "name": "Sylvain Gbohouo",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_3",
+          "name": "Serge Aurier",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_4",
+          "name": "Wilfried Singo",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "Monaco"
+        },
+        {
+          "id": "CIV_5",
+          "name": "Eric Bailly",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Besiktas"
+        },
+        {
+          "id": "CIV_6",
+          "name": "Evan Ndicka",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Roma"
+        },
+        {
+          "id": "CIV_7",
+          "name": "Ghislain Konan",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_8",
+          "name": "Jean-Philippe Gbamin",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_9",
+          "name": "Franck Kessie",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Al-Ahli"
+        },
+        {
+          "id": "CIV_10",
+          "name": "Ibrahim Sangare",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "CIV_11",
+          "name": "Seko Fofana",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Al-Qadsiah"
+        },
+        {
+          "id": "CIV_12",
+          "name": "Nicolas Pepe",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_13",
+          "name": "Simon Adingra",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 7.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "CIV_14",
+          "name": "Sebastien Haller",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 7.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "CIV_15",
+          "name": "Jonathan Bamba",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_16",
+          "name": "Wilfried Zaha",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": ""
+        },
+        {
+          "id": "CIV_17",
+          "name": "Christian Kouame",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Fiorentina"
+        },
+        {
+          "id": "CIV_18",
+          "name": "Maxwell Cornet",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        }
+      ]
+    },
+    "COD": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "COD_1",
+          "name": "Lionel Mpasi",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "COD_2",
+          "name": "Joris Kayembe",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COD_3",
+          "name": "Arthur Masuaku",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Besiktas"
+        },
+        {
+          "id": "COD_4",
+          "name": "Chancel Mbemba",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COD_5",
+          "name": "Marcel Tisserand",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "COD_6",
+          "name": "Yoane Wissa",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Brentford"
+        },
+        {
+          "id": "COD_7",
+          "name": "Cédric Bakambu",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "COD_8",
+          "name": "Silas Katompa",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "VfB Stuttgart"
+        },
+        {
+          "id": "COD_9",
+          "name": "Théo Bongonda",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COD_10",
+          "name": "Paul-José Mpoku",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "COD_11",
+          "name": "Trésor Mputu",
+          "position": "MID",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "COD_12",
+          "name": "Christian Luyindama",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "COD_13",
+          "name": "Ngonda Muzinga",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "COD_14",
+          "name": "Merveille Bongonda",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "COD_15",
+          "name": "Chadrac Akolo",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "COD_16",
+          "name": "Amissi Murhula",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "COL": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "COL_1",
+          "name": "David Ospina",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "COL_2",
+          "name": "Camilo Vargas",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "COL_3",
+          "name": "Davinson Sanchez",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "COL_4",
+          "name": "Yerry Mina",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "COL_5",
+          "name": "Daniel Munoz",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "COL_6",
+          "name": "Johan Mojica",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COL_7",
+          "name": "Juan Cuadrado",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COL_8",
+          "name": "Carlos Cuesta",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Genk"
+        },
+        {
+          "id": "COL_9",
+          "name": "James Rodriguez",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Rayo Vallecano"
+        },
+        {
+          "id": "COL_10",
+          "name": "Matheus Uribe",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Porto"
+        },
+        {
+          "id": "COL_11",
+          "name": "Jefferson Lerma",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "COL_12",
+          "name": "Richard Rios",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Palmeiras"
+        },
+        {
+          "id": "COL_13",
+          "name": "Luis Diaz",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 20.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "COL_14",
+          "name": "Jhon Cordoba",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Krasnodar"
+        },
+        {
+          "id": "COL_15",
+          "name": "Jhon Duran",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "COL_16",
+          "name": "Rafael Santos Borre",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Eintracht Frankfurt"
+        },
+        {
+          "id": "COL_17",
+          "name": "Luis Sinisterra",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Bournemouth"
+        },
+        {
+          "id": "COL_18",
+          "name": "Cucho Hernandez",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Columbus Crew"
+        },
+        {
+          "id": "COL_19",
+          "name": "Sebastian Villa",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "COL_20",
+          "name": "Santiago Arias",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "CPV": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CPV_1",
+          "name": "Vozinha",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_2",
+          "name": "Marco Soares",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_3",
+          "name": "Stopira",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_4",
+          "name": "Zé Lopes",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "CPV_5",
+          "name": "Roberto Lopes",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": "Shamrock Rovers"
+        },
+        {
+          "id": "CPV_6",
+          "name": "Diney",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "CPV_7",
+          "name": "Ryan Mendes",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_8",
+          "name": "Garry Rodrigues",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_9",
+          "name": "Júlio Tavares",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CPV_10",
+          "name": "Steven Fortes",
+          "position": "MID",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "CPV_11",
+          "name": "Willy Semedo",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_12",
+          "name": "Jovane Cabral",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Sporting CP"
+        },
+        {
+          "id": "CPV_13",
+          "name": "Kenny Rocha Santos",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_14",
+          "name": "Kelvin",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CPV_15",
+          "name": "David Tavares",
+          "position": "FWD",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "CRO": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CRO_1",
+          "name": "Dominik Livakovic",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 8.0,
+          "club": "Fenerbahce"
+        },
+        {
+          "id": "CRO_2",
+          "name": "Ivo Grbic",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 1.5,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "CRO_3",
+          "name": "Josko Gvardiol",
+          "position": "DEF",
+          "price": 7.5,
+          "ownership_pct": 15.0,
+          "club": "Man City"
+        },
+        {
+          "id": "CRO_4",
+          "name": "Borna Sosa",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Ajax"
+        },
+        {
+          "id": "CRO_5",
+          "name": "Martin Erlic",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Leipzig"
+        },
+        {
+          "id": "CRO_6",
+          "name": "Duje Caleta-Car",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CRO_7",
+          "name": "Josip Stanisic",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "CRO_8",
+          "name": "Luka Modric",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "CRO_9",
+          "name": "Mateo Kovacic",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Man City"
+        },
+        {
+          "id": "CRO_10",
+          "name": "Marcelo Brozovic",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Al-Nassr"
+        },
+        {
+          "id": "CRO_11",
+          "name": "Mario Pasalic",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Atalanta"
+        },
+        {
+          "id": "CRO_12",
+          "name": "Luka Sucic",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Leipzig"
+        },
+        {
+          "id": "CRO_13",
+          "name": "Lovro Majer",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Wolfsburg"
+        },
+        {
+          "id": "CRO_14",
+          "name": "Nikola Vlasic",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Torino"
+        },
+        {
+          "id": "CRO_15",
+          "name": "Ivan Perisic",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "CRO_16",
+          "name": "Andrej Kramaric",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 8.0,
+          "club": "Hoffenheim"
+        },
+        {
+          "id": "CRO_17",
+          "name": "Bruno Petkovic",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Dinamo Zagreb"
+        },
+        {
+          "id": "CRO_18",
+          "name": "Ante Budimir",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 4.0,
+          "club": "Osasuna"
+        },
+        {
+          "id": "CRO_19",
+          "name": "Marko Pjaca",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CRO_20",
+          "name": "Martin Baturina",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Chelsea"
+        }
+      ]
+    },
+    "CUW": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CUW_1",
+          "name": "Eloy Room",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Columbus Crew"
+        },
+        {
+          "id": "CUW_2",
+          "name": "Wersley Monroy",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_3",
+          "name": "Cuco Martina",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_4",
+          "name": "Richie Paesch",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "CUW_5",
+          "name": "Tyronne Ebuehi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Empoli"
+        },
+        {
+          "id": "CUW_6",
+          "name": "Leandro Bacuna",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "FC Midtjylland"
+        },
+        {
+          "id": "CUW_7",
+          "name": "Jafar Arias",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_8",
+          "name": "Chedric Bazoer",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_9",
+          "name": "Juninho Bacuna",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Huddersfield"
+        },
+        {
+          "id": "CUW_10",
+          "name": "Glen Kamara",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Leeds"
+        },
+        {
+          "id": "CUW_11",
+          "name": "Ethan Dingemanse",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_12",
+          "name": "Myron Boadu",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Metz"
+        },
+        {
+          "id": "CUW_13",
+          "name": "Quentin Maceiras",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CUW_14",
+          "name": "Xavier Bakoune",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CUW_15",
+          "name": "Rangelo Janga",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "CZE": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "CZE_1",
+          "name": "Jiri Pavlenka",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Werder Bremen"
+        },
+        {
+          "id": "CZE_2",
+          "name": "Matyas Tomas",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "CZE_3",
+          "name": "Tomas Holes",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CZE_4",
+          "name": "Ladislav Krejci",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Bologna"
+        },
+        {
+          "id": "CZE_5",
+          "name": "Pavel Kaderabek",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Hoffenheim"
+        },
+        {
+          "id": "CZE_6",
+          "name": "David Zima",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Torino"
+        },
+        {
+          "id": "CZE_7",
+          "name": "Jan Boril",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "CZE_8",
+          "name": "Tomas Soucek",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "CZE_9",
+          "name": "Alex Kral",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "CZE_10",
+          "name": "Lukas Provod",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "CZE_11",
+          "name": "Jakub Pesek",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "CZE_12",
+          "name": "Vladimir Coufal",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "CZE_13",
+          "name": "Patrik Schick",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "CZE_14",
+          "name": "Tomas Chory",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "CZE_15",
+          "name": "Adam Hlozek",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "CZE_16",
+          "name": "Ondrej Lingr",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "CZE_17",
+          "name": "Václav Cerny",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Stuttgart"
+        },
+        {
+          "id": "CZE_18",
+          "name": "Jan Kuchta",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 3.5,
+          "club": ""
+        }
+      ]
+    },
+    "ECU": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "ECU_1",
+          "name": "Hernan Galindez",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_2",
+          "name": "Wellington Ramírez",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_3",
+          "name": "Piero Hincapie",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "ECU_4",
+          "name": "Felix Torres",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Santos Laguna"
+        },
+        {
+          "id": "ECU_5",
+          "name": "Angelo Preciado",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Genk"
+        },
+        {
+          "id": "ECU_6",
+          "name": "Pervis Estupinan",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "ECU_7",
+          "name": "Xavier Arreaga",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "ECU_8",
+          "name": "Moises Caicedo",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 12.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ECU_9",
+          "name": "Carlos Gruezo",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_10",
+          "name": "Jhegson Mendez",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "LA Galaxy"
+        },
+        {
+          "id": "ECU_11",
+          "name": "Romario Ibarra",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_12",
+          "name": "Gonzalo Plata",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Real Valladolid"
+        },
+        {
+          "id": "ECU_13",
+          "name": "Enner Valencia",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Fenerbahce"
+        },
+        {
+          "id": "ECU_14",
+          "name": "Kevin Rodriguez",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_15",
+          "name": "Michael Estrada",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "ECU_16",
+          "name": "Kendry Paez",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ECU_17",
+          "name": "Jeremy Sarmiento",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "ECU_18",
+          "name": "Luis Minda",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "EGY": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "EGY_1",
+          "name": "Mohamed El-Shenawy",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Al Ahly"
+        },
+        {
+          "id": "EGY_2",
+          "name": "Mohamed Sobhi",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_3",
+          "name": "Ahmed Hegazy",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "EGY_4",
+          "name": "Omar Kamal",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_5",
+          "name": "Mahmoud Hamdy",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_6",
+          "name": "Mohamed Abdelmonem",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "EGY_7",
+          "name": "Ahmed Sayed Zizo",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_8",
+          "name": "Mohamed Elneny",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "EGY_9",
+          "name": "Emam Ashour",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_10",
+          "name": "Amr El-Sulaya",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_11",
+          "name": "Tarek Hamed",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_12",
+          "name": "Mohamed Salah",
+          "position": "FWD",
+          "price": 11.0,
+          "ownership_pct": 40.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "EGY_13",
+          "name": "Mostafa Mohamed",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Nantes"
+        },
+        {
+          "id": "EGY_14",
+          "name": "Omar Marmoush",
+          "position": "FWD",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Man City"
+        },
+        {
+          "id": "EGY_15",
+          "name": "Rami Rabia",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_16",
+          "name": "Hamdi Fathi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "EGY_17",
+          "name": "Ramadan Sobhi",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Al Ahly"
+        },
+        {
+          "id": "EGY_18",
+          "name": "Marwan Hamdi",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        }
+      ]
+    },
+    "ENG": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "ENG_1",
+          "name": "Jordan Pickford",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 15.0,
+          "club": "Everton"
+        },
+        {
+          "id": "ENG_2",
+          "name": "Aaron Ramsdale",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 3.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "ENG_3",
+          "name": "Dean Henderson",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 1.5,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "ENG_4",
+          "name": "Trent Alexander-Arnold",
+          "position": "DEF",
+          "price": 8.0,
+          "ownership_pct": 32.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "ENG_5",
+          "name": "Kyle Walker",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Man City"
+        },
+        {
+          "id": "ENG_6",
+          "name": "John Stones",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Man City"
+        },
+        {
+          "id": "ENG_7",
+          "name": "Harry Maguire",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ENG_8",
+          "name": "Marc Guehi",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "ENG_9",
+          "name": "Kieran Trippier",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "ENG_10",
+          "name": "Luke Shaw",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ENG_11",
+          "name": "Ben Chilwell",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ENG_12",
+          "name": "Jude Bellingham",
+          "position": "MID",
+          "price": 9.5,
+          "ownership_pct": 45.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "ENG_13",
+          "name": "Bukayo Saka",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 30.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "ENG_14",
+          "name": "Phil Foden",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 25.0,
+          "club": "Man City"
+        },
+        {
+          "id": "ENG_15",
+          "name": "Declan Rice",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 18.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "ENG_16",
+          "name": "Cole Palmer",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ENG_17",
+          "name": "Kobbie Mainoo",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ENG_18",
+          "name": "Conor Gallagher",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "ENG_19",
+          "name": "Anthony Gordon",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "ENG_20",
+          "name": "Harry Kane",
+          "position": "FWD",
+          "price": 10.5,
+          "ownership_pct": 35.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "ENG_21",
+          "name": "Ollie Watkins",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 8.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "ENG_22",
+          "name": "Ivan Toney",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 5.0,
+          "club": "Al-Ahli"
+        },
+        {
+          "id": "ENG_23",
+          "name": "Marcus Rashford",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 6.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "ENG_24",
+          "name": "Jarrod Bowen",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "West Ham"
+        }
+      ]
+    },
+    "ESP": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "ESP_1",
+          "name": "Unai Simon",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 8.0,
+          "club": "Athletic Bilbao"
+        },
+        {
+          "id": "ESP_2",
+          "name": "David Raya",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "ESP_3",
+          "name": "Robert Sanchez",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ESP_4",
+          "name": "Alejandro Grimaldo",
+          "position": "DEF",
+          "price": 7.5,
+          "ownership_pct": 28.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "ESP_5",
+          "name": "Dani Carvajal",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 15.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "ESP_6",
+          "name": "Aymeric Laporte",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 6.0,
+          "club": "Al-Nassr"
+        },
+        {
+          "id": "ESP_7",
+          "name": "Robin Le Normand",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "ESP_8",
+          "name": "Marc Cucurella",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 4.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "ESP_9",
+          "name": "Jose Gaya",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Valencia"
+        },
+        {
+          "id": "ESP_10",
+          "name": "Nacho Fernandez",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Al-Qadsiah"
+        },
+        {
+          "id": "ESP_11",
+          "name": "Pedri",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 30.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "ESP_12",
+          "name": "Gavi",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 22.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "ESP_13",
+          "name": "Rodri",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Man City"
+        },
+        {
+          "id": "ESP_14",
+          "name": "Fabian Ruiz",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "PSG"
+        },
+        {
+          "id": "ESP_15",
+          "name": "Dani Olmo",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 18.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "ESP_16",
+          "name": "Lamine Yamal",
+          "position": "FWD",
+          "price": 10.5,
+          "ownership_pct": 38.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "ESP_17",
+          "name": "Nico Williams",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 25.0,
+          "club": "Athletic Bilbao"
+        },
+        {
+          "id": "ESP_18",
+          "name": "Ferran Torres",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "ESP_19",
+          "name": "Alvaro Morata",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "ESP_20",
+          "name": "Mikel Merino",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "ESP_21",
+          "name": "Bryan Gil",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Girona"
+        },
+        {
+          "id": "ESP_22",
+          "name": "Yeremy Pino",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Villarreal"
+        }
+      ]
+    },
+    "FRA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "FRA_1",
+          "name": "Mike Maignan",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 10.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "FRA_2",
+          "name": "Alphonse Areola",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "FRA_3",
+          "name": "Brice Samba",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 1.5,
+          "club": "Lens"
+        },
+        {
+          "id": "FRA_4",
+          "name": "Theo Hernandez",
+          "position": "DEF",
+          "price": 7.5,
+          "ownership_pct": 20.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "FRA_5",
+          "name": "William Saliba",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 12.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "FRA_6",
+          "name": "Dayot Upamecano",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "FRA_7",
+          "name": "Jules Kounde",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "FRA_8",
+          "name": "Jonathan Clauss",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "FRA_9",
+          "name": "Lucas Digne",
+          "position": "DEF",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "FRA_10",
+          "name": "Ibrahima Konate",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "FRA_11",
+          "name": "Aurelien Tchouameni",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "FRA_12",
+          "name": "Eduardo Camavinga",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "FRA_13",
+          "name": "Antoine Griezmann",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "FRA_14",
+          "name": "Ousmane Dembele",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "PSG"
+        },
+        {
+          "id": "FRA_15",
+          "name": "Adrien Rabiot",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "FRA_16",
+          "name": "Warren Zaire-Emery",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "PSG"
+        },
+        {
+          "id": "FRA_17",
+          "name": "Matteo Guendouzi",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Lazio"
+        },
+        {
+          "id": "FRA_18",
+          "name": "Kylian Mbappe",
+          "position": "FWD",
+          "price": 12.0,
+          "ownership_pct": 60.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "FRA_19",
+          "name": "Marcus Thuram",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 22.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "FRA_20",
+          "name": "Randal Kolo Muani",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 10.0,
+          "club": "PSG"
+        },
+        {
+          "id": "FRA_21",
+          "name": "Kingsley Coman",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "FRA_22",
+          "name": "Bradley Barcola",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "PSG"
+        }
+      ]
+    },
+    "GER": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "GER_1",
+          "name": "Manuel Neuer",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 6.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_2",
+          "name": "Marc-Andre ter Stegen",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "GER_3",
+          "name": "Oliver Baumann",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 1.5,
+          "club": "Hoffenheim"
+        },
+        {
+          "id": "GER_4",
+          "name": "Antonio Rudiger",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "GER_5",
+          "name": "Niklas Sule",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "GER_6",
+          "name": "Jonathan Tah",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "GER_7",
+          "name": "Nico Schlotterbeck",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "GER_8",
+          "name": "Joshua Kimmich",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 15.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_9",
+          "name": "Leon Goretzka",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_10",
+          "name": "Ilkay Gundogan",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 7.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "GER_11",
+          "name": "Robert Andrich",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "GER_12",
+          "name": "Pascal Gross",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "GER_13",
+          "name": "Florian Wirtz",
+          "position": "MID",
+          "price": 9.5,
+          "ownership_pct": 38.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "GER_14",
+          "name": "Jamal Musiala",
+          "position": "MID",
+          "price": 9.0,
+          "ownership_pct": 30.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_15",
+          "name": "Leroy Sane",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 12.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_16",
+          "name": "Kai Havertz",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "GER_17",
+          "name": "Thomas Muller",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_18",
+          "name": "Serge Gnabry",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "GER_19",
+          "name": "Niclas Fullkrug",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "GER_20",
+          "name": "Deniz Undav",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Stuttgart"
+        },
+        {
+          "id": "GER_21",
+          "name": "David Raum",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Leipzig"
+        },
+        {
+          "id": "GER_22",
+          "name": "Maximilian Mittelstädt",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Stuttgart"
+        },
+        {
+          "id": "GER_23",
+          "name": "Chris Führich",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Stuttgart"
+        }
+      ]
+    },
+    "GHA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "GHA_1",
+          "name": "Lawrence Ati-Zigi",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "St Gallen"
+        },
+        {
+          "id": "GHA_2",
+          "name": "Ibrahim Danlad",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "GHA_3",
+          "name": "Alexander Djiku",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Fenerbahce"
+        },
+        {
+          "id": "GHA_4",
+          "name": "Daniel Amartey",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Leicester"
+        },
+        {
+          "id": "GHA_5",
+          "name": "Tariq Lamptey",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "GHA_6",
+          "name": "Baba Rahman",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "GHA_7",
+          "name": "Thomas Partey",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "GHA_8",
+          "name": "Mohammed Kudus",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "GHA_9",
+          "name": "Andre Ayew",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "GHA_10",
+          "name": "Jordan Ayew",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "GHA_11",
+          "name": "Kamaldeen Sulemana",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Southampton"
+        },
+        {
+          "id": "GHA_12",
+          "name": "Antoine Semenyo",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Bournemouth"
+        },
+        {
+          "id": "GHA_13",
+          "name": "Inaki Williams",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Athletic Bilbao"
+        },
+        {
+          "id": "GHA_14",
+          "name": "Ransford-Yeboah Konigsdorfer",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Hamburger SV"
+        },
+        {
+          "id": "GHA_15",
+          "name": "Felix Afena-Gyan",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "GHA_16",
+          "name": "Daniel Afriyie Barnieh",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "GHA_17",
+          "name": "Alidu Seidu",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Lens"
+        },
+        {
+          "id": "GHA_18",
+          "name": "Ernest Nuamah",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Lyon"
+        }
+      ]
+    },
+    "HAI": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "HAI_1",
+          "name": "Josue Duverger",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_2",
+          "name": "Jonathan Remy",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_3",
+          "name": "Mechack Jerome",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_4",
+          "name": "Florian Ayé",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_5",
+          "name": "Frantzdy Pierrot",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_6",
+          "name": "Orlandez Burroughs",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_7",
+          "name": "Steeven Saba",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_8",
+          "name": "Wilde-Donald Guerrier",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_9",
+          "name": "Pascal Noel",
+          "position": "MID",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_10",
+          "name": "Christophe Charlus",
+          "position": "MID",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "HAI_11",
+          "name": "Duckens Nazon",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_12",
+          "name": "Bernard Laryea",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_13",
+          "name": "Carnejy Antoine",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_14",
+          "name": "Derrick Etienne",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "HAI_15",
+          "name": "Kevin Fortune",
+          "position": "FWD",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "IRN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "IRN_1",
+          "name": "Alireza Beiranvand",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_2",
+          "name": "Hossein Hosseini",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_3",
+          "name": "Ehsan Hajsafi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "AEK Athens"
+        },
+        {
+          "id": "IRN_4",
+          "name": "Morteza Pouraliganji",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "IRN_5",
+          "name": "Milad Mohammadi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_6",
+          "name": "Sadegh Moharrami",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_7",
+          "name": "Saeid Ezatolahi",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Vejle BK"
+        },
+        {
+          "id": "IRN_8",
+          "name": "Ali Gholizadeh",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Charleroi"
+        },
+        {
+          "id": "IRN_9",
+          "name": "Ahmad Noorollahi",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_10",
+          "name": "Mehdi Taremi",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "IRN_11",
+          "name": "Sardar Azmoun",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Roma"
+        },
+        {
+          "id": "IRN_12",
+          "name": "Alireza Jahanbakhsh",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "IRN_13",
+          "name": "Ali Karimi",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "IRN_14",
+          "name": "Allahyar Sayyadmanesh",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Hull City"
+        },
+        {
+          "id": "IRN_15",
+          "name": "Shoja Khalilzadeh",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "IRN_16",
+          "name": "Kaveh Rezaei",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        }
+      ]
+    },
+    "IRQ": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "IRQ_1",
+          "name": "Jalal Hassan",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_2",
+          "name": "Ahmed Basel",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_3",
+          "name": "Ali Adnan",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 4.0,
+          "club": "Cagliari"
+        },
+        {
+          "id": "IRQ_4",
+          "name": "Rebin Sulaka",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "IRQ_5",
+          "name": "Ahmed Ibrahim",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "IRQ_6",
+          "name": "Mustafa Mohammed",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_7",
+          "name": "Amjed Attwan",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_8",
+          "name": "Saad Abdul Amir",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_9",
+          "name": "Ali Jasim",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "IRQ_10",
+          "name": "Amir Al Ammari",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_11",
+          "name": "Emad Mohammed",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_12",
+          "name": "Bashar Resan",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "IRQ_13",
+          "name": "Aymane Barkok",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "IRQ_14",
+          "name": "Dana Majeed",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "IRQ_15",
+          "name": "Mohanad Ali",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "JOR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "JOR_1",
+          "name": "Yazeed Abulaila",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_2",
+          "name": "Elias Fadel",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_3",
+          "name": "Baher Mutari",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_4",
+          "name": "Ahmad Saleh",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_5",
+          "name": "Hamza Nazeer",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_6",
+          "name": "Mousa Alramadan",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_7",
+          "name": "Baha Faisal",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_8",
+          "name": "Ahmad Haroun",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_9",
+          "name": "Musa Al-Taamari",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Montpellier"
+        },
+        {
+          "id": "JOR_10",
+          "name": "Yazan Al-Naimat",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_11",
+          "name": "Islam Batran",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_12",
+          "name": "Qusai Abu Tayeh",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JOR_13",
+          "name": "Ali Olwan",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_14",
+          "name": "Noor Al Rawabdeh",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "JOR_15",
+          "name": "Abdullah Nasib",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        }
+      ]
+    },
+    "JPN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "JPN_1",
+          "name": "Shuichi Gonda",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "PSV"
+        },
+        {
+          "id": "JPN_2",
+          "name": "Zion Suzuki",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Anderlecht"
+        },
+        {
+          "id": "JPN_3",
+          "name": "Maya Yoshida",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Vissel Kobe"
+        },
+        {
+          "id": "JPN_4",
+          "name": "Takehiro Tomiyasu",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "JPN_5",
+          "name": "Ko Itakura",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Borussia M'gladbach"
+        },
+        {
+          "id": "JPN_6",
+          "name": "Yuto Nagatomo",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "JPN_7",
+          "name": "Hiroki Sakai",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "JPN_8",
+          "name": "Wataru Endo",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "JPN_9",
+          "name": "Hidemasa Morita",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Sporting CP"
+        },
+        {
+          "id": "JPN_10",
+          "name": "Takefusa Kubo",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Real Sociedad"
+        },
+        {
+          "id": "JPN_11",
+          "name": "Ritsu Doan",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Freiburg"
+        },
+        {
+          "id": "JPN_12",
+          "name": "Kaoru Mitoma",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "JPN_13",
+          "name": "Daichi Kamada",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "JPN_14",
+          "name": "Ao Tanaka",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Leeds"
+        },
+        {
+          "id": "JPN_15",
+          "name": "Junya Ito",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Stade Reims"
+        },
+        {
+          "id": "JPN_16",
+          "name": "Takuma Asano",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Bochum"
+        },
+        {
+          "id": "JPN_17",
+          "name": "Ayase Ueda",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "JPN_18",
+          "name": "Daizen Maeda",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Celtic"
+        },
+        {
+          "id": "JPN_19",
+          "name": "Yukinari Sugawara",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Southampton"
+        },
+        {
+          "id": "JPN_20",
+          "name": "Reo Hatate",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Celtic"
+        }
+      ]
+    },
+    "KOR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "KOR_1",
+          "name": "Kim Seung-gyu",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "KOR_2",
+          "name": "Jo Hyeon-woo",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KOR_3",
+          "name": "Kim Min-jae",
+          "position": "DEF",
+          "price": 7.5,
+          "ownership_pct": 15.0,
+          "club": "Bayern Munich"
+        },
+        {
+          "id": "KOR_4",
+          "name": "Kim Young-gwon",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_5",
+          "name": "Kim Jin-su",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_6",
+          "name": "Kim Tae-hwan",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KOR_7",
+          "name": "Jung Seung-hyun",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_8",
+          "name": "Lee Kang-in",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "PSG"
+        },
+        {
+          "id": "KOR_9",
+          "name": "Hwang In-beom",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "KOR_10",
+          "name": "Son Heung-min",
+          "position": "FWD",
+          "price": 10.0,
+          "ownership_pct": 35.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "KOR_11",
+          "name": "Kwon Chang-hoon",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "KOR_12",
+          "name": "Hwang Ui-jo",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "KOR_13",
+          "name": "Cho Gue-sung",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Feyenoord"
+        },
+        {
+          "id": "KOR_14",
+          "name": "Oh Hyeon-gyu",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Celtic"
+        },
+        {
+          "id": "KOR_15",
+          "name": "Lee Jae-sung",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Mainz"
+        },
+        {
+          "id": "KOR_16",
+          "name": "Seol Young-woo",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_17",
+          "name": "Baek Seung-ho",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_18",
+          "name": "Yang Hyun-jun",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Celtic"
+        },
+        {
+          "id": "KOR_19",
+          "name": "Paik Seung-ho",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "KOR_20",
+          "name": "Na Sang-ho",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Suwon"
+        }
+      ]
+    },
+    "KSA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "KSA_1",
+          "name": "Mohammed Al-Owais",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Al-Ahli"
+        },
+        {
+          "id": "KSA_2",
+          "name": "Fawaz Al-Qarni",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_3",
+          "name": "Ali Al-Bulaihi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "KSA_4",
+          "name": "Saud Abdulhamid",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Roma"
+        },
+        {
+          "id": "KSA_5",
+          "name": "Hassan Al-Tambakti",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Al-Qadsiah"
+        },
+        {
+          "id": "KSA_6",
+          "name": "Abdulellah Al-Malki",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "KSA_7",
+          "name": "Riyadh Sharahili",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_8",
+          "name": "Mohammed Kanno",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "KSA_9",
+          "name": "Sami Al-Najei",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_10",
+          "name": "Saleh Al-Shehri",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "KSA_11",
+          "name": "Firas Al-Buraikan",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Al-Fateh"
+        },
+        {
+          "id": "KSA_12",
+          "name": "Salem Al-Dawsari",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "KSA_13",
+          "name": "Hatan Bahbir",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_14",
+          "name": "Abdullah Al-Hamdan",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Al-Qadsiah"
+        },
+        {
+          "id": "KSA_15",
+          "name": "Abdulrahman Al-Aboud",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_16",
+          "name": "Abdulelah Al-Amri",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_17",
+          "name": "Ali Al-Hassan",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "KSA_18",
+          "name": "Sultan Al-Ghannam",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "MAR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "MAR_1",
+          "name": "Yassine Bounou",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 10.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "MAR_2",
+          "name": "Munir Mohand",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "MAR_3",
+          "name": "Achraf Hakimi",
+          "position": "DEF",
+          "price": 8.0,
+          "ownership_pct": 30.0,
+          "club": "PSG"
+        },
+        {
+          "id": "MAR_4",
+          "name": "Noussair Mazraoui",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "MAR_5",
+          "name": "Romain Saiss",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Besiktas"
+        },
+        {
+          "id": "MAR_6",
+          "name": "Achraf Dari",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Stade Brest"
+        },
+        {
+          "id": "MAR_7",
+          "name": "Nayef Aguerd",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "MAR_8",
+          "name": "Yahia Attiyat-Allah",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "MAR_9",
+          "name": "Sofyan Amrabat",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Fiorentina"
+        },
+        {
+          "id": "MAR_10",
+          "name": "Selim Amallah",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Standard Liege"
+        },
+        {
+          "id": "MAR_11",
+          "name": "Azzedine Ounahi",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "MAR_12",
+          "name": "Hakim Ziyech",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "MAR_13",
+          "name": "Sofiane Boufal",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Angers"
+        },
+        {
+          "id": "MAR_14",
+          "name": "Bilal El Khannouss",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Genk"
+        },
+        {
+          "id": "MAR_15",
+          "name": "Youssef En-Nesyri",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Fenerbahce"
+        },
+        {
+          "id": "MAR_16",
+          "name": "Abdessamad Ezzalzouli",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Real Betis"
+        },
+        {
+          "id": "MAR_17",
+          "name": "Abde Ezzalzouli",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "MAR_18",
+          "name": "Ilias Chair",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "QPR"
+        },
+        {
+          "id": "MAR_19",
+          "name": "Zakaria Aboukhlal",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Toulouse"
+        },
+        {
+          "id": "MAR_20",
+          "name": "Adam Masina",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Watford"
+        }
+      ]
+    },
+    "MEX": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "MEX_1",
+          "name": "Guillermo Ochoa",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "MEX_2",
+          "name": "Luis Malagon",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "MEX_3",
+          "name": "Cesar Montes",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Espanyol"
+        },
+        {
+          "id": "MEX_4",
+          "name": "Johan Vasquez",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Genoa"
+        },
+        {
+          "id": "MEX_5",
+          "name": "Julian Araujo",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Bournemouth"
+        },
+        {
+          "id": "MEX_6",
+          "name": "Jorge Sanchez",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Porto"
+        },
+        {
+          "id": "MEX_7",
+          "name": "Jesus Gallardo",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Monterrey"
+        },
+        {
+          "id": "MEX_8",
+          "name": "Edson Alvarez",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "West Ham"
+        },
+        {
+          "id": "MEX_9",
+          "name": "Hector Herrera",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "MEX_10",
+          "name": "Andres Guardado",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "MEX_11",
+          "name": "Roberto Alvarado",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Guadalajara"
+        },
+        {
+          "id": "MEX_12",
+          "name": "Chucky Lozano",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "PSV"
+        },
+        {
+          "id": "MEX_13",
+          "name": "Uriel Antuna",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Guadalajara"
+        },
+        {
+          "id": "MEX_14",
+          "name": "Raul Jimenez",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Fulham"
+        },
+        {
+          "id": "MEX_15",
+          "name": "Henry Martin",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Club America"
+        },
+        {
+          "id": "MEX_16",
+          "name": "Alexis Vega",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Guadalajara"
+        },
+        {
+          "id": "MEX_17",
+          "name": "Santiago Gimenez",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "MEX_18",
+          "name": "Cesar Huerta",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Pumas UNAM"
+        },
+        {
+          "id": "MEX_19",
+          "name": "Marcelo Flores",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "MEX_20",
+          "name": "Jorge Ruvalcaba",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        }
+      ]
+    },
+    "NED": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "NED_1",
+          "name": "Bart Verbruggen",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "NED_2",
+          "name": "Mark Flekken",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Brentford"
+        },
+        {
+          "id": "NED_3",
+          "name": "Virgil van Dijk",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 22.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "NED_4",
+          "name": "Matthijs de Ligt",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "NED_5",
+          "name": "Nathan Ake",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Man City"
+        },
+        {
+          "id": "NED_6",
+          "name": "Denzel Dumfries",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "NED_7",
+          "name": "Jurrien Timber",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "NED_8",
+          "name": "Ian Maatsen",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "NED_9",
+          "name": "Frenkie de Jong",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "NED_10",
+          "name": "Ryan Gravenberch",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "NED_11",
+          "name": "Teun Koopmeiners",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "NED_12",
+          "name": "Tijjani Reijnders",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "NED_13",
+          "name": "Xavi Simons",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 18.0,
+          "club": "Leipzig"
+        },
+        {
+          "id": "NED_14",
+          "name": "Cody Gakpo",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "NED_15",
+          "name": "Memphis Depay",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "NED_16",
+          "name": "Wout Weghorst",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Hoffenheim"
+        },
+        {
+          "id": "NED_17",
+          "name": "Donyell Malen",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "NED_18",
+          "name": "Brian Brobbey",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Ajax"
+        },
+        {
+          "id": "NED_19",
+          "name": "Steven Bergwijn",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Ajax"
+        },
+        {
+          "id": "NED_20",
+          "name": "Joey Veerman",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "PSV"
+        },
+        {
+          "id": "NED_21",
+          "name": "Jeremie Frimpong",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "NED_22",
+          "name": "Stefan de Vrij",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Inter Milan"
+        }
+      ]
+    },
+    "NOR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "NOR_1",
+          "name": "Orjan Nyland",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 4.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "NOR_2",
+          "name": "Ste Johnsen",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "NOR_3",
+          "name": "Kristoffer Ajer",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Brentford"
+        },
+        {
+          "id": "NOR_4",
+          "name": "Leo Ostigard",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Napoli"
+        },
+        {
+          "id": "NOR_5",
+          "name": "Stefan Strandberg",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "NOR_6",
+          "name": "Birger Meling",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Rennes"
+        },
+        {
+          "id": "NOR_7",
+          "name": "Bard Finne",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "NOR_8",
+          "name": "Martin Odegaard",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "NOR_9",
+          "name": "Sander Berge",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Fulham"
+        },
+        {
+          "id": "NOR_10",
+          "name": "Mathias Normann",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Watford"
+        },
+        {
+          "id": "NOR_11",
+          "name": "Antonio Nusa",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Club Brugge"
+        },
+        {
+          "id": "NOR_12",
+          "name": "Mohamed Elyounoussi",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Southampton"
+        },
+        {
+          "id": "NOR_13",
+          "name": "Fredrik Aursnes",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Benfica"
+        },
+        {
+          "id": "NOR_14",
+          "name": "Erling Haaland",
+          "position": "FWD",
+          "price": 12.0,
+          "ownership_pct": 45.0,
+          "club": "Man City"
+        },
+        {
+          "id": "NOR_15",
+          "name": "Alexander Sorloth",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 10.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "NOR_16",
+          "name": "Joshua King",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Besiktas"
+        },
+        {
+          "id": "NOR_17",
+          "name": "Joergen-Strand Larsen",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Celta Vigo"
+        },
+        {
+          "id": "NOR_18",
+          "name": "Patrick Pedersen",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "NOR_19",
+          "name": "Kristian Thorstvedt",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Sassuolo"
+        },
+        {
+          "id": "NOR_20",
+          "name": "Ola Solbakken",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Roma"
+        }
+      ]
+    },
+    "NZL": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "NZL_1",
+          "name": "Michael Woud",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "NZL_2",
+          "name": "Oli Sail",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "NZL_3",
+          "name": "Winston Reid",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": "Brentford"
+        },
+        {
+          "id": "NZL_4",
+          "name": "Liberato Cacace",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Empoli"
+        },
+        {
+          "id": "NZL_5",
+          "name": "Tim Payne",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "NZL_6",
+          "name": "Nando Pijnaker",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "NZL_7",
+          "name": "Clayton Lewis",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "NZL_8",
+          "name": "Marko Stamenic",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "FC Copenhagen"
+        },
+        {
+          "id": "NZL_9",
+          "name": "Marco Rojas",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "NZL_10",
+          "name": "Elijah Just",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "NZL_11",
+          "name": "Chris Wood",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "NZL_12",
+          "name": "Dane Ingham",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "NZL_13",
+          "name": "Matthew Garbett",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "NZL_14",
+          "name": "Callan Elliot",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "NZL_15",
+          "name": "Emilio Rangel",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "PAN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "PAN_1",
+          "name": "Luis Mejia",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_2",
+          "name": "Orlando Mosquera",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_3",
+          "name": "Eric Davis",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAN_4",
+          "name": "Fidel Escobar",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "New York Red Bulls"
+        },
+        {
+          "id": "PAN_5",
+          "name": "Adolfo Machado",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "PAN_6",
+          "name": "Harold Cummings",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAN_7",
+          "name": "Anibal Godoy",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAN_8",
+          "name": "Adalberto Carrasquilla",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.5,
+          "club": "Watford"
+        },
+        {
+          "id": "PAN_9",
+          "name": "Rolando Blackburn",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_10",
+          "name": "Edgar Yoel Barcenas",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_11",
+          "name": "Cesar Yanis",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_12",
+          "name": "Ismael Diaz",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Strasbourg"
+        },
+        {
+          "id": "PAN_13",
+          "name": "Gabriel Torres",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAN_14",
+          "name": "Alfredo Mosquera",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "PAN_15",
+          "name": "Jose Fajardo",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "PAR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "PAR_1",
+          "name": "Antony Silva",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAR_2",
+          "name": "Alfredo Aguilar",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "PAR_3",
+          "name": "Omar Alderete",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Getafe"
+        },
+        {
+          "id": "PAR_4",
+          "name": "Gustavo Velazquez",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAR_5",
+          "name": "Robert Rojas",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAR_6",
+          "name": "Junior Alonso",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Atletico Mineiro"
+        },
+        {
+          "id": "PAR_7",
+          "name": "Richard Sanchez",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "PAR_8",
+          "name": "Mathias Villasanti",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Cerro Porteno"
+        },
+        {
+          "id": "PAR_9",
+          "name": "Miguel Almiron",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "PAR_10",
+          "name": "Julio Enciso",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "PAR_11",
+          "name": "Andres Cubas",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "PAR_12",
+          "name": "Carlos Gonzalez",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Fluminense"
+        },
+        {
+          "id": "PAR_13",
+          "name": "Alberto Espinola",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "PAR_14",
+          "name": "Antonio Sanabria",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Torino"
+        },
+        {
+          "id": "PAR_15",
+          "name": "Angel Cardozo",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "PAR_16",
+          "name": "Braian Samudio",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "PAR_17",
+          "name": "Diego Gomez",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "PAR_18",
+          "name": "Ivan Villalba",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "POR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "POR_1",
+          "name": "Diogo Costa",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 10.0,
+          "club": "Porto"
+        },
+        {
+          "id": "POR_2",
+          "name": "Jose Sa",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Wolves"
+        },
+        {
+          "id": "POR_3",
+          "name": "Joao Cancelo",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 12.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "POR_4",
+          "name": "Ruben Dias",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Man City"
+        },
+        {
+          "id": "POR_5",
+          "name": "Nuno Mendes",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "PSG"
+        },
+        {
+          "id": "POR_6",
+          "name": "Diogo Dalot",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "POR_7",
+          "name": "Goncalo Inacio",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Sporting CP"
+        },
+        {
+          "id": "POR_8",
+          "name": "Nelson Semedo",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Wolves"
+        },
+        {
+          "id": "POR_9",
+          "name": "Bruno Fernandes",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "POR_10",
+          "name": "Vitinha",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 12.0,
+          "club": "PSG"
+        },
+        {
+          "id": "POR_11",
+          "name": "Joao Neves",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "PSG"
+        },
+        {
+          "id": "POR_12",
+          "name": "Bernardo Silva",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 18.0,
+          "club": "Man City"
+        },
+        {
+          "id": "POR_13",
+          "name": "Rafael Leao",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "POR_14",
+          "name": "Joao Felix",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "POR_15",
+          "name": "Francisco Conceicao",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "POR_16",
+          "name": "Cristiano Ronaldo",
+          "position": "FWD",
+          "price": 10.0,
+          "ownership_pct": 15.0,
+          "club": "Al-Nassr"
+        },
+        {
+          "id": "POR_17",
+          "name": "Diogo Jota",
+          "position": "FWD",
+          "price": 8.5,
+          "ownership_pct": 15.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "POR_18",
+          "name": "Goncalo Ramos",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 10.0,
+          "club": "PSG"
+        },
+        {
+          "id": "POR_19",
+          "name": "Pedro Neto",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "POR_20",
+          "name": "Ruben Neves",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "POR_21",
+          "name": "William Carvalho",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.0,
+          "club": "Betis"
+        },
+        {
+          "id": "POR_22",
+          "name": "Pepe",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "QAT": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "QAT_1",
+          "name": "Meshaal Barsham",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_2",
+          "name": "Saad Al Sheeb",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_3",
+          "name": "Pedro Miguel",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Al-Rayyan"
+        },
+        {
+          "id": "QAT_4",
+          "name": "Bassam Al-Rawi",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_5",
+          "name": "Tarek Salman",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_6",
+          "name": "Ismail Mohamad",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_7",
+          "name": "Karim Boudiaf",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_8",
+          "name": "Abdelkarim Hassan",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Al-Sadd"
+        },
+        {
+          "id": "QAT_9",
+          "name": "Hassan Al-Haydos",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Al-Sadd"
+        },
+        {
+          "id": "QAT_10",
+          "name": "Akram Afif",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Al-Sadd"
+        },
+        {
+          "id": "QAT_11",
+          "name": "Almoez Ali",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Al-Duhail"
+        },
+        {
+          "id": "QAT_12",
+          "name": "Hasan Al-Haydos",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_13",
+          "name": "Mohammed Muntari",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.5,
+          "club": ""
+        },
+        {
+          "id": "QAT_14",
+          "name": "Yusuf Abdurisag",
+          "position": "FWD",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "QAT_15",
+          "name": "Jassem Gaber",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        }
+      ]
+    },
+    "RSA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "RSA_1",
+          "name": "Ronwen Williams",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Mamelodi Sundowns"
+        },
+        {
+          "id": "RSA_2",
+          "name": "Veli Mothwa",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "RSA_3",
+          "name": "Bongani Zungu",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "RSA_4",
+          "name": "Sifiso Hlanti",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "RSA_5",
+          "name": "Thibang Phete",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "RSA_6",
+          "name": "Mothobi Mvala",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "RSA_7",
+          "name": "Themba Zwane",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Mamelodi Sundowns"
+        },
+        {
+          "id": "RSA_8",
+          "name": "Percy Tau",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Al Ahly"
+        },
+        {
+          "id": "RSA_9",
+          "name": "Lyle Foster",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Burnley"
+        },
+        {
+          "id": "RSA_10",
+          "name": "Teboho Mokoena",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Mamelodi Sundowns"
+        },
+        {
+          "id": "RSA_11",
+          "name": "Victor Letsoalo",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "RSA_12",
+          "name": "Keagan Dolly",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Kaizer Chiefs"
+        },
+        {
+          "id": "RSA_13",
+          "name": "Evidence Makgopa",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Pirates"
+        },
+        {
+          "id": "RSA_14",
+          "name": "Luther Singh",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "RSA_15",
+          "name": "Nkosinathi Sibisi",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    },
+    "SCO": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "SCO_1",
+          "name": "Craig Gordon",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Hearts"
+        },
+        {
+          "id": "SCO_2",
+          "name": "Angus Gunn",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Norwich"
+        },
+        {
+          "id": "SCO_3",
+          "name": "Andrew Robertson",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 15.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "SCO_4",
+          "name": "Kieran Tierney",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Arsenal"
+        },
+        {
+          "id": "SCO_5",
+          "name": "Grant Hanley",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "SCO_6",
+          "name": "John Souttar",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Rangers"
+        },
+        {
+          "id": "SCO_7",
+          "name": "Anthony Ralston",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Celtic"
+        },
+        {
+          "id": "SCO_8",
+          "name": "Ryan Jack",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Rangers"
+        },
+        {
+          "id": "SCO_9",
+          "name": "Stuart Armstrong",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Southampton"
+        },
+        {
+          "id": "SCO_10",
+          "name": "John McGinn",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "SCO_11",
+          "name": "Billy Gilmour",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "SCO_12",
+          "name": "Ryan Christie",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Bournemouth"
+        },
+        {
+          "id": "SCO_13",
+          "name": "Callum McGregor",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Celtic"
+        },
+        {
+          "id": "SCO_14",
+          "name": "Scott McTominay",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Napoli"
+        },
+        {
+          "id": "SCO_15",
+          "name": "Che Adams",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Torino"
+        },
+        {
+          "id": "SCO_16",
+          "name": "Lyndon Dykes",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "QPR"
+        },
+        {
+          "id": "SCO_17",
+          "name": "Lawrence Shankland",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Hearts"
+        },
+        {
+          "id": "SCO_18",
+          "name": "Liam Kelly",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Motherwell"
+        },
+        {
+          "id": "SCO_19",
+          "name": "Ryan Fraser",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "SCO_20",
+          "name": "Aaron Hickey",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Brentford"
+        }
+      ]
+    },
+    "SEN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "SEN_1",
+          "name": "Edouard Mendy",
+          "position": "GK",
+          "price": 5.5,
+          "ownership_pct": 8.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "SEN_2",
+          "name": "Alfred Gomis",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Rennes"
+        },
+        {
+          "id": "SEN_3",
+          "name": "Kalidou Koulibaly",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Al-Hilal"
+        },
+        {
+          "id": "SEN_4",
+          "name": "Abdou Diallo",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Leipzig"
+        },
+        {
+          "id": "SEN_5",
+          "name": "Youssouf Sabaly",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Betis"
+        },
+        {
+          "id": "SEN_6",
+          "name": "Moussa Niakhate",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "SEN_7",
+          "name": "Formose Mendy",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "SEN_8",
+          "name": "Idrissa Gueye",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Everton"
+        },
+        {
+          "id": "SEN_9",
+          "name": "Pape Matar Sarr",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "SEN_10",
+          "name": "Nampalys Mendy",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Leicester"
+        },
+        {
+          "id": "SEN_11",
+          "name": "Sadio Mane",
+          "position": "FWD",
+          "price": 9.0,
+          "ownership_pct": 18.0,
+          "club": "Al-Nassr"
+        },
+        {
+          "id": "SEN_12",
+          "name": "Ismaila Sarr",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Crystal Palace"
+        },
+        {
+          "id": "SEN_13",
+          "name": "Bamba Dieng",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Nice"
+        },
+        {
+          "id": "SEN_14",
+          "name": "Nicolas Jackson",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Chelsea"
+        },
+        {
+          "id": "SEN_15",
+          "name": "Habib Diallo",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Strasbourg"
+        },
+        {
+          "id": "SEN_16",
+          "name": "Mamadou Loum Ndiaye",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Porto"
+        },
+        {
+          "id": "SEN_17",
+          "name": "Krepin Diatta",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Monaco"
+        },
+        {
+          "id": "SEN_18",
+          "name": "Lamine Camara",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "AS Monaco"
+        },
+        {
+          "id": "SEN_19",
+          "name": "Iliman Ndiaye",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "SEN_20",
+          "name": "Moussa Diaby",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Aston Villa"
+        }
+      ]
+    },
+    "SUI": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "SUI_1",
+          "name": "Yann Sommer",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 6.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "SUI_2",
+          "name": "Gregor Kobel",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 4.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "SUI_3",
+          "name": "Nico Elvedi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Borussia M'gladbach"
+        },
+        {
+          "id": "SUI_4",
+          "name": "Manuel Akanji",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Man City"
+        },
+        {
+          "id": "SUI_5",
+          "name": "Fabian Schar",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "SUI_6",
+          "name": "Silvan Widmer",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 4.0,
+          "club": "Mainz"
+        },
+        {
+          "id": "SUI_7",
+          "name": "Ricardo Rodriguez",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Torino"
+        },
+        {
+          "id": "SUI_8",
+          "name": "Granit Xhaka",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Bayer Leverkusen"
+        },
+        {
+          "id": "SUI_9",
+          "name": "Remo Freuler",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "SUI_10",
+          "name": "Denis Zakaria",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Monaco"
+        },
+        {
+          "id": "SUI_11",
+          "name": "Xherdan Shaqiri",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Chicago Fire"
+        },
+        {
+          "id": "SUI_12",
+          "name": "Ruben Vargas",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Augsburg"
+        },
+        {
+          "id": "SUI_13",
+          "name": "Michel Aebischer",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Bologna"
+        },
+        {
+          "id": "SUI_14",
+          "name": "Ardon Jashari",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Club Brugge"
+        },
+        {
+          "id": "SUI_15",
+          "name": "Breel Embolo",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Monaco"
+        },
+        {
+          "id": "SUI_16",
+          "name": "Noah Okafor",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "SUI_17",
+          "name": "Haris Seferovic",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "SUI_18",
+          "name": "Dan Ndoye",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Bologna"
+        },
+        {
+          "id": "SUI_19",
+          "name": "Fabian Rieder",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Rennes"
+        },
+        {
+          "id": "SUI_20",
+          "name": "Zeki Amdouni",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Burnley"
+        }
+      ]
+    },
+    "SWE": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "SWE_1",
+          "name": "Robin Olsen",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Aston Villa"
+        },
+        {
+          "id": "SWE_2",
+          "name": "Karl-Johan Johnsson",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "SWE_3",
+          "name": "Victor Lindelof",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "SWE_4",
+          "name": "Marcus Danielson",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "SWE_5",
+          "name": "Emil Krafth",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Newcastle"
+        },
+        {
+          "id": "SWE_6",
+          "name": "Ludwig Augustinsson",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Marseille"
+        },
+        {
+          "id": "SWE_7",
+          "name": "Joakim Nilsson",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "SWE_8",
+          "name": "Albin Ekdal",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "SWE_9",
+          "name": "Dejan Kulusevski",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "SWE_10",
+          "name": "Emil Forsberg",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Leipzig"
+        },
+        {
+          "id": "SWE_11",
+          "name": "Mattias Svanberg",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Wolfsburg"
+        },
+        {
+          "id": "SWE_12",
+          "name": "Karl-Erik Nilsson Hornqvist",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "SWE_13",
+          "name": "Samuel Gustafson",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": "Torino"
+        },
+        {
+          "id": "SWE_14",
+          "name": "Viktor Gyokeres",
+          "position": "FWD",
+          "price": 10.5,
+          "ownership_pct": 30.0,
+          "club": "Sporting CP"
+        },
+        {
+          "id": "SWE_15",
+          "name": "Alexander Isak",
+          "position": "FWD",
+          "price": 9.5,
+          "ownership_pct": 20.0,
+          "club": "Newcastle"
+        },
+        {
+          "id": "SWE_16",
+          "name": "Anthony Elanga",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "SWE_17",
+          "name": "Jesper Karlsson",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Bologna"
+        },
+        {
+          "id": "SWE_18",
+          "name": "Zlatan Ibrahimovic",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": ""
+        },
+        {
+          "id": "SWE_19",
+          "name": "Jordan Larsson",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "SWE_20",
+          "name": "Patrik Walemark",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 3.0,
+          "club": "Feyenoord"
+        }
+      ]
+    },
+    "TUN": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "TUN_1",
+          "name": "Aymen Dahmen",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.5,
+          "club": "Lorient"
+        },
+        {
+          "id": "TUN_2",
+          "name": "Bechir Ben Said",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "TUN_3",
+          "name": "Dylan Bronn",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Salernitana"
+        },
+        {
+          "id": "TUN_4",
+          "name": "Montassar Talbi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Lorient"
+        },
+        {
+          "id": "TUN_5",
+          "name": "Ali Abdi",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Parma"
+        },
+        {
+          "id": "TUN_6",
+          "name": "Hamza Rafia",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.5,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "TUN_7",
+          "name": "Anis Ben Slimane",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Brondby"
+        },
+        {
+          "id": "TUN_8",
+          "name": "Ellyes Skhiri",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Eintracht Frankfurt"
+        },
+        {
+          "id": "TUN_9",
+          "name": "Wahbi Khazri",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Montpellier"
+        },
+        {
+          "id": "TUN_10",
+          "name": "Seifeddine Jaziri",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": "Umm Salal"
+        },
+        {
+          "id": "TUN_11",
+          "name": "Youssef Msakni",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Al Arabi"
+        },
+        {
+          "id": "TUN_12",
+          "name": "Naim Sliti",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "TUN_13",
+          "name": "Nizar Issaoui",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "TUN_14",
+          "name": "Saad Bguir",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "TUN_15",
+          "name": "Mohamed Drager",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "FC Lorient"
+        },
+        {
+          "id": "TUN_16",
+          "name": "Hannibal Mejbri",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "TUN_17",
+          "name": "Aissa Laidouni",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Ferencvaros"
+        },
+        {
+          "id": "TUN_18",
+          "name": "Issam Jebali",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Huddersfield"
+        }
+      ]
+    },
+    "TUR": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "TUR_1",
+          "name": "Ugurcan Cakir",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 3.0,
+          "club": "Trabzonspor"
+        },
+        {
+          "id": "TUR_2",
+          "name": "Altay Bayindir",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "TUR_3",
+          "name": "Zeki Celik",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Roma"
+        },
+        {
+          "id": "TUR_4",
+          "name": "Merih Demiral",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Al-Qadsiah"
+        },
+        {
+          "id": "TUR_5",
+          "name": "Samet Akaydin",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "TUR_6",
+          "name": "Ferdi Kadioglu",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Brighton"
+        },
+        {
+          "id": "TUR_7",
+          "name": "Mert Muldur",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 3.0,
+          "club": "Sassuolo"
+        },
+        {
+          "id": "TUR_8",
+          "name": "Hakan Calhanoglu",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 15.0,
+          "club": "Inter Milan"
+        },
+        {
+          "id": "TUR_9",
+          "name": "Okay Yokuslu",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Middlesbrough"
+        },
+        {
+          "id": "TUR_10",
+          "name": "Abdulkerim Bardakci",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "TUR_11",
+          "name": "Orkun Kokcu",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Benfica"
+        },
+        {
+          "id": "TUR_12",
+          "name": "Kerem Akturkoglu",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "TUR_13",
+          "name": "Arda Guler",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "TUR_14",
+          "name": "Yusuf Yazici",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "LOSC Lille"
+        },
+        {
+          "id": "TUR_15",
+          "name": "Cengiz Under",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Marseille"
+        },
+        {
+          "id": "TUR_16",
+          "name": "Baris Yilmaz",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "TUR_17",
+          "name": "Cenk Tosun",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "TUR_18",
+          "name": "Semih Kilicsoy",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Besiktas"
+        },
+        {
+          "id": "TUR_19",
+          "name": "Kenan Yildiz",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 12.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "TUR_20",
+          "name": "Barış Alper Yılmaz",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Galatasaray"
+        }
+      ]
+    },
+    "URU": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "URU_1",
+          "name": "Sergio Rochet",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Nacional"
+        },
+        {
+          "id": "URU_2",
+          "name": "Sebastian Sosa",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "URU_3",
+          "name": "Ronald Araujo",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 12.0,
+          "club": "Barcelona"
+        },
+        {
+          "id": "URU_4",
+          "name": "Diego Godin",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "URU_5",
+          "name": "Mathias Olivera",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 8.0,
+          "club": "Napoli"
+        },
+        {
+          "id": "URU_6",
+          "name": "Jose Maria Gimenez",
+          "position": "DEF",
+          "price": 6.0,
+          "ownership_pct": 5.0,
+          "club": "Atletico Madrid"
+        },
+        {
+          "id": "URU_7",
+          "name": "Nahitan Nandez",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Cagliari"
+        },
+        {
+          "id": "URU_8",
+          "name": "Lucas Torreira",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Galatasaray"
+        },
+        {
+          "id": "URU_9",
+          "name": "Rodrigo Bentancur",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Tottenham"
+        },
+        {
+          "id": "URU_10",
+          "name": "Federico Valverde",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 18.0,
+          "club": "Real Madrid"
+        },
+        {
+          "id": "URU_11",
+          "name": "Manuel Ugarte",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 10.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "URU_12",
+          "name": "Facundo Pellistri",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Man Utd"
+        },
+        {
+          "id": "URU_13",
+          "name": "Giorgian De Arrascaeta",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Flamengo"
+        },
+        {
+          "id": "URU_14",
+          "name": "Darwin Nunez",
+          "position": "FWD",
+          "price": 9.5,
+          "ownership_pct": 22.0,
+          "club": "Liverpool"
+        },
+        {
+          "id": "URU_15",
+          "name": "Edinson Cavani",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 4.0,
+          "club": ""
+        },
+        {
+          "id": "URU_16",
+          "name": "Maxi Gomez",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 4.0,
+          "club": "Celta Vigo"
+        },
+        {
+          "id": "URU_17",
+          "name": "Facundo Torres",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Orlando City"
+        },
+        {
+          "id": "URU_18",
+          "name": "Santiago Bueno",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Wolves"
+        },
+        {
+          "id": "URU_19",
+          "name": "Brian Rodriguez",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "LA FC"
+        },
+        {
+          "id": "URU_20",
+          "name": "Agustin Canobbio",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Atletico Mineiro"
+        }
+      ]
+    },
+    "USA": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "USA_1",
+          "name": "Matt Turner",
+          "position": "GK",
+          "price": 5.0,
+          "ownership_pct": 5.0,
+          "club": "Nottm Forest"
+        },
+        {
+          "id": "USA_2",
+          "name": "Ethan Horvath",
+          "position": "GK",
+          "price": 4.5,
+          "ownership_pct": 2.0,
+          "club": "Luton"
+        },
+        {
+          "id": "USA_3",
+          "name": "Sergino Dest",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 6.0,
+          "club": "PSV"
+        },
+        {
+          "id": "USA_4",
+          "name": "Miles Robinson",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Atlanta United"
+        },
+        {
+          "id": "USA_5",
+          "name": "Antonee Robinson",
+          "position": "DEF",
+          "price": 7.0,
+          "ownership_pct": 10.0,
+          "club": "Fulham"
+        },
+        {
+          "id": "USA_6",
+          "name": "Walker Zimmerman",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Nashville SC"
+        },
+        {
+          "id": "USA_7",
+          "name": "Joe Scally",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": "Borussia M'gladbach"
+        },
+        {
+          "id": "USA_8",
+          "name": "Weston McKennie",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "USA_9",
+          "name": "Tyler Adams",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "AFC Bournemouth"
+        },
+        {
+          "id": "USA_10",
+          "name": "Yunus Musah",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "USA_11",
+          "name": "Christian Pulisic",
+          "position": "MID",
+          "price": 8.5,
+          "ownership_pct": 20.0,
+          "club": "AC Milan"
+        },
+        {
+          "id": "USA_12",
+          "name": "Giovanni Reyna",
+          "position": "MID",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Borussia Dortmund"
+        },
+        {
+          "id": "USA_13",
+          "name": "Timothy Weah",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": "Juventus"
+        },
+        {
+          "id": "USA_14",
+          "name": "Folarin Balogun",
+          "position": "FWD",
+          "price": 8.0,
+          "ownership_pct": 10.0,
+          "club": "Monaco"
+        },
+        {
+          "id": "USA_15",
+          "name": "Josh Sargent",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Norwich"
+        },
+        {
+          "id": "USA_16",
+          "name": "Jordan Morris",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Seattle Sounders"
+        },
+        {
+          "id": "USA_17",
+          "name": "Jesus Ferreira",
+          "position": "FWD",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "FC Dallas"
+        },
+        {
+          "id": "USA_18",
+          "name": "Brenden Aaronson",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 5.0,
+          "club": "Leeds"
+        },
+        {
+          "id": "USA_19",
+          "name": "Matt Miazga",
+          "position": "DEF",
+          "price": 5.5,
+          "ownership_pct": 2.5,
+          "club": ""
+        },
+        {
+          "id": "USA_20",
+          "name": "Taylor Booth",
+          "position": "MID",
+          "price": 6.0,
+          "ownership_pct": 2.5,
+          "club": "FC Utrecht"
+        }
+      ]
+    },
+    "UZB": {
+      "lineup_games_sampled": 0,
+      "players": [
+        {
+          "id": "UZB_1",
+          "name": "Eldorbek Smatov",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "UZB_2",
+          "name": "Otabek Shukurov",
+          "position": "GK",
+          "price": 4.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_3",
+          "name": "Dostonbek Khamdamov",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "UZB_4",
+          "name": "Sanjar Tursunov",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "UZB_5",
+          "name": "Hamza Karimov",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.5,
+          "club": ""
+        },
+        {
+          "id": "UZB_6",
+          "name": "Abdullokhon Iskandarov",
+          "position": "DEF",
+          "price": 5.0,
+          "ownership_pct": 1.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_7",
+          "name": "Odiljon Hamrobekov",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_8",
+          "name": "Jasur Yakhshiboev",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_9",
+          "name": "Otabek Fayzullaev",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 8.0,
+          "club": "Anderlecht"
+        },
+        {
+          "id": "UZB_10",
+          "name": "Abbosbek Fayzullaev",
+          "position": "MID",
+          "price": 7.0,
+          "ownership_pct": 6.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_11",
+          "name": "Eldor Shomurodov",
+          "position": "FWD",
+          "price": 7.5,
+          "ownership_pct": 8.0,
+          "club": "Roma"
+        },
+        {
+          "id": "UZB_12",
+          "name": "Jaloliddin Masharipov",
+          "position": "MID",
+          "price": 6.5,
+          "ownership_pct": 4.0,
+          "club": "Istanbul Basaksehir"
+        },
+        {
+          "id": "UZB_13",
+          "name": "Ikrom Alibaev",
+          "position": "FWD",
+          "price": 6.5,
+          "ownership_pct": 3.5,
+          "club": ""
+        },
+        {
+          "id": "UZB_14",
+          "name": "Shamsiddin Shojaev",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 2.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_15",
+          "name": "Jamshid Iskanderov",
+          "position": "FWD",
+          "price": 6.0,
+          "ownership_pct": 3.0,
+          "club": ""
+        },
+        {
+          "id": "UZB_16",
+          "name": "Adkhamjon Hamrobekov",
+          "position": "MID",
+          "price": 5.5,
+          "ownership_pct": 1.5,
+          "club": ""
+        }
+      ]
+    }
+  }
+}

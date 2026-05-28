@@ -24,9 +24,10 @@ with st.sidebar:
 
     st.subheader("Data Source")
     data_mode = st.radio("Load from", [
-        "Demo data (offline)",
+        "WC Squads (offline, all players)",
         "FIFA Fantasy API (live)",
         "Local JSON export",
+        "Demo data (40 players)",
     ])
 
     session_token = None
@@ -65,7 +66,8 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     return load_data(
         session_token=token or None,
         players_file=pfile or None,
-        use_demo=(mode == "Demo data (offline)"),
+        use_demo=(mode == "Demo data (40 players)"),
+        use_squads=(mode == "WC Squads (offline, all players)"),
     )
 
 

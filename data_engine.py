@@ -893,14 +893,17 @@ def load_from_wc_squads() -> list:
                 penalties_saved=intl.get("penalties_saved", 0),
             )
 
+            price = float(p.get("price") or _DEFAULT_PRICE.get(pos, 6.0))
+            own   = float(p.get("ownership_pct") or p.get("ownership") or 0.0)
+
             players.append(Player(
                 id=pid,
                 name=p.get("name", "Unknown"),
                 position=pos,
                 team_code=team_code,
-                club="",
-                price=_DEFAULT_PRICE.get(pos, 6.0),
-                ownership_pct=0.0,
+                club=p.get("club", ""),
+                price=price,
+                ownership_pct=own,
                 national_stats=nat_stats,
             ))
     return players
@@ -910,11 +913,14 @@ def load_data(
     session_token: Optional[str] = None,
     players_file: Optional[str] = None,
     use_demo: bool = False,
+    use_squads: bool = False,
     enrich_with_api: bool = True,
 ) -> pd.DataFrame:
     """Main entry point. Fetches players + stats, returns ranked DataFrame."""
     if use_demo:
         players = get_demo_players()
+    elif use_squads:
+        players = load_from_wc_squads() or get_demo_players()
     elif players_file:
         players = load_players_from_json(players_file)
     else:
