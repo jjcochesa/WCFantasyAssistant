@@ -582,30 +582,28 @@ def _compute_per90(p: Player) -> None:
         if nt_manual.get("starter_rate", 0.0) > 0 and p.starter_rate == 1.0:
             p.starter_rate = nt_manual["starter_rate"]
 
-    # Position-based fallback for KP and tackles when no data available
-    _DEF_KP  = {"GK": 0.2, "DEF": 0.6, "MID": 1.8, "FWD": 0.8}
-    _DEF_TK  = {"GK": 0.1, "DEF": 1.8, "MID": 2.0, "FWD": 0.5}
+    # Position-based display defaults for KP/tackles — shown in table but
+    # NOT used in scoring so they don't inflate projected points for
+    # players we have no real data on.
+    _DEF_KP = {"GK": 0.2, "DEF": 0.6, "MID": 1.8, "FWD": 0.8}
+    _DEF_TK = {"GK": 0.1, "DEF": 1.8, "MID": 2.0, "FWD": 0.5}
     pos = p.position
-    if cl_kp == 0.0:  cl_kp = _DEF_KP.get(pos, 1.0)
-    if cl_tk == 0.0:  cl_tk = _DEF_TK.get(pos, 1.0)
-    if nt_kp == 0.0:  nt_kp = _DEF_KP.get(pos, 1.0)
-    if nt_tk == 0.0:  nt_tk = _DEF_TK.get(pos, 1.0)
 
     nt_w, cl_w = (0.65, 0.35) if p.national_stats.matches >= 5 else (0.35, 0.65)
 
-    # Club split
+    # Club split — display uses position default when no real data
     p.xg90_club      = cl_xg
     p.xa90_club      = cl_xa
     p.sot90_club     = cl_sot
-    p.kp90_club      = cl_kp
-    p.tackles90_club = cl_tk
+    p.kp90_club      = cl_kp if cl_kp > 0 else _DEF_KP.get(pos, 1.0)
+    p.tackles90_club = cl_tk if cl_tk > 0 else _DEF_TK.get(pos, 1.0)
 
-    # NT split
+    # NT split — same
     p.xg90_nt      = nt_xg
     p.xa90_nt      = nt_xa
     p.sot90_nt     = nt_sot
-    p.kp90_nt      = nt_kp
-    p.tackles90_nt = nt_tk
+    p.kp90_nt      = nt_kp if nt_kp > 0 else _DEF_KP.get(pos, 1.0)
+    p.tackles90_nt = nt_tk if nt_tk > 0 else _DEF_TK.get(pos, 1.0)
 
     # Blended
     p.xg90      = nt_w * nt_xg  + cl_w * cl_xg
