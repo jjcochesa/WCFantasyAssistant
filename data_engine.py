@@ -34,32 +34,50 @@ WC_2026_SEASON = 2026
 CLUB_SEASON = 2024
 
 CACHE_DIR = "data/cache"
-FBREF_MAP_PATH = "data/fbref_player_map.json"
+FBREF_MAP_PATH   = "data/fbref_player_map.json"
+MANUAL_STATS_PATH = "data/manual_stats.json"
 
-# FBref stats keyed two ways for fast lookup
-_FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> fbref stats
-_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> fbref stats
+# FBref/manual stats keyed two ways for fast lookup
+_FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> stats
+_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> stats
 
 
 def _load_fbref_map() -> None:
     global _FBREF_BY_ID, _FBREF_BY_NAME
-    if not os.path.exists(FBREF_MAP_PATH):
-        return
-    try:
-        with open(FBREF_MAP_PATH) as f:
-            data: dict[str, dict] = json.load(f)
-        for key, stats in data.items():
-            if key.isdigit():
-                _FBREF_BY_ID[key] = stats
-            else:
-                _FBREF_BY_NAME[key] = stats
-            # Also index by norm_name stored inside the dict
-            nn = stats.get("norm_name", "")
-            if nn:
-                _FBREF_BY_NAME[nn] = stats
-        print(f"[FBref] Loaded {len(data)} player records from {FBREF_MAP_PATH}")
-    except Exception as e:
-        print(f"[FBref] Could not load map: {e}")
+
+    # 1. Load manual stats (norm_name keyed) — baseline for all key WC players
+    if os.path.exists(MANUAL_STATS_PATH):
+        try:
+            with open(MANUAL_STATS_PATH) as f:
+                manual: dict[str, dict] = json.load(f)
+            for norm_key, stats in manual.items():
+                # Ensure norm_name field is set
+                if "norm_name" not in stats:
+                    stats["norm_name"] = norm_key
+                _FBREF_BY_NAME[norm_key] = stats
+            print(f"[Stats] Loaded {len(manual)} manual player records")
+        except Exception as e:
+            print(f"[Stats] Could not load manual_stats.json: {e}")
+
+    # 2. Load name_match output (may override manual with fresher data)
+    if os.path.exists(FBREF_MAP_PATH):
+        try:
+            with open(FBREF_MAP_PATH) as f:
+                data: dict[str, dict] = json.load(f)
+            count = 0
+            for key, stats in data.items():
+                if key.isdigit():
+                    _FBREF_BY_ID[key] = stats
+                else:
+                    _FBREF_BY_NAME[key] = stats
+                nn = stats.get("norm_name", "")
+                if nn:
+                    _FBREF_BY_NAME[nn] = stats
+                count += 1
+            if count:
+                print(f"[Stats] Loaded {count} records from fbref_player_map.json")
+        except Exception as e:
+            print(f"[Stats] Could not load fbref_player_map.json: {e}")
 
 
 _load_fbref_map()
