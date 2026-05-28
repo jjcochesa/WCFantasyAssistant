@@ -312,10 +312,10 @@ def fetch_live_player_data(session_token: Optional[str] = None) -> dict:
 
     for url in [FIFA_PLAYERS_URL, f"{FIFA_FANTASY_BASE}/v2/players", f"{FIFA_FANTASY_BASE}/v1/players"]:
         try:
-            resp = requests.get(url, headers=headers, timeout=15)
-            if resp.status_code != 200:
+            raw_bytes = _fetch_url_timed(url, headers, wall_secs=8)
+            if raw_bytes is None:
                 continue
-            data = resp.json()
+            data = json.loads(raw_bytes)
             raw_list = data if isinstance(data, list) else (
                 data.get("players") or data.get("data") or data.get("response") or []
             )
@@ -357,31 +357,65 @@ def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
     return fetch_live_player_data(session_token)
 
 
+def _fetch_url_timed(url: str, headers: dict, wall_secs: int = 10) -> Optional[bytes]:
+    """
+    Fetch a URL with a hard wall-clock deadline.
+    requests.get(timeout=N) only resets on each received chunk, so a slow
+    server that trickles data can hang for minutes.  This wraps the call in
+    a daemon thread and joins with a real clock limit.
+    Returns raw bytes on success, None on timeout or error.
+    """
+    import threading
+    bucket: dict = {}
+
+    def _do():
+        try:
+            r = requests.get(
+                url, headers=headers,
+                timeout=(5, wall_secs),   # connect=5s, read=wall_secs per chunk
+            )
+            bucket["status"] = r.status_code
+            bucket["content"] = r.content
+        except Exception as exc:
+            bucket["error"] = str(exc)
+
+    t = threading.Thread(target=_do, daemon=True)
+    t.start()
+    t.join(timeout=wall_secs + 2)          # hard wall deadline
+
+    if t.is_alive():
+        print(f"[FIFA Fantasy] Hard timeout ({wall_secs}s) on {url}")
+        return None
+    if bucket.get("status") != 200:
+        print(f"[FIFA Fantasy] {url} → {bucket.get('status') or bucket.get('error')}")
+        return None
+    return bucket.get("content")
+
+
 def fetch_fantasy_players(session_token: Optional[str] = None) -> list:
     """
     Load players from the public FIFA Fantasy JSON endpoint.
-    No authentication required — Access-Control-Allow-Origin: * confirmed.
-    session_token kept for API compatibility but not used.
+    Returns confirmed squad data — positions, prices, and ownership as
+    registered in the live game.  Falls back to local file cache, then [].
     """
     cached = _from_cache("fifa_fantasy_players_raw")
-
     headers = dict(_FIFA_HEADERS)
 
-    # Public static JSON — no auth needed
     for url in [FIFA_PLAYERS_URL, f"{FIFA_FANTASY_BASE}/v2/players"]:
+        raw_bytes = _fetch_url_timed(url, headers, wall_secs=10)
+        if raw_bytes is None:
+            continue
         try:
-            resp = requests.get(url, headers=headers, timeout=20)
-            if resp.status_code == 200:
-                data = resp.json()
-                _to_cache("fifa_fantasy_players_raw", data)
-                print(f"[FIFA Fantasy] Loaded {_count_players(data)} players from {url}")
-                return _parse_fantasy_players(data)
+            data = json.loads(raw_bytes)
+            _to_cache("fifa_fantasy_players_raw", data)
+            print(f"[FIFA Fantasy] Loaded {_count_players(data)} players from {url}")
+            return _parse_fantasy_players(data)
         except Exception as e:
-            print(f"[FIFA Fantasy] {url}: {e}")
+            print(f"[FIFA Fantasy] Parse error ({url}): {e}")
             continue
 
     if cached:
-        print("[FIFA Fantasy] Using cached player data.")
+        print("[FIFA Fantasy] Using cached player data (API unavailable).")
         return _parse_fantasy_players(cached)
 
     return []

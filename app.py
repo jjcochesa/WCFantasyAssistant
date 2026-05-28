@@ -87,7 +87,7 @@ with st.sidebar:
 # ── Cached loaders ────────────────────────────────────────────────────────────
 
 # Heavy load: stats + projections. Long TTL — stats don't change between loads.
-@st.cache_data(ttl=21600, show_spinner="Loading players from FIFA Fantasy...")
+@st.cache_data(ttl=21600, show_spinner="Loading players... (FIFA Fantasy API, up to 20s)")
 def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     import config as cfg_mod
     cfg_mod.NATIONAL_TEAM_WEIGHT = iw
