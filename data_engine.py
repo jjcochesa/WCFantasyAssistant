@@ -22,6 +22,7 @@ from scoring_rules import SCORING, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRES
 from data.team_stats import (
     CS_PCT, PROJ_GOALS, FDR, TEAM_NAMES, FIXTURES,
     get_avg_cs_pct, get_avg_proj_goals, get_team_fdr_total, get_group_balance,
+    get_team_proj, get_opponent_xg,
 )
 
 API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY", "")
@@ -123,19 +124,24 @@ class Player:
     national_stats: PlayerStats = field(default_factory=PlayerStats)
     club_stats: PlayerStats = field(default_factory=PlayerStats)
 
-    # Set by lineup fetcher (0.0–1.0, fraction of recent games started)
-    starter_rate: float = 1.0
+    # Per-90 stats (blended: 65% NT / 35% club if NT >= 5 apps, else flipped)
+    xg90: float = 0.0        # goals or xG per 90 (proxy: goals/90)
+    xa90: float = 0.0        # assists or xA per 90
+    sot90: float = 0.0       # shots on target per 90 (FWD)
+    kp90: float = 0.0        # key passes per 90 (MID)
+    tackles90: float = 0.0   # tackles per 90 (MID)
+    save_rate: float = 0.7   # GK: saves / shots faced
 
-    # Filled by engine
-    raw_intl_ppg: float = 0.0
-    raw_club_ppg: float = 0.0
-    shrunk_intl_ppg: float = 0.0
-    shrunk_club_ppg: float = 0.0
-    participation_mult: float = 1.0
-    combined_ppg: float = 0.0
+    # Raw per-90 by source (for display)
+    xg90_club: float = 0.0
+    xa90_club: float = 0.0
+    xg90_nt: float = 0.0
+    xa90_nt: float = 0.0
+
+    # Computed by engine
     xpts_per_match: float = 0.0
-    xpts_group_stage: float = 0.0   # projected total for all 3 group games
-    value: float = 0.0              # xpts_group_stage / price
+    xpts_group_stage: float = 0.0
+    value: float = 0.0
     scout_flag: bool = False
 
     @property
@@ -374,180 +380,152 @@ def fetch_stats_club(player_id: int) -> Optional[PlayerStats]:
     return _parse_stats(data) if data else None
 
 
-# ── PPG calculation per scoring rules ────────────────────────────────────────
+# ── Per-90 blending ───────────────────────────────────────────────────────────
 
-def _s(action: str, pos: str) -> float:
-    return SCORING.get(action, {}).get(pos, 0)
+def _per90(val: float, minutes: int) -> float:
+    return (val / minutes * 90) if minutes >= 45 else 0.0
 
 
-def calc_raw_ppg(stats: PlayerStats, pos: str, team_code: str = "", match_num: int = None) -> float:
-    """
-    Expected points per match from raw stats, using team-level CS/goal projections
-    blended with individual stat rates.
-    match_num: 0/1/2 for specific matchday, or None for average across 3 MDs.
-    """
-    if stats.matches == 0:
-        return 0.0
+def _compute_per90(p: Player) -> None:
+    """Blend NT (65%) and club (35%) per-90 stats. Flip weights if NT < 5 apps."""
+    nt = p.national_stats
+    cl = p.club_stats
 
-    xpts = 0.0
+    nt_mins = nt.minutes if nt.minutes > 0 else nt.matches * 75
+    cl_mins = cl.minutes if cl.minutes > 0 else cl.matches * 80
 
-    # Minutes: assume full game (+1 for playing + +1 for 60+ = +2 total)
-    xpts += 2.0
+    nt_xg  = _per90(nt.goals,           nt_mins)
+    nt_xa  = _per90(nt.assists,          nt_mins)
+    nt_sot = _per90(nt.shots_on_target,  nt_mins)
+    nt_kp  = _per90(nt.chances_created,  nt_mins)
+    nt_tk  = _per90(nt.tackles,          nt_mins)
 
-    # Goals
-    xpts += stats.rate("goals") * _s("goal", pos)
+    cl_xg  = _per90(cl.goals,           cl_mins)
+    cl_xa  = _per90(cl.assists,          cl_mins)
+    cl_sot = _per90(cl.shots_on_target,  cl_mins)
+    cl_kp  = _per90(cl.chances_created,  cl_mins)
+    cl_tk  = _per90(cl.tackles,          cl_mins)
 
-    # Assists
-    xpts += stats.rate("assists") * _s("assist", pos)
+    nt_w, cl_w = (0.65, 0.35) if nt.matches >= 5 else (0.35, 0.65)
 
-    # Clean sheet — blend player historical rate with team market CS probability
-    if pos in ("GK", "DEF", "MID"):
-        hist_cs_rate = stats.rate("clean_sheets") if stats.matches > 0 else 0
-        if team_code and team_code in CS_PCT:
-            if match_num is not None:
-                market_cs = CS_PCT[team_code][match_num]
-            else:
-                market_cs = sum(CS_PCT[team_code]) / 3
-            # Weight toward market data (it's more accurate for specific opponents)
-            cs_rate = 0.4 * hist_cs_rate + 0.6 * market_cs
-        else:
-            cs_rate = hist_cs_rate
-        xpts += cs_rate * _s("clean_sheet_60", pos)
+    p.xg90_nt   = nt_xg
+    p.xa90_nt   = nt_xa
+    p.xg90_club = cl_xg
+    p.xa90_club = cl_xa
 
-        # Goals conceded: only additional goals (after the 1st) cost points
-        # Expected goals conceded = opponent's projected goals
-        if pos in ("GK", "DEF") and team_code:
-            fixtures = FIXTURES.get(team_code, [])
-            if match_num is not None and match_num < len(fixtures):
-                opp = fixtures[match_num]
-                exp_gc = PROJ_GOALS.get(opp, [1.0, 1.0, 1.0])[match_num]
-            elif team_code in PROJ_GOALS:
-                # Average opponent projected goals
-                opps = FIXTURES.get(team_code, [])
-                exp_gc = sum(PROJ_GOALS.get(o, [1.0])[i] for i, o in enumerate(opps)) / max(len(opps), 1)
-            else:
-                exp_gc = stats.rate("goals_conceded")
-            # -1 for each goal conceded after the first
-            xpts += max(0, exp_gc - 1) * _s("goals_conceded_add", pos)
+    p.xg90     = nt_w * nt_xg  + cl_w * cl_xg
+    p.xa90     = nt_w * nt_xa  + cl_w * cl_xa
+    p.sot90    = nt_w * nt_sot + cl_w * cl_sot
+    p.kp90     = nt_w * nt_kp  + cl_w * cl_kp
+    p.tackles90 = nt_w * nt_tk  + cl_w * cl_tk
 
-    # GK-specific
+    if p.position == "GK":
+        shots_faced = nt.saves + nt.goals_conceded
+        p.save_rate = (nt.saves / shots_faced) if shots_faced > 0 else 0.7
+
+
+# ── Projection formula ────────────────────────────────────────────────────────
+
+# Fraction of team xG/xA credited to each position type (sums to ~1.0)
+_POS_XG_FRAC = {"GK": 0.02, "DEF": 0.12, "MID": 0.28, "FWD": 0.58}
+_POS_XA_FRAC = {"GK": 0.01, "DEF": 0.15, "MID": 0.55, "FWD": 0.29}
+# Typical starters per position in a XI
+_N_STARTERS  = {"GK": 1,    "DEF": 4,    "MID": 4,    "FWD": 3}
+
+# Default xg90 / xa90 per position when no data
+_DEFAULT_XG90 = {"GK": 0.01, "DEF": 0.04, "MID": 0.10, "FWD": 0.35}
+_DEFAULT_XA90 = {"GK": 0.01, "DEF": 0.05, "MID": 0.15, "FWD": 0.12}
+
+
+def _pos_averages(players: list) -> tuple:
+    xg_by_pos: dict = {p: [] for p in ["GK", "DEF", "MID", "FWD"]}
+    xa_by_pos: dict = {p: [] for p in ["GK", "DEF", "MID", "FWD"]}
+    for p in players:
+        if p.xg90 > 0:
+            xg_by_pos[p.position].append(p.xg90)
+        if p.xa90 > 0:
+            xa_by_pos[p.position].append(p.xa90)
+    avg_xg = {pos: (sum(v) / len(v) if v else _DEFAULT_XG90[pos]) for pos, v in xg_by_pos.items()}
+    avg_xa = {pos: (sum(v) / len(v) if v else _DEFAULT_XA90[pos]) for pos, v in xa_by_pos.items()}
+    return avg_xg, avg_xa
+
+
+def _player_xg(p: Player, team_xg: float, avg_xg: dict) -> float:
+    """Individual expected goals for one matchday."""
+    pos = p.position
+    base = team_xg * _POS_XG_FRAC[pos] / _N_STARTERS[pos]
+    share = (p.xg90 / avg_xg[pos]) if (avg_xg[pos] > 0 and p.xg90 > 0) else 1.0
+    return base * share
+
+
+def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
+    """Individual expected assists for one matchday."""
+    pos = p.position
+    base = (team_xg * 0.75) * _POS_XA_FRAC[pos] / _N_STARTERS[pos]
+    share = (p.xa90 / avg_xa[pos]) if (avg_xa[pos] > 0 and p.xa90 > 0) else 1.0
+    return base * share
+
+
+def _project_md(p: Player, md: int, avg_xg: dict, avg_xa: dict) -> tuple:
+    """Project points for one matchday. Returns (pts, player_xg)."""
+    pos = p.position
+    team_xg, cs_pct = get_team_proj(p.team_code, md)
+    opp_xg = get_opponent_xg(p.team_code, md)
+
+    pxg = _player_xg(p, team_xg, avg_xg)
+    pxa = _player_xa(p, team_xg, avg_xa)
+
+    pts = 2.0  # 90 min
+    pts += pxg * SCORING["goal"][pos]
+    pts += pxa * 3
+    pts += cs_pct * SCORING["clean_sheet_60"][pos]
+
+    if pos in ("GK", "DEF"):
+        pts += max(0.0, opp_xg - 1.0) * SCORING["goals_conceded_add"][pos]
+
     if pos == "GK":
-        xpts += stats.rate("saves") / 3 * _s("saves_per_3", pos)
-        xpts += stats.rate("penalties_saved") * _s("penalty_save", pos)
+        pts += (opp_xg * 3.5 * p.save_rate) / 3
 
-    # MID-specific
     if pos == "MID":
-        xpts += stats.rate("tackles") / 3 * _s("tackles_per_3", pos)
-        xpts += stats.rate("chances_created") / 2 * _s("chances_per_2", pos)
+        pts += p.tackles90 / 3
+        pts += p.kp90 / 2
 
-    # FWD-specific
     if pos == "FWD":
-        xpts += stats.rate("shots_on_target") / 2 * _s("shots_on_target_per_2", pos)
+        pts += p.sot90 / 2
 
-    # Yellow cards
-    xpts += stats.rate("yellow_cards") * _s("yellow_card", pos)
-    xpts += stats.rate("red_cards") * _s("red_card", pos)
-
-    return max(0.0, xpts)
+    return max(0.0, pts), pxg
 
 
-# ── Bayesian shrinkage ────────────────────────────────────────────────────────
-
-def _adaptive_k(games: int) -> float:
-    """K = max(3.0, 40.0 / sqrt(games)). Veterans get ~83% own-PPG at 34 games."""
-    return max(3.0, 40.0 / math.sqrt(max(games, 1)))
-
-
-def _shrink(raw_ppg: float, pos_mean: float, games: int) -> float:
-    """Bayesian shrinkage toward position mean."""
-    k = _adaptive_k(games)
-    return (games * raw_ppg + k * pos_mean) / (games + k)
-
-
-def _participation_floor(shrunk_ppg: float, intl_matches: int) -> tuple:
+def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     """
-    Apply 0.75 participation multiplier to players with <8 recent international appearances.
-    Only for established starters (>=8 games) do we trust full projection.
-    Returns (adjusted_ppg, multiplier).
+    Compute per-90 blended stats, then project points for given matchdays.
+    Default: GD1 + GD2 cumulative.
     """
-    if intl_matches >= 8:
-        return shrunk_ppg, 1.0
-    mult = 0.75
-    return shrunk_ppg * mult, mult
-
-
-# ── Two-phase build ───────────────────────────────────────────────────────────
-
-def build_projections(players: list) -> pd.DataFrame:
-    """
-    Phase 1: compute position-average raw PPG from qualified players (>=5 intl games).
-    Phase 2: per-player shrinkage + participation floor + combined score.
-    Returns ranked DataFrame.
-    """
-    # Phase 1 — position means from qualified players
-    pos_intl_ppg: dict = {p: [] for p in ["GK", "DEF", "MID", "FWD"]}
-    pos_club_ppg: dict = {p: [] for p in ["GK", "DEF", "MID", "FWD"]}
+    if matchdays is None:
+        matchdays = [1, 2]
 
     for p in players:
-        if p.national_stats.matches >= 5:
-            raw = calc_raw_ppg(p.national_stats, p.position, p.team_code)
-            pos_intl_ppg[p.position].append(raw)
-        if p.club_stats.matches >= 10:
-            raw = calc_raw_ppg(p.club_stats, p.position)
-            pos_club_ppg[p.position].append(raw)
+        _compute_per90(p)
 
-    pos_intl_mean = {
-        pos: (sum(vals) / len(vals)) if vals else _default_pos_mean(pos)
-        for pos, vals in pos_intl_ppg.items()
-    }
-    pos_club_mean = {
-        pos: (sum(vals) / len(vals)) if vals else _default_pos_mean(pos)
-        for pos, vals in pos_club_ppg.items()
-    }
+    avg_xg, avg_xa = _pos_averages(players)
 
-    # Phase 2 — per-player records
     for p in players:
-        p.raw_intl_ppg = calc_raw_ppg(p.national_stats, p.position, p.team_code)
-        p.raw_club_ppg = calc_raw_ppg(p.club_stats, p.position)
-
-        p.shrunk_intl_ppg = _shrink(p.raw_intl_ppg, pos_intl_mean[p.position], p.national_stats.matches)
-        p.shrunk_club_ppg = _shrink(p.raw_club_ppg, pos_club_mean[p.position], p.club_stats.matches)
-
-        shrunk_intl, p.participation_mult = _participation_floor(p.shrunk_intl_ppg, p.national_stats.matches)
-
-        # Combined: 60% international + 40% club
-        p.combined_ppg = 0.6 * shrunk_intl + 0.4 * p.shrunk_club_ppg
-
-        # Starter weight: scale down bench players (0.4 floor so deep squad
-        # members aren't zeroed out — they still might start at WC)
-        starter_mult = max(0.4, p.starter_rate)
-        p.xpts_per_match = round(p.combined_ppg * starter_mult, 3)
-
-        # Group stage total: sum expected pts across 3 matchdays
-        total = 0.0
-        for md in range(3):
-            intl_md = calc_raw_ppg(p.national_stats, p.position, p.team_code, match_num=md)
-            shrunk_md = _shrink(intl_md, pos_intl_mean[p.position], p.national_stats.matches)
-            shrunk_md_adj, _ = _participation_floor(shrunk_md, p.national_stats.matches)
-            club_md = calc_raw_ppg(p.club_stats, p.position)
-            shrunk_club_md = _shrink(club_md, pos_club_mean[p.position], p.club_stats.matches)
-            combined_md = 0.6 * shrunk_md_adj + 0.4 * shrunk_club_md
-            total += combined_md * starter_mult
-        p.xpts_group_stage = round(total, 2)
-
+        results = [_project_md(p, md, avg_xg, avg_xa) for md in matchdays]
+        md_pts  = [r[0] for r in results]
+        md_pxg  = [r[1] for r in results]
+        p.xpts_per_match   = round(sum(md_pts) / len(md_pts), 3)
+        p.xpts_group_stage = round(sum(md_pts), 2)
+        p._xg_by_md = md_pxg  # store for display
         if p.price > 0:
             p.value = round(p.xpts_group_stage / p.price, 3)
-
         p.scout_flag = p.xpts_per_match > SCOUT_POINTS_THRESHOLD and p.is_differential
 
-    return _to_dataframe(players)
+    return _to_dataframe(players, matchdays)
 
 
-def _default_pos_mean(pos: str) -> float:
-    return {"GK": 4.5, "DEF": 4.0, "MID": 4.5, "FWD": 5.0}[pos]
-
-
-def _to_dataframe(players: list) -> pd.DataFrame:
+def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
+    if matchdays is None:
+        matchdays = [1, 2]
     rows = []
     for p in players:
         fdr_total = get_team_fdr_total(p.team_code)
@@ -556,6 +534,10 @@ def _to_dataframe(players: list) -> pd.DataFrame:
         cs_vals = CS_PCT.get(p.team_code, ["-", "-", "-"])
         g_vals = PROJ_GOALS.get(p.team_code, ["-", "-", "-"])
         fdr_vals = FDR.get(p.team_code, ["-", "-", "-"])
+
+        xg_by_md = getattr(p, "_xg_by_md", [0.0] * len(matchdays))
+        xg_gd1 = round(xg_by_md[0], 3) if len(xg_by_md) > 0 else 0.0
+        xg_gd2 = round(xg_by_md[1], 3) if len(xg_by_md) > 1 else 0.0
 
         rows.append({
             "id": p.id,
@@ -570,6 +552,14 @@ def _to_dataframe(players: list) -> pd.DataFrame:
             "xPts_GS": p.xpts_group_stage,
             "value": p.value,
             "scout": p.scout_flag,
+            # Spec display columns
+            "GD1 xG": xg_gd1,
+            "GD2 xG": xg_gd2,
+            "goals/90": round(p.xg90, 3),
+            "assists/90": round(p.xa90, 3),
+            "xg90_club": round(p.xg90_club, 3),
+            "xg90_nt": round(p.xg90_nt, 3),
+            # Raw stats for expander
             "intl_games": p.national_stats.matches,
             "intl_goals": p.national_stats.goals,
             "intl_assists": p.national_stats.assists,
@@ -586,10 +576,6 @@ def _to_dataframe(players: list) -> pd.DataFrame:
             "club_chances": round(p.club_stats.chances_created, 1),
             "club_tackles": round(p.club_stats.tackles, 1),
             "club_saves": round(p.club_stats.saves, 1),
-            "starter_%": round(p.starter_rate * 100),
-            "raw_intl_ppg": round(p.raw_intl_ppg, 3),
-            "raw_club_ppg": round(p.raw_club_ppg, 3),
-            "participation_mult": p.participation_mult,
             "team_fdr": fdr_total,
             "avg_cs%": round(avg_cs * 100, 1),
             "avg_proj_goals": round(avg_goals, 2),
@@ -766,13 +752,7 @@ def load_from_wc_squads() -> list:
             seen_ids.add(pid)
 
             pos = p.get("position", "MID")
-            starts = p.get("starts") or 0
-            starter_rate = p.get("starter_rate")
-            if starter_rate is None:
-                # No lineup data — give bench players a low default
-                starter_rate = 0.5 if starts == 0 else min(starts / max(game_count, 1), 1.0)
 
-            # Build PlayerStats from pre-fetched intl stats if available
             intl = p.get("intl_stats") or {}
             nat_stats = PlayerStats(
                 matches=intl.get("matches", 0),
@@ -798,7 +778,6 @@ def load_from_wc_squads() -> list:
                 price=_DEFAULT_PRICE.get(pos, 6.0),
                 ownership_pct=0.0,
                 national_stats=nat_stats,
-                starter_rate=float(starter_rate),
             ))
     return players
 

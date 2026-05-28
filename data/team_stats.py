@@ -100,6 +100,7 @@ CS_PCT = {
     "IRN": [0.41, 0.14, 0.30], "SEN": [0.14, 0.23, 0.48], "SWE": [0.41, 0.19, 0.24],
     "ALG": [0.14, 0.44, 0.24], "BIH": [0.21, 0.17, 0.42], "GHA": [0.36, 0.11, 0.21],
     "RSA": [0.16, 0.26, 0.25], "AUS": [0.21, 0.19, 0.26], "TUN": [0.24, 0.24, 0.16],
+    "PAR": [0.22, 0.28, 0.38],
     "COD": [0.09, 0.18, 0.34], "KSA": [0.15, 0.06, 0.34], "UZB": [0.14, 0.08, 0.31],
     "NZL": [0.22, 0.21, 0.09], "CPV": [0.04, 0.14, 0.31], "QAT": [0.10, 0.17, 0.21],
     "PAN": [0.23, 0.16, 0.08], "JOR": [0.11, 0.19, 0.07], "HAI": [0.13, 0.03, 0.11],
@@ -137,6 +138,30 @@ GROUP_BALANCE = {
     "C": "Unbalanced",      # Brazil, Morocco, Scotland, Haiti
     "H": "Most unbalanced", # Spain, Uruguay, Saudi Arabia, Cape Verde
 }
+
+import math as _math
+
+# Combined projection lookup: {team: {md1: (xg, cs_pct), md2: ..., md3: ...}}
+TEAM_PROJECTIONS = {
+    code: {
+        "md1": (PROJ_GOALS[code][0], CS_PCT.get(code, [0.3, 0.3, 0.3])[0]),
+        "md2": (PROJ_GOALS[code][1], CS_PCT.get(code, [0.3, 0.3, 0.3])[1]),
+        "md3": (PROJ_GOALS[code][2], CS_PCT.get(code, [0.3, 0.3, 0.3])[2]),
+    }
+    for code in PROJ_GOALS
+}
+
+
+def get_team_proj(team_code: str, md: int) -> tuple:
+    """Returns (team_xg, cs_pct) for matchday 1/2/3."""
+    return TEAM_PROJECTIONS.get(team_code, {}).get(f"md{md}", (1.0, 0.3))
+
+
+def get_opponent_xg(team_code: str, md: int) -> float:
+    """Estimate opponent xG from cs_pct via Poisson: P(CS) = e^(-λ) → λ = -ln(cs_pct)."""
+    _, cs_pct = get_team_proj(team_code, md)
+    return -_math.log(max(cs_pct, 0.01))
+
 
 def get_team_fdr_total(team_code: str) -> int:
     """Total FDR across 3 group stage games. Lower = easier fixtures."""

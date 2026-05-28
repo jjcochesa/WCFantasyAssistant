@@ -48,12 +48,7 @@ with st.sidebar:
         players_file = st.text_input("JSON file path", "data/players_export.json")
 
     st.divider()
-    st.subheader("Projection weights")
-    intl_w = st.slider("International weight", 0.0, 1.0, 0.6, 0.05,
-                       help="Share of projection from national team stats")
-    club_w = round(1.0 - intl_w, 2)
-    st.caption(f"Club form weight: {club_w}")
-
+    st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
     st.divider()
     budget = st.number_input("Your budget ($m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
     country_cap = st.slider("Max players per country", 1, 5, MAX_PER_COUNTRY_GROUP)
@@ -79,7 +74,7 @@ if "df" not in st.session_state:
 
 if load_btn or st.session_state.df is None:
     try:
-        st.session_state.df = _load(data_mode, session_token or "", players_file or "", intl_w)
+        st.session_state.df = _load(data_mode, session_token or "", players_file or "", 0.65)
     except Exception as e:
         st.error(f"Error loading data: {e}")
         st.stop()
@@ -110,20 +105,22 @@ SORT_LABELS = {
 }
 
 def fmt(sub: pd.DataFrame):
-    return (
-        sub.style
-        .background_gradient(subset=["xPts_GS", "xPts/game"], cmap="Greens")
-        .background_gradient(subset=["value"], cmap="Blues")
-        .format({
-            "price": "${:.1f}m",
-            "own_%": "{:.1f}%",
-            "xPts/game": "{:.2f}",
-            "xPts_GS": "{:.2f}",
-            "value": "{:.3f}",
-            "avg_cs%": "{:.1f}%",
-            "avg_proj_goals": "{:.2f}",
-        }, na_rep="—")
-    )
+    grad_cols = [c for c in ["xPts_GS", "xPts/game"] if c in sub.columns]
+    blue_cols = [c for c in ["value"] if c in sub.columns]
+    s = sub.style
+    if grad_cols:
+        s = s.background_gradient(subset=grad_cols, cmap="Greens")
+    if blue_cols:
+        s = s.background_gradient(subset=blue_cols, cmap="Blues")
+    fmt_map = {
+        "price": "${:.1f}m", "own_%": "{:.1f}%",
+        "xPts/game": "{:.2f}", "xPts_GS": "{:.2f}", "value": "{:.3f}",
+        "avg_cs%": "{:.1f}%", "avg_proj_goals": "{:.2f}",
+        "GD1 xG": "{:.2f}", "GD2 xG": "{:.2f}",
+        "goals/90": "{:.3f}", "assists/90": "{:.3f}",
+        "xg90_club": "{:.3f}", "xg90_nt": "{:.3f}",
+    }
+    return s.format({k: v for k, v in fmt_map.items() if k in sub.columns}, na_rep="—")
 
 
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
@@ -220,20 +217,19 @@ with tab1:
     view = view.sort_values(SORT_LABELS[sort_l], ascending=False).reset_index(drop=True)
     view.index += 1
 
-    cols_main = ["name", "pos", "country", "club", "price", "own_%",
-                 "xPts_GS", "xPts/game", "value", "team_fdr", "avg_cs%", "avg_proj_goals", "scout"]
+    cols_main = ["name", "country", "club", "pos", "price", "own_%",
+                 "GD1 xG", "GD2 xG", "xPts_GS", "goals/90", "assists/90",
+                 "xg90_club", "xg90_nt", "value", "scout"]
     st.dataframe(fmt(view[cols_main]), use_container_width=True, height=560)
 
     with st.expander("📋 Full stats breakdown"):
-        st.caption("International stats (last 2 years)")
+        st.caption("International stats")
         intl_cols = ["name", "pos", "country", "intl_games", "intl_goals", "intl_assists",
-                     "intl_cs", "intl_sot", "intl_chances", "intl_tackles", "intl_saves",
-                     "raw_intl_ppg", "participation_mult"]
+                     "intl_cs", "intl_sot", "intl_chances", "intl_tackles", "intl_saves"]
         st.dataframe(view[intl_cols], use_container_width=True)
         st.caption("Club stats (current season)")
         club_cols = ["name", "pos", "club", "club_games", "club_goals", "club_assists",
-                     "club_cs", "club_sot", "club_chances", "club_tackles", "club_saves",
-                     "raw_club_ppg"]
+                     "club_cs", "club_sot", "club_chances", "club_tackles", "club_saves"]
         st.dataframe(view[club_cols], use_container_width=True)
 
 
@@ -378,15 +374,11 @@ with tab4:
         else:
             country_players.index = range(1, len(country_players) + 1)
             st.dataframe(
-                country_players[["name", "pos", "club", "price", "own_%",
-                                  "xPts_GS", "xPts/game", "value", "scout",
-                                  "intl_games", "intl_goals", "intl_assists",
-                                  "club_games", "club_goals", "club_assists"]].style
-                    .background_gradient(subset=["xPts_GS"], cmap="Greens")
-                    .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                             "xPts_GS": "{:.2f}", "xPts/game": "{:.2f}", "value": "{:.3f}"}),
+                fmt(country_players[["name", "pos", "club", "price", "own_%",
+                                     "GD1 xG", "GD2 xG", "xPts_GS", "goals/90",
+                                     "assists/90", "xg90_club", "xg90_nt", "value", "scout"]]),
                 use_container_width=True,
             )
 
 st.divider()
-st.caption("Scoring: Official FIFA WC Fantasy 2026 rules | Stats: 60% international (last 2yr) + 40% club form | Bayesian shrinkage K=max(3, 40/√games) | Participation floor 0.75 for <8 intl appearances | FDR & projections: FPLJoe.com / @FPL_Marcello")
+st.caption("Scoring: Official FIFA WC Fantasy 2026 rules | Model: ratio-based xG share × team projection | Stats: 65% NT / 35% club (flipped if <5 NT apps) | Team projections: FPLJoe.com (bookie-derived)")
