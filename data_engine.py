@@ -1105,25 +1105,4 @@ def load_data(
             PLAYER_SOURCE = "demo"
             players = get_demo_players()
 
-    if enrich_with_api and API_FOOTBALL_KEY and not use_demo:
-        _enrich_stats(players)
-
     return build_projections(players)
-
-
-def _enrich_stats(players: list) -> None:
-    print(f"Enriching {len(players)} players with API-Football stats...")
-    for i, p in enumerate(players):
-        if not p.id or not p.id.isdigit():
-            continue
-        try:
-            nat = fetch_stats_national(int(p.id))
-            if nat:
-                p.national_stats = nat
-            club = fetch_stats_club(int(p.id))
-            if club:
-                p.club_stats = club
-        except Exception as e:
-            print(f"  Skipping {p.name}: {e}")
-        if (i + 1) % 20 == 0:
-            print(f"  {i+1}/{len(players)} done")

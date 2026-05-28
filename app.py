@@ -60,10 +60,6 @@ with st.sidebar:
                      "Or set FIFA_SESSION_TOKEN in Streamlit secrets to never paste again.",
             )
 
-    api_key = st.text_input("API-Football key (optional)", type="password")
-    if api_key:
-        os.environ["API_FOOTBALL_KEY"] = api_key
-
     # Resolved token: secret beats sidebar input
     session_token = _SECRET_TOKEN or _sidebar_token or None
 
@@ -429,10 +425,7 @@ with tab2:
     )
     with st.expander("ℹ️ About Club Form data"):
         st.markdown("""
-**Source**: API-Football, 2024/25 club season stats.
-
-**Available when**: `API_FOOTBALL_KEY` is set and player IDs are matched.
-*Pre-tournament, most players will show 0 club stats until the ID mapping is built.*
+**Source**: 2025/26 club season stats from `data/stats.json` (run `fetch_player_stats.py` locally to refresh).
 
 **What each column means**:
 - `xg90_club` = goals/90 from club (proxy for xG/90 until FBRef scraper is added)
