@@ -46,6 +46,9 @@ CLUB_FILES = {
     # Big 5 combined — has goals_per90, assists_per90, minutes (no xG)
     "Big5_standard":         ("Big 5 European Leagues", "standard"),
     "Big5_shooting":         ("Big 5 European Leagues", "shooting"),
+    "Big5_misc":             ("Big 5 European Leagues", "misc"),
+    "Big5_passing":          ("Big 5 European Leagues", "passing"),
+    "Big5_gca":              ("Big 5 European Leagues", "gca"),
 
     # Individual leagues (richer columns, include xG if FBref provides it)
     "club_PL_standard":      ("Premier League",  "standard"),
@@ -107,9 +110,50 @@ CLUB_ALIASES = {
 # Helpers
 # ---------------------------------------------------------------------------
 
+# Characters that don't decompose in NFKD but need normalising for name matching
+_SPECIAL = str.maketrans({
+    'ø': 'o', 'Ø': 'O',
+    'ß': 'ss',
+    'ı': 'i', 'İ': 'I',
+    'ğ': 'g', 'Ğ': 'G',
+    'ş': 's', 'Ş': 'S',
+    'đ': 'd', 'ð': 'd', 'Ð': 'D',
+    'æ': 'ae', 'Æ': 'AE',
+    'œ': 'oe', 'Œ': 'OE',
+    'þ': 'th', 'Þ': 'TH',
+})
+
+# Our wc_squads.json name → FBref name (after norm) — for genuine spelling diffs
+PLAYER_ALIASES = {
+    "vinicius jr":                  "vinicius junior",
+    "savinho":                      "savio",
+    "mat ryan":                     "mathew ryan",
+    "maxwell cornet":               "maxwel cornet",
+    "billal brahimi":               "bilal brahimi",
+    "abdessamad ezzalzouli":        "abde ezzalzouli",
+    "yeremy pino":                  "yeremi pino",
+    "giovanni lo celso":            "giovani lo celso",
+    "ransford-yeboah konigsdorfer": "ransford konigsdorffer",
+    "mohamed amine amoura":         "mohamed amoura",
+    "mustafa mohammed":             "mostafa mohamed",
+    "ilias chair":                  "ilias chair",       # keep — might be correct
+    "kenan yildiz":                 "kenan yildiz",      # ı → i handled by norm now
+    "semih kilicsoy":               "semih kilicsoy",    # same
+}
+
+
 def norm(name: str) -> str:
-    s = unicodedata.normalize("NFKD", str(name))
+    """Normalise a player name for matching: strip accents, lowercase, collapse spaces."""
+    name = str(name).translate(_SPECIAL)
+    s = unicodedata.normalize("NFKD", name)
     return "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
+
+
+def norm_player(name: str) -> str:
+    """Norm + apply player aliases so our names match FBref names."""
+    n = norm(name)
+    return PLAYER_ALIASES.get(n, n)
+
 
 def norm_club(name: str) -> str:
     n = norm(name)
@@ -130,10 +174,11 @@ def load_squads() -> dict:
     players = {}
     for nation_code, team_data in sq["teams"].items():
         for p in team_data["players"]:
-            key = norm(p["name"])
+            key = norm(p["name"])           # canonical key in our system
             players[key] = {
                 "name": p["name"], "nation": nation_code,
                 "club": p.get("club", ""), "position": p.get("position", "MID"),
+                "_fbref_key": norm_player(p["name"]),  # key to look up in FBref data
             }
     return players
 
@@ -197,26 +242,46 @@ def parse_fbref_html(path: Path, file_type: str) -> dict:
         pname = cell("player")
         if not pname or pname == "Player":
             continue
-        key = norm(pname)
+        key = norm(pname)          # FBref names normalised (ø→o, ß→ss etc.)
         squad = norm_club(cell("team"))
 
         if file_type == "shooting":
-            # shooting page: shots on target per90, total xG (npxg)
-            sot90   = safe_float(cell("shots_on_target_per90"))
-            sh90    = safe_float(cell("shots_per90"))
-            npxg    = safe_float(cell("npxg"))          # total npxG
-            npxg90  = safe_float(cell("npxg_per90") or cell("npxg_per_shot"))
-            minutes_90s = safe_float(cell("minutes_90s"))
-
-            # derive npxg per 90 if not directly available
-            if npxg90 == 0 and npxg > 0 and minutes_90s > 0:
-                npxg90 = per90(npxg, minutes_90s)
-
+            sot90 = safe_float(cell("shots_on_target_per90"))
+            sh90  = safe_float(cell("shots_per90"))
+            # npxg not present on Big5 shooting page — derive from SOT
+            # average ~33% of on-target shots become goals across top leagues
+            xg90_proxy = round(sot90 * 0.33, 3) if sot90 > 0 else 0.0
             result[key] = {
                 "_squad": squad,
                 "sot90":  round(sot90, 3),
                 "sh90":   round(sh90, 3),
-                "xg90":   round(npxg90, 3),   # npxG is our xG proxy from shooting
+                "xg90":   xg90_proxy,
+            }
+
+        elif file_type == "misc":
+            minutes_90s  = safe_float(cell("minutes_90s"))
+            tackles_won  = safe_float(cell("tackles_won"))
+            interceptions = safe_float(cell("interceptions"))
+            if minutes_90s <= 0:
+                continue
+            result[key] = {
+                "_squad":    squad,
+                "tackles90": per90(tackles_won, minutes_90s),
+                "int90":     per90(interceptions, minutes_90s),
+            }
+
+        elif file_type in ("passing", "gca"):
+            minutes_90s = safe_float(cell("minutes_90s"))
+            # passing page: key_passes = passes leading directly to a shot
+            kp = safe_float(cell("key_passes") or cell("passes_leading_to_shot"))
+            # gca page: sca = shot-creating actions (broader than key passes)
+            sca = safe_float(cell("sca") or cell("sca_per90"))
+            if minutes_90s <= 0:
+                continue
+            kp90 = per90(kp, minutes_90s) if kp > 0 else 0.0
+            result[key] = {
+                "_squad": squad,
+                "kp90":   round(kp90, 3),
             }
 
         else:
@@ -273,6 +338,8 @@ def parse_fbref_html(path: Path, file_type: str) -> dict:
 def build_club_stats(wc_players: dict) -> dict:
     standard_data: dict[str, dict] = {}
     shooting_data: dict[str, dict] = {}
+    misc_data:     dict[str, dict] = {}
+    passing_data:  dict[str, dict] = {}
 
     for stem, (league, file_type) in CLUB_FILES.items():
         path = find_file(stem)
@@ -282,12 +349,15 @@ def build_club_stats(wc_players: dict) -> dict:
         print(f"  {path.name}: {len(parsed)} players ({league})")
 
         if file_type == "shooting":
-            # shooting data adds sot90 and possibly xg90
             for k, v in parsed.items():
-                existing = shooting_data.get(k, {})
-                # keep entry with higher sot90 (more complete data)
-                if v.get("sot90", 0) >= existing.get("sot90", 0):
+                if v.get("sot90", 0) >= shooting_data.get(k, {}).get("sot90", 0):
                     shooting_data[k] = v
+        elif file_type == "misc":
+            misc_data.update(parsed)
+        elif file_type in ("passing", "gca"):
+            for k, v in parsed.items():
+                if v.get("kp90", 0) >= passing_data.get(k, {}).get("kp90", 0):
+                    passing_data[k] = v
         else:
             for k, v in parsed.items():
                 existing = standard_data.get(k)
@@ -295,20 +365,18 @@ def build_club_stats(wc_players: dict) -> dict:
                     v["_league"] = league
                     standard_data[k] = v
 
-    print(f"\nStandard data: {len(standard_data)} players")
-    print(f"Shooting data: {len(shooting_data)} players")
+    print(f"\nStandard: {len(standard_data)}  Shooting: {len(shooting_data)}  "
+          f"Misc: {len(misc_data)}  Passing: {len(passing_data)}")
 
     out = {}
     for norm_name, wcp in wc_players.items():
-        std = standard_data.get(norm_name)
+        fbref_key = wcp.get("_fbref_key", norm_name)
+        std = standard_data.get(fbref_key) or standard_data.get(norm_name)
         if not std:
             continue
-        sht = shooting_data.get(norm_name, {})
-
-        # xg90: prefer shooting page npxG, fall back to standard page xg
-        xg90 = sht.get("xg90") or std.get("xg90", 0.0)
-        # xa90: assists per 90 from standard page
-        xa90 = std.get("xa90", 0.0)
+        sht = shooting_data.get(fbref_key) or shooting_data.get(norm_name, {})
+        msc = misc_data.get(fbref_key)     or misc_data.get(norm_name, {})
+        pas = passing_data.get(fbref_key)  or passing_data.get(norm_name, {})
 
         out[norm_name] = {
             "name":         wcp["name"],
@@ -317,10 +385,12 @@ def build_club_stats(wc_players: dict) -> dict:
             "mp":           std["mp"],
             "starts":       std["starts"],
             "minutes":      std["minutes"],
-            "xg90":         xg90,
-            "xa90":         xa90,
+            "xg90":         sht.get("xg90") or std.get("xg90", 0.0),
+            "xa90":         std.get("xa90", 0.0),
             "goals90":      std["goals90"],
             "sot90":        sht.get("sot90", 0.0),
+            "tackles90":    msc.get("tackles90", 0.0),
+            "kp90":         pas.get("kp90", 0.0),
             "starter_rate": std["starter_rate"],
             "norm_name":    norm_name,
         }
@@ -353,7 +423,8 @@ def build_nt_stats(wc_players: dict) -> dict:
 
     out = {}
     for norm_name, wcp in wc_players.items():
-        rows = nt_raw.get(norm_name)
+        fbref_key = wcp.get("_fbref_key", norm_name)
+        rows = nt_raw.get(fbref_key) or nt_raw.get(norm_name)
         if not rows:
             continue
 
