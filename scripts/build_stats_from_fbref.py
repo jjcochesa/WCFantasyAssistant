@@ -1,16 +1,21 @@
 """
 build_stats_from_fbref.py
 
-Reads FBref CSV exports from data/fbref/ and writes:
+Reads FBref HTML page saves (or CSV exports) from data/fbref/ and writes:
   data/manual_stats.json      (2025/26 club stats)
   data/manual_nt_stats.json   (WC 2026 qualifying NT stats)
 
-See FBREF_DOWNLOAD_GUIDE.md for exactly which pages to download.
+HOW TO SAVE PAGES FROM FBREF:
+  1. Open the FBref URL in your browser
+  2. Press Ctrl+S (Windows) or Cmd+S (Mac)
+  3. Choose "Webpage, HTML Only" format
+  4. Save into data/fbref/ with the filename shown in FBREF_DOWNLOAD_GUIDE.md
+
+Also accepts CSV exports if you can find the Share & Export button on FBref.
 
 Usage:
+    pip install pandas lxml beautifulsoup4
     python scripts/build_stats_from_fbref.py [--dry-run]
-
-Requirements: pip install pandas lxml (requests not needed — CSVs are local)
 """
 
 import argparse
@@ -28,81 +33,83 @@ OUT_CLUB = ROOT / "data" / "manual_stats.json"
 OUT_NT = ROOT / "data" / "manual_nt_stats.json"
 
 # ---------------------------------------------------------------------------
-# FBref CSV file names → league metadata
-# Place downloaded CSVs in data/fbref/ with these exact file names
+# File registry: filename → (league_name, file_type)
+# file_type: "standard", "shooting", "nt_standard"
+# Accepts both .html and .csv extensions
 # ---------------------------------------------------------------------------
 
-CLUB_CSVS = {
-    # file_name: (league_display_name, competition)
-    "club_PL_standard.csv":      ("Premier League", "eng ENG"),
-    "club_PL_shooting.csv":      ("Premier League", "eng ENG"),
-    "club_LaLiga_standard.csv":  ("La Liga", "es ESP"),
-    "club_LaLiga_shooting.csv":  ("La Liga", "es ESP"),
-    "club_Bundesliga_standard.csv": ("Bundesliga", "de GER"),
-    "club_Bundesliga_shooting.csv": ("Bundesliga", "de GER"),
-    "club_SerieA_standard.csv":  ("Serie A", "it ITA"),
-    "club_SerieA_shooting.csv":  ("Serie A", "it ITA"),
-    "club_Ligue1_standard.csv":  ("Ligue 1", "fr FRA"),
-    "club_Ligue1_shooting.csv":  ("Ligue 1", "fr FRA"),
-    "club_Saudi_standard.csv":   ("Saudi Pro League", "sa KSA"),
-    "club_Saudi_shooting.csv":   ("Saudi Pro League", "sa KSA"),
-    "club_Eredivisie_standard.csv": ("Eredivisie", "nl NED"),
-    "club_Eredivisie_shooting.csv": ("Eredivisie", "nl NED"),
-    "club_PrimeiraLiga_standard.csv": ("Primeira Liga", "pt POR"),
-    "club_PrimeiraLiga_shooting.csv": ("Primeira Liga", "pt POR"),
-    "club_SuperLig_standard.csv":("Süper Lig", "tr TUR"),
-    "club_SuperLig_shooting.csv":("Süper Lig", "tr TUR"),
-    "club_Scottish_standard.csv":("Scottish Prem", "sco SCO"),
-    "club_Scottish_shooting.csv":("Scottish Prem", "sco SCO"),
-    "club_Belgian_standard.csv": ("Belgian Pro League", "be BEL"),
-    "club_Belgian_shooting.csv": ("Belgian Pro League", "be BEL"),
-    "club_MLS_standard.csv":     ("MLS", "us USA"),
-    "club_MLS_shooting.csv":     ("MLS", "us USA"),
-    "club_LigaMX_standard.csv":  ("Liga MX", "mx MEX"),
-    "club_LigaMX_shooting.csv":  ("Liga MX", "mx MEX"),
-    "club_BrazilA_standard.csv": ("Série A (Brazil)", "br BRA"),
-    "club_BrazilA_shooting.csv": ("Série A (Brazil)", "br BRA"),
-    "club_Argentina_standard.csv": ("Primera Div (ARG)", "ar ARG"),
-    "club_Argentina_shooting.csv": ("Primera Div (ARG)", "ar ARG"),
+CLUB_FILES = {
+    # Big 5 combined (one file covers PL + LaLiga + Bundesliga + Serie A + Ligue 1)
+    "Big5_standard":      ("Big 5 European Leagues", "standard"),
+    "Big5_shooting":      ("Big 5 European Leagues", "shooting"),
+
+    # Individual leagues (only needed if Big5 file not present)
+    "club_PL_standard":      ("Premier League",    "standard"),
+    "club_PL_shooting":      ("Premier League",    "shooting"),
+    "club_LaLiga_standard":  ("La Liga",           "standard"),
+    "club_LaLiga_shooting":  ("La Liga",           "shooting"),
+    "club_Bundesliga_standard": ("Bundesliga",     "standard"),
+    "club_Bundesliga_shooting": ("Bundesliga",     "shooting"),
+    "club_SerieA_standard":  ("Serie A",           "standard"),
+    "club_SerieA_shooting":  ("Serie A",           "shooting"),
+    "club_Ligue1_standard":  ("Ligue 1",           "standard"),
+    "club_Ligue1_shooting":  ("Ligue 1",           "shooting"),
+
+    # Other leagues
+    "club_Saudi_standard":      ("Saudi Pro League",    "standard"),
+    "club_Saudi_shooting":      ("Saudi Pro League",    "shooting"),
+    "club_Eredivisie_standard":  ("Eredivisie",         "standard"),
+    "club_Eredivisie_shooting":  ("Eredivisie",         "shooting"),
+    "club_PrimeiraLiga_standard":("Primeira Liga",      "standard"),
+    "club_PrimeiraLiga_shooting":("Primeira Liga",      "shooting"),
+    "club_SuperLig_standard":   ("Süper Lig",           "standard"),
+    "club_SuperLig_shooting":   ("Süper Lig",           "shooting"),
+    "club_Scottish_standard":   ("Scottish Prem",       "standard"),
+    "club_Scottish_shooting":   ("Scottish Prem",       "shooting"),
+    "club_Belgian_standard":    ("Belgian Pro League",  "standard"),
+    "club_Belgian_shooting":    ("Belgian Pro League",  "shooting"),
+    "club_MLS_standard":        ("MLS",                 "standard"),
+    "club_MLS_shooting":        ("MLS",                 "shooting"),
+    "club_LigaMX_standard":     ("Liga MX",             "standard"),
+    "club_LigaMX_shooting":     ("Liga MX",             "shooting"),
+    "club_BrazilA_standard":    ("Série A Brazil",      "standard"),
+    "club_BrazilA_shooting":    ("Série A Brazil",      "shooting"),
+    "club_Argentina_standard":  ("Primera Div ARG",     "standard"),
+    "club_Argentina_shooting":  ("Primera Div ARG",     "shooting"),
 }
 
-NT_CSVS = {
-    # file_name: confederation
-    "nt_UEFA_WC.csv":     "UEFA",
-    "nt_CONMEBOL_WC.csv": "CONMEBOL",
-    "nt_CAF_WC.csv":      "CAF",
-    "nt_CONCACAF_WC.csv": "CONCACAF",
-    "nt_AFC_WC.csv":      "AFC",
-    "nt_AFCON2025.csv":   "CAF",   # supplement for African players
-    "nt_CopaAmerica2024.csv": "CONMEBOL",
-    "nt_UEFANationsLeague.csv": "UEFA",
+NT_FILES = {
+    "nt_UEFA_WC":          ("UEFA WC 2026 Qualifying",    "nt_standard"),
+    "nt_CONMEBOL_WC":      ("CONMEBOL WC 2026 Qualifying","nt_standard"),
+    "nt_CAF_WC":           ("CAF WC 2026 Qualifying",     "nt_standard"),
+    "nt_CONCACAF_WC":      ("CONCACAF WC 2026 Qualifying","nt_standard"),
+    "nt_AFC_WC":           ("AFC WC 2026 Qualifying",     "nt_standard"),
+    "nt_AFCON2025":        ("AFCON 2025",                 "nt_standard"),
+    "nt_CopaAmerica2024":  ("Copa América 2024",          "nt_standard"),
+    "nt_UEFANationsLeague":("UEFA Nations League 24-25",  "nt_standard"),
 }
 
-# ---------------------------------------------------------------------------
-# Club name → FBref squad name mapping (FBref uses different spellings)
-# ---------------------------------------------------------------------------
+# FBref table IDs we look for in HTML files
+STANDARD_TABLE_IDS = ["stats_standard", "stats_standard_expanded"]
+SHOOTING_TABLE_IDS = ["stats_shooting", "stats_shooting_expanded"]
 
+# Club name normalisation aliases (our names → FBref names)
 CLUB_ALIASES = {
-    "man utd": "manchester utd",
-    "man city": "manchester city",
-    "nottm forest": "nott'ham forest",
-    "ac milan": "milan",
-    "borussia dortmund": "dortmund",
+    "man utd":          "manchester utd",
+    "man city":         "manchester city",
+    "nottm forest":     "nott'ham forest",
+    "ac milan":         "milan",
+    "borussia dortmund":"dortmund",
     "borussia m'gladbach": "m'gladbach",
-    "atletico madrid": "atlético madrid",
-    "athletic bilbao": "athletic club",
-    "al-hilal": "al-hilal",
-    "al-nassr": "al-nassr",
-    "al-ahli": "al-ahli",
-    "al-qadsiah": "al-qadsiah",
-    "psg": "paris s-g",
-    "inter milan": "inter",
-    "rb leipzig": "rb leipzig",
-    "leipzig": "rb leipzig",
+    "atletico madrid":  "atlético madrid",
+    "athletic bilbao":  "athletic club",
+    "psg":              "paris s-g",
+    "inter milan":      "inter",
+    "rb leipzig":       "rb leipzig",
+    "leipzig":          "rb leipzig",
     "bayer leverkusen": "leverkusen",
-    "sporting cp": "sporting cp",
-    "la galaxy": "la galaxy",
-    "lafc": "los angeles fc",
+    "la galaxy":        "la galaxy",
+    "lafc":             "los angeles fc",
 }
 
 
@@ -111,7 +118,6 @@ CLUB_ALIASES = {
 # ---------------------------------------------------------------------------
 
 def norm(name: str) -> str:
-    """Strip accents and lowercase."""
     s = unicodedata.normalize("NFKD", str(name))
     return "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
 
@@ -121,226 +127,234 @@ def norm_club(name: str) -> str:
     return CLUB_ALIASES.get(n, n)
 
 
-def load_squads() -> dict:
-    """Returns {norm_name: {name, nation, club, position}} for all WC players."""
-    sq = json.load(open(SQUADS_FILE))
-    players = {}
-    for nation_code, team_data in sq["teams"].items():
-        for p in team_data["players"]:
-            key = norm(p["name"])
-            players[key] = {
-                "name": p["name"],
-                "nation": nation_code,
-                "club": p.get("club", ""),
-                "position": p.get("position", "MID"),
-            }
-    return players
-
-
-def read_fbref_csv(path: Path) -> pd.DataFrame | None:
-    """
-    Read an FBref 'Get table as CSV' export.
-    FBref CSVs have a two-row header. We skip the first row (category row)
-    and use the second row as column names. Repeated header rows are dropped.
-    """
-    try:
-        df = pd.read_csv(path, skiprows=1, header=0, encoding="utf-8-sig")
-    except Exception:
-        try:
-            df = pd.read_csv(path, skiprows=0, header=0, encoding="utf-8-sig")
-        except Exception as e:
-            print(f"  ✗ Could not read {path.name}: {e}")
-            return None
-
-    # Drop repeated header rows (FBref inserts column names every 25 rows)
-    if "Player" in df.columns:
-        df = df[df["Player"] != "Player"].copy()
-    elif "Rk" in df.columns:
-        df = df[df["Rk"] != "Rk"].copy()
-
-    # Drop totals / squad rows
-    df = df.dropna(subset=["Player"] if "Player" in df.columns else df.columns[:2])
-    df = df[df.get("Player", df.iloc[:, 1]).astype(str).str.strip() != ""].copy()
-
-    return df.reset_index(drop=True)
-
-
 def safe_float(val, default: float = 0.0) -> float:
     try:
-        f = float(val)
+        f = float(str(val).replace(",", ""))
         return f if pd.notna(f) else default
     except (ValueError, TypeError):
         return default
 
 
 def per90(total: float, nineties: float) -> float:
-    if nineties <= 0:
-        return 0.0
-    return round(total / nineties, 3)
+    return round(total / nineties, 3) if nineties > 0 else 0.0
+
+
+def load_squads() -> dict:
+    sq = json.load(open(SQUADS_FILE))
+    players = {}
+    for nation_code, team_data in sq["teams"].items():
+        for p in team_data["players"]:
+            key = norm(p["name"])
+            players[key] = {
+                "name":     p["name"],
+                "nation":   nation_code,
+                "club":     p.get("club", ""),
+                "position": p.get("position", "MID"),
+            }
+    return players
 
 
 # ---------------------------------------------------------------------------
-# Standard stats processing
+# File reading — handles both HTML saves and CSV exports
 # ---------------------------------------------------------------------------
 
-STANDARD_COLS = {
-    "Player": ["Player"],
-    "Squad":  ["Squad"],
-    "90s":    ["90s"],
-    "MP":     ["MP", "Matches"],
-    "Starts": ["Starts"],
-    "Min":    ["Min"],
-    "Gls":    ["Gls", "Goals"],
-    "Ast":    ["Ast", "Assists"],
-    "xG":     ["xG"],
-    "xAG":    ["xAG", "xA"],
-    "npxG":   ["npxG"],
-}
-
-SHOOTING_COLS = {
-    "Player": ["Player"],
-    "Squad":  ["Squad"],
-    "SoT":    ["SoT", "Sh on Target"],
-    "Sh":     ["Sh", "Shots"],
-    "90s":    ["90s"],
-    "SoT_90": ["SoT/90"],
-    "Sh_90":  ["Sh/90"],
-}
+def find_file(stem: str) -> Path | None:
+    """Find data/fbref/<stem>.html or <stem>.csv, html preferred."""
+    for ext in (".html", ".htm", ".csv"):
+        p = FBREF_DIR / (stem + ext)
+        if p.exists():
+            return p
+    return None
 
 
-def find_col(df: pd.DataFrame, aliases: list[str]) -> str | None:
+def read_table_from_html(path: Path, table_ids: list[str]) -> pd.DataFrame | None:
+    """Extract a specific table from a saved FBref HTML page."""
+    try:
+        tables = pd.read_html(str(path), attrs={"id": tid} if (tid := next(
+            (t for t in table_ids), None)) else None)
+    except Exception:
+        tables = []
+
+    # Try each table id until one works
+    for tid in table_ids:
+        try:
+            dfs = pd.read_html(str(path), attrs={"id": tid})
+            if dfs:
+                df = dfs[0]
+                # FBref uses MultiIndex columns — flatten them
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = [
+                        col[-1] if col[-1] != col[0] else col[0]
+                        for col in df.columns
+                    ]
+                return _clean_df(df)
+        except Exception:
+            continue
+
+    # Fallback: try to find ANY table with a "Player" column
+    try:
+        all_tables = pd.read_html(str(path))
+        for df in all_tables:
+            if isinstance(df.columns, pd.MultiIndex):
+                df.columns = [col[-1] for col in df.columns]
+            if "Player" in df.columns and len(df) > 10:
+                return _clean_df(df)
+    except Exception as e:
+        print(f"    ✗ Could not parse HTML {path.name}: {e}")
+    return None
+
+
+def read_table_from_csv(path: Path) -> pd.DataFrame | None:
+    """Read an FBref 'Get table as CSV' export."""
+    for skiprows in (1, 0):
+        try:
+            df = pd.read_csv(path, skiprows=skiprows, header=0,
+                             encoding="utf-8-sig")
+            if "Player" in df.columns:
+                return _clean_df(df)
+        except Exception:
+            continue
+    return None
+
+
+def _clean_df(df: pd.DataFrame) -> pd.DataFrame:
+    """Remove repeated header rows and blank rows."""
+    if "Player" in df.columns:
+        df = df[df["Player"].astype(str) != "Player"]
+        df = df[df["Player"].astype(str).str.strip() != ""]
+        df = df.dropna(subset=["Player"])
+    return df.reset_index(drop=True)
+
+
+def read_file(path: Path, file_type: str) -> pd.DataFrame | None:
+    table_ids = SHOOTING_TABLE_IDS if "shooting" in file_type else STANDARD_TABLE_IDS
+    if path.suffix in (".html", ".htm"):
+        return read_table_from_html(path, table_ids)
+    else:
+        return read_table_from_csv(path)
+
+
+# ---------------------------------------------------------------------------
+# Column extraction (handles FBref's many column name variations)
+# ---------------------------------------------------------------------------
+
+def col(df: pd.DataFrame, *aliases) -> str | None:
     for a in aliases:
         if a in df.columns:
             return a
     return None
 
 
-def parse_standard(df: pd.DataFrame) -> dict:
-    """Returns {norm_player: stats_dict} from a standard stats CSV."""
+def parse_standard_row(row, df: pd.DataFrame) -> dict | None:
+    nineties = safe_float(row.get(col(df, "90s") or "", 0))
+    minutes  = safe_float(row.get(col(df, "Min") or "", 0))
+    mp       = safe_float(row.get(col(df, "MP", "Matches") or "", 0))
+    starts   = safe_float(row.get(col(df, "Starts") or "", 0))
+    goals    = safe_float(row.get(col(df, "Gls", "Goals") or "", 0))
+    assists  = safe_float(row.get(col(df, "Ast", "Assists") or "", 0))
+    xg       = safe_float(row.get(col(df, "xG") or "", 0))
+    xag      = safe_float(row.get(col(df, "xAG", "xA") or "", 0))
+    squad    = norm_club(str(row.get(col(df, "Squad") or "", "")).strip())
+
+    if nineties <= 0 and minutes > 0:
+        nineties = minutes / 90
+    if nineties <= 0:
+        return None
+
+    return {
+        "_squad":    squad,
+        "_nineties": nineties,
+        "mp":        int(mp),
+        "starts":    int(starts),
+        "minutes":   int(minutes) if minutes > 0 else int(nineties * 90),
+        "goals90":   per90(goals, nineties),
+        "xg90":      per90(xg, nineties),
+        "xa90":      per90(xag, nineties),
+        "starter_rate": round(starts / mp, 2) if mp > 0 else 0.0,
+    }
+
+
+def parse_shooting_row(row, df: pd.DataFrame) -> dict:
+    # Prefer pre-computed /90 columns
+    sot90 = safe_float(row.get(col(df, "SoT/90") or "", 0))
+    sh90  = safe_float(row.get(col(df, "Sh/90") or "", 0))
+
+    if sot90 == 0:
+        nineties = safe_float(row.get(col(df, "90s") or "", 0))
+        sot = safe_float(row.get(col(df, "SoT") or "", 0))
+        sh  = safe_float(row.get(col(df, "Sh", "Shots") or "", 0))
+        sot90 = per90(sot, nineties)
+        sh90  = per90(sh, nineties)
+
+    return {"sot90": sot90, "sh90": sh90}
+
+
+def parse_df(df: pd.DataFrame, file_type: str) -> dict:
+    """Returns {norm_player_name: stats_dict}."""
     result = {}
-    pcol = find_col(df, STANDARD_COLS["Player"])
-    scol = find_col(df, STANDARD_COLS["Squad"])
+    pcol = col(df, "Player")
     if not pcol:
         return result
 
     for _, row in df.iterrows():
         pname = str(row.get(pcol, "")).strip()
-        if not pname or pname == "Player":
+        if not pname or pname in ("Player", "nan"):
             continue
         key = norm(pname)
 
-        nineties = safe_float(row.get(find_col(df, STANDARD_COLS["90s"]) or "", 0))
-        mp       = safe_float(row.get(find_col(df, STANDARD_COLS["MP"]) or "", 0))
-        starts   = safe_float(row.get(find_col(df, STANDARD_COLS["Starts"]) or "", 0))
-        minutes  = safe_float(row.get(find_col(df, STANDARD_COLS["Min"]) or "", 0))
-        goals    = safe_float(row.get(find_col(df, STANDARD_COLS["Gls"]) or "", 0))
-        assists  = safe_float(row.get(find_col(df, STANDARD_COLS["Ast"]) or "", 0))
-        xg       = safe_float(row.get(find_col(df, STANDARD_COLS["xG"]) or "", 0))
-        xag      = safe_float(row.get(find_col(df, STANDARD_COLS["xAG"]) or "", 0))
-
-        squad = norm_club(str(row.get(scol, "")).strip()) if scol else ""
-
-        if nineties <= 0 and minutes > 0:
-            nineties = minutes / 90
-
-        result[key] = {
-            "_squad": squad,
-            "_nineties": nineties,
-            "mp": int(mp),
-            "starts": int(starts),
-            "minutes": int(minutes),
-            "goals90": per90(goals, nineties),
-            "xg90": per90(xg, nineties),
-            "xa90": per90(xag, nineties),
-            "starter_rate": round(starts / mp, 2) if mp > 0 else 0.0,
-        }
-    return result
-
-
-def parse_shooting(df: pd.DataFrame) -> dict:
-    """Returns {norm_player: {sot90, sh90}} from a shooting CSV."""
-    result = {}
-    pcol = find_col(df, SHOOTING_COLS["Player"])
-    if not pcol:
-        return result
-
-    for _, row in df.iterrows():
-        pname = str(row.get(pcol, "")).strip()
-        if not pname or pname == "Player":
-            continue
-        key = norm(pname)
-
-        # Prefer pre-computed /90 columns; fall back to computing from totals
-        sot90_col = find_col(df, SHOOTING_COLS["SoT_90"])
-        sh90_col  = find_col(df, SHOOTING_COLS["Sh_90"])
-
-        if sot90_col and sh90_col:
-            sot90 = safe_float(row.get(sot90_col, 0))
-            sh90  = safe_float(row.get(sh90_col, 0))
+        if "shooting" in file_type:
+            result[key] = parse_shooting_row(row, df)
         else:
-            nineties = safe_float(row.get(find_col(df, SHOOTING_COLS["90s"]) or "", 0))
-            sot = safe_float(row.get(find_col(df, SHOOTING_COLS["SoT"]) or "", 0))
-            sh  = safe_float(row.get(find_col(df, SHOOTING_COLS["Sh"]) or "", 0))
-            sot90 = per90(sot, nineties)
-            sh90  = per90(sh, nineties)
+            parsed = parse_standard_row(row, df)
+            if parsed:
+                result[key] = parsed
 
-        result[key] = {"sot90": sot90, "sh90": sh90}
     return result
 
 
 # ---------------------------------------------------------------------------
-# Main build logic
+# Build club stats
 # ---------------------------------------------------------------------------
 
 def build_club_stats(wc_players: dict) -> dict:
-    """
-    Merge all available standard + shooting CSVs into per-player club stats.
-    For players who appear in multiple league files (transfers), prefer
-    the file with more minutes.
-    """
-    standard_data: dict[str, dict] = {}  # norm_name → stats
-    shooting_data: dict[str, dict] = {}  # norm_name → {sot90, sh90}
+    standard_data: dict[str, dict] = {}
+    shooting_data: dict[str, dict] = {}
 
-    for fname, (league, _) in CLUB_CSVS.items():
-        fpath = FBREF_DIR / fname
-        if not fpath.exists():
+    all_files = {**CLUB_FILES}
+
+    for stem, (league, file_type) in all_files.items():
+        path = find_file(stem)
+        if not path:
             continue
 
-        df = read_fbref_csv(fpath)
+        df = read_file(path, file_type)
         if df is None or df.empty:
+            print(f"  {stem}: empty or unreadable")
             continue
 
-        if "shooting" in fname:
-            parsed = parse_shooting(df)
-            print(f"  {fname}: {len(parsed)} shooting rows")
-            for k, v in parsed.items():
-                shooting_data[k] = v
+        parsed = parse_df(df, file_type)
+        print(f"  {path.name}: {len(parsed)} players ({league})")
+
+        if "shooting" in file_type:
+            shooting_data.update(parsed)
         else:
-            parsed = parse_standard(df)
-            print(f"  {fname}: {len(parsed)} standard rows")
             for k, v in parsed.items():
-                # keep entry with most minutes if player appears in multiple leagues
                 existing = standard_data.get(k)
                 if existing is None or v["minutes"] > existing["minutes"]:
                     v["_league"] = league
                     standard_data[k] = v
 
-    print(f"\nStandard data loaded: {len(standard_data)} players")
-    print(f"Shooting data loaded:  {len(shooting_data)} players")
+    print(f"\nStandard data: {len(standard_data)} players")
+    print(f"Shooting data: {len(shooting_data)} players")
 
-    # --- merge into output dict ---
     out = {}
-    matched = 0
-
     for norm_name, wcp in wc_players.items():
         std = standard_data.get(norm_name)
-        if std is None:
-            continue  # no FBref club match
-
+        if not std:
+            continue
         sht = shooting_data.get(norm_name, {})
-        matched += 1
 
-        entry = {
+        out[norm_name] = {
             "name":         wcp["name"],
             "squad":        wcp["club"],
             "league":       std.get("_league", ""),
@@ -354,55 +368,52 @@ def build_club_stats(wc_players: dict) -> dict:
             "starter_rate": std["starter_rate"],
             "norm_name":    norm_name,
         }
-        out[norm_name] = entry
 
-    print(f"WC players matched to club stats: {matched}/{len(wc_players)}")
+    matched = len(out)
     unmatched = [wcp["name"] for nn, wcp in wc_players.items() if nn not in out]
+    print(f"Matched: {matched}/{len(wc_players)} WC players")
     if unmatched:
-        print(f"Unmatched ({len(unmatched)}): {unmatched[:10]}{'...' if len(unmatched) > 10 else ''}")
+        print(f"Not found ({len(unmatched)}): {', '.join(unmatched[:15])}"
+              + (" ..." if len(unmatched) > 15 else ""))
     return out
 
 
-def build_nt_stats(wc_players: dict) -> dict:
-    """
-    Merge all NT qualification CSVs. For players with multiple entries
-    (different competitions), average weighted by 90s played.
-    """
-    nt_raw: dict[str, list] = defaultdict(list)  # norm_name → list of stat dicts
+# ---------------------------------------------------------------------------
+# Build NT stats
+# ---------------------------------------------------------------------------
 
-    for fname, conf in NT_CSVS.items():
-        fpath = FBREF_DIR / fname
-        if not fpath.exists():
+def build_nt_stats(wc_players: dict) -> dict:
+    nt_raw: dict[str, list] = defaultdict(list)
+
+    for stem, (comp, file_type) in NT_FILES.items():
+        path = find_file(stem)
+        if not path:
             continue
 
-        df = read_fbref_csv(fpath)
+        df = read_file(path, file_type)
         if df is None or df.empty:
             continue
 
-        parsed = parse_standard(df)
-        shoot  = parse_shooting(df)
-        print(f"  {fname}: {len(parsed)} NT rows ({conf})")
+        parsed = parse_df(df, "standard")
+        shoot  = parse_df(df, "shooting") if "shooting" in (df.columns.tolist()) else {}
+        print(f"  {path.name}: {len(parsed)} players ({comp})")
 
-        for norm_name, stats in parsed.items():
-            entry = {**stats, "_conf": conf}
-            entry["sot90"] = shoot.get(norm_name, {}).get("sot90", 0.0)
-            nt_raw[norm_name].append(entry)
+        for k, v in parsed.items():
+            v["sot90"] = shoot.get(k, {}).get("sot90", 0.0)
+            v["_comp"] = comp
+            nt_raw[k].append(v)
 
     out = {}
-    matched = 0
-
     for norm_name, wcp in wc_players.items():
         rows = nt_raw.get(norm_name)
         if not rows:
             continue
 
-        matched += 1
-        # weighted average of per-90 rates by minutes played
         total_min = sum(r["minutes"] for r in rows) or 1
         def wavg(field):
             return round(sum(r.get(field, 0) * r["minutes"] for r in rows) / total_min, 3)
 
-        total_mp  = sum(r["mp"] for r in rows)
+        total_mp    = sum(r["mp"] for r in rows)
         total_start = sum(r["starts"] for r in rows)
 
         out[norm_name] = {
@@ -415,10 +426,10 @@ def build_nt_stats(wc_players: dict) -> dict:
             "xa90":         wavg("xa90"),
             "goals90":      wavg("goals90"),
             "sot90":        wavg("sot90"),
-            "tackles90":    wavg("tackles90") if any("tackles90" in r for r in rows) else 0.0,
+            "tackles90":    0.0,
         }
 
-    print(f"WC players matched to NT stats: {matched}/{len(wc_players)}")
+    print(f"Matched: {len(out)}/{len(wc_players)} WC players to NT stats")
     return out
 
 
@@ -428,52 +439,50 @@ def build_nt_stats(wc_players: dict) -> dict:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Print stats without writing files")
+    parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
 
-    if not FBREF_DIR.exists():
-        print(f"Creating {FBREF_DIR}")
-        FBREF_DIR.mkdir(parents=True)
+    FBREF_DIR.mkdir(parents=True, exist_ok=True)
 
-    available = list(FBREF_DIR.glob("*.csv"))
-    if not available:
-        print(f"No CSVs found in {FBREF_DIR}")
-        print("Download FBref CSVs as described in FBREF_DOWNLOAD_GUIDE.md")
+    available = list(FBREF_DIR.glob("*"))
+    data_files = [f for f in available if f.suffix in (".html", ".htm", ".csv")]
+
+    if not data_files:
+        print(f"No files found in {FBREF_DIR}")
+        print("Save FBref pages as HTML (Ctrl+S / Cmd+S) into that folder.")
+        print("See FBREF_DOWNLOAD_GUIDE.md for filenames and URLs.")
         return
 
-    print(f"Found {len(available)} CSV files in {FBREF_DIR}\n")
-    wc_players = load_squads()
-    print(f"Loaded {len(wc_players)} WC players from wc_squads.json\n")
+    print(f"Found {len(data_files)} files in {FBREF_DIR}\n")
 
-    print("--- Club stats ---")
+    wc_players = load_squads()
+    print(f"Loaded {len(wc_players)} WC players\n")
+
+    print("=== Club stats ===")
     club_stats = build_club_stats(wc_players)
 
-    print("\n--- NT stats ---")
+    print("\n=== NT stats ===")
     nt_stats = build_nt_stats(wc_players)
 
     if args.dry_run:
-        print("\n[dry-run] Sample club stats (first 3):")
+        print("\n[dry-run] First 3 club entries:")
         for k, v in list(club_stats.items())[:3]:
-            print(f"  {k}: {v}")
-        print("\n[dry-run] Sample NT stats (first 3):")
+            print(f"  {k}: xg90={v['xg90']} xa90={v['xa90']} sot90={v['sot90']}")
+        print("\n[dry-run] First 3 NT entries:")
         for k, v in list(nt_stats.items())[:3]:
-            print(f"  {k}: {v}")
+            print(f"  {k}: nation={v['nation']} xg90={v['xg90']} goals90={v['goals90']}")
         return
 
-    # Merge with existing files (preserve entries not found in FBref)
     existing_club = json.loads(OUT_CLUB.read_text()) if OUT_CLUB.exists() else {}
     existing_nt   = json.loads(OUT_NT.read_text()) if OUT_NT.exists() else {}
-
     existing_club.update(club_stats)
     existing_nt.update(nt_stats)
 
     OUT_CLUB.write_text(json.dumps(existing_club, indent=2, ensure_ascii=False))
     OUT_NT.write_text(json.dumps(existing_nt, indent=2, ensure_ascii=False))
 
-    print(f"\n✓ Wrote {len(existing_club)} entries → {OUT_CLUB}")
-    print(f"✓ Wrote {len(existing_nt)} entries → {OUT_NT}")
-    print("\nPlayers NOT found in FBref keep their existing manual stats.")
+    print(f"\n✓ {OUT_CLUB} — {len(existing_club)} entries")
+    print(f"✓ {OUT_NT} — {len(existing_nt)} entries")
 
 
 if __name__ == "__main__":
