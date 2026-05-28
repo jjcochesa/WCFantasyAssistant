@@ -286,6 +286,60 @@ def _parse_team_code(raw: dict) -> str:
 FIFA_PLAYERS_URL = "https://play.fifa.com/json/fantasy/players.json"
 FIFA_SQUADS_URL  = "https://play.fifa.com/json/fantasy/squads.json"
 
+_FIFA_HEADERS = {
+    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15",
+    "Referer": "https://play.fifa.com/fantasy/",
+}
+
+
+def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
+    """
+    Fetch live ownership % for all players from the FIFA Fantasy API.
+    Never uses file cache — always hits the live endpoint so the 5%
+    scout threshold reflects current ownership.
+    Returns {norm_name: pct, player_id_str: pct}.
+    Falls back to {} silently if the API is unreachable.
+    """
+    headers = dict(_FIFA_HEADERS)
+    if session_token:
+        token = session_token if session_token.startswith("Bearer") else f"Bearer {session_token}"
+        headers["Authorization"] = token
+
+    for url in [FIFA_PLAYERS_URL, f"{FIFA_FANTASY_BASE}/v2/players", f"{FIFA_FANTASY_BASE}/v1/players"]:
+        try:
+            resp = requests.get(url, headers=headers, timeout=15)
+            if resp.status_code != 200:
+                continue
+            data = resp.json()
+            raw_list = data if isinstance(data, list) else (
+                data.get("players") or data.get("data") or data.get("response") or []
+            )
+            result: dict = {}
+            for raw in raw_list:
+                own = float(
+                    raw.get("percentSelected") or raw.get("ownershipPercent") or
+                    raw.get("selectedBy") or raw.get("ownership") or 0.0
+                )
+                pid = str(raw.get("id") or raw.get("playerId") or "")
+                known = raw.get("knownName")
+                if known:
+                    name = known
+                else:
+                    first = raw.get("firstName") or ""
+                    last  = raw.get("lastName") or ""
+                    name  = f"{first} {last}".strip()
+                if pid:
+                    result[pid] = own
+                if name:
+                    result[_norm_name(name)] = own
+            if result:
+                print(f"[FIFA] Live ownership fetched: {len(raw_list)} players")
+                return result
+        except Exception as e:
+            print(f"[FIFA] Ownership fetch failed ({url}): {e}")
+    return {}
+
 
 def fetch_fantasy_players(session_token: Optional[str] = None) -> list:
     """
@@ -295,11 +349,7 @@ def fetch_fantasy_players(session_token: Optional[str] = None) -> list:
     """
     cached = _from_cache("fifa_fantasy_players_raw")
 
-    headers = {
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15",
-        "Referer": "https://play.fifa.com/fantasy/",
-    }
+    headers = dict(_FIFA_HEADERS)
 
     # Public static JSON — no auth needed
     for url in [FIFA_PLAYERS_URL, f"{FIFA_FANTASY_BASE}/v2/players"]:

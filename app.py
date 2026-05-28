@@ -1,12 +1,13 @@
 """FIFA World Cup Fantasy 2026 Assistant — Streamlit App"""
 import os
+import datetime
 import streamlit as st
 import pandas as pd
 
-from data_engine import load_data
+from data_engine import load_data, fetch_ownership_map, _norm_name
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
-    MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD
+    MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
 )
 from data.team_stats import TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, get_team_fdr_total
 
@@ -42,11 +43,18 @@ with st.sidebar:
             "4. Paste it below (starts with 'Bearer ...')"
         )
         session_token = st.text_input("Session token", type="password")
-        api_key = st.text_input("API-Football key (optional, for live stats)", type="password")
+        api_key = st.text_input("API-Football key (optional)", type="password")
         if api_key:
             os.environ["API_FOOTBALL_KEY"] = api_key
     elif data_mode == "Local JSON export":
         players_file = st.text_input("JSON file path", "data/players_export.json")
+    else:
+        # WC Squads / Demo — token still used for live ownership refresh
+        with st.expander("FIFA Fantasy session token (for live ownership %)"):
+            session_token = st.text_input(
+                "Bearer token", type="password", key="wc_token",
+                help="Optional. Paste your Authorization header from play.fifa.com/fantasy to get real ownership % instead of estimates.",
+            )
 
     st.divider()
     st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
@@ -56,9 +64,14 @@ with st.sidebar:
 
     load_btn = st.button("Load / Refresh Data", type="primary", use_container_width=True)
 
+    # Ownership status — filled in after the refresh below
+    own_status_placeholder = st.empty()
 
-# ── Load data ─────────────────────────────────────────────────────────────────
-@st.cache_data(ttl=900, show_spinner="Fetching and scoring players...")
+
+# ── Cached loaders ────────────────────────────────────────────────────────────
+
+# Heavy load: stats + projections. Long TTL — stats don't change between loads.
+@st.cache_data(ttl=21600, show_spinner="Scoring players...")
 def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     import config as cfg_mod
     cfg_mod.NATIONAL_TEAM_WEIGHT = iw
@@ -71,8 +84,38 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     )
 
 
+# Ownership refresh: short TTL, always runs on page load.
+# Keyed on token so a new token immediately gets fresh data.
+@st.cache_data(ttl=600, show_spinner=False)
+def _get_ownership(token: str) -> dict:
+    return fetch_ownership_map(token or None)
+
+
+def _apply_ownership(df: pd.DataFrame, own_map: dict) -> pd.DataFrame:
+    """Overlay live ownership % and recompute scout flag."""
+    if not own_map:
+        return df
+    df = df.copy()
+    def _lookup(row):
+        v = own_map.get(str(row.get("id", "")))
+        if v is None:
+            v = own_map.get(_norm_name(str(row.get("name", ""))))
+        return float(v) if v is not None else row["own_%"]
+    df["own_%"] = df.apply(_lookup, axis=1)
+    # Scout = under 5% ownership AND projected to earn >4 pts/game
+    df["scout"] = (df["own_%"] < SCOUT_OWNERSHIP_THRESHOLD) & (df["xPts/game"] > SCOUT_POINTS_THRESHOLD)
+    return df
+
+
+# ── Load data ─────────────────────────────────────────────────────────────────
 if "df" not in st.session_state:
     st.session_state.df = None
+if "own_refreshed_at" not in st.session_state:
+    st.session_state.own_refreshed_at = None
+
+if load_btn:
+    _load.clear()
+    _get_ownership.clear()
 
 if load_btn or st.session_state.df is None:
     try:
@@ -81,10 +124,25 @@ if load_btn or st.session_state.df is None:
         st.error(f"Error loading data: {e}")
         st.stop()
 
+# Always refresh ownership on every page render (cached for 10 min)
+if st.session_state.df is not None and data_mode != "Demo data (40 players)":
+    own_map = _get_ownership(session_token or "")
+    if own_map:
+        st.session_state.df = _apply_ownership(st.session_state.df, own_map)
+        st.session_state.own_refreshed_at = datetime.datetime.now()
+
 df = st.session_state.df
 if df is None or df.empty:
     st.info("👈 Click **Load / Refresh Data** to get started.")
     st.stop()
+
+# Sidebar ownership status badge
+with own_status_placeholder:
+    if st.session_state.own_refreshed_at:
+        mins_ago = int((datetime.datetime.now() - st.session_state.own_refreshed_at).total_seconds() / 60)
+        st.success(f"Live ownership updated {mins_ago}m ago")
+    else:
+        st.warning("Ownership: using estimates (no API connection)")
 
 # ── KPI strip ─────────────────────────────────────────────────────────────────
 k1, k2, k3, k4, k5 = st.columns(5)
