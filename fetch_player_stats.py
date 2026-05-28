@@ -77,7 +77,7 @@ NT_LEAGUE_IDS = {
     34,   # CONMEBOL WCQ
     36,   # AFCON Qualification
     37,   # WCQ Playoffs (all confederations)
-    # CAF WCQ (Africa WC qualifying) — ID unknown, check API-Football search
+    29,   # CAF WCQ (Africa World Cup Qualifying)
 }
 
 # ---------------------------------------------------------------------------
