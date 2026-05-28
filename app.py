@@ -191,50 +191,130 @@ def _greedy_squad(df, budget, sort_col, country_cap):
 
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4 = st.tabs([
-    "🏅 Player Rankings",
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    "🏅 Rankings",
+    "⚽ Club Form",
+    "🌍 International Form",
     "🏗️ Squad Builder",
     "🔍 Scouts & Value",
     "📊 Fixtures & FDR",
 ])
 
-# ── TAB 1: Player Rankings ────────────────────────────────────────────────────
-with tab1:
-    st.subheader("All Players — Ranked by Projected Group Stage Points")
-
-    r1, r2, r3, r4 = st.columns(4)
-    pos_f = r1.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="r_pos")
-    max_p = r2.number_input("Max price ($m)", 4.0, 15.0, 12.0, 0.5, key="r_price")
-    sort_l = r3.selectbox("Sort by", list(SORT_LABELS.keys()), key="r_sort")
-    country_f = r4.selectbox("Country", ["All"] + sorted(df["country"].unique()), key="r_country")
-
-    view = df.copy()
+# ── Shared filter helper ──────────────────────────────────────────────────────
+def _filter(key_prefix: str) -> pd.DataFrame:
+    c1, c2, c3, c4 = st.columns(4)
+    pos_f    = c1.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key=f"{key_prefix}_pos")
+    max_p    = c2.number_input("Max price ($m)", 4.0, 15.0, 12.0, 0.5, key=f"{key_prefix}_price")
+    country  = c3.selectbox("Country", ["All"] + sorted(df["country"].unique()), key=f"{key_prefix}_ctry")
+    sort_opt = c4.selectbox("Sort by", list(SORT_LABELS.keys()), key=f"{key_prefix}_sort")
+    v = df.copy()
     if pos_f != "All":
-        view = view[view["pos"] == pos_f]
-    if country_f != "All":
-        view = view[view["country"] == country_f]
-    view = view[view["price"] <= max_p]
-    view = view.sort_values(SORT_LABELS[sort_l], ascending=False).reset_index(drop=True)
-    view.index += 1
+        v = v[v["pos"] == pos_f]
+    if country != "All":
+        v = v[v["country"] == country]
+    v = v[v["price"] <= max_p].sort_values(SORT_LABELS[sort_opt], ascending=False).reset_index(drop=True)
+    v.index += 1
+    return v
 
+
+# ── TAB 1: Combined Rankings ──────────────────────────────────────────────────
+with tab1:
+    st.subheader("Player Rankings — Combined Model (GD1 + GD2)")
+    st.caption("Model: player_xG = team_xG × pos_fraction × (player_xg90 / pos_avg_xg90) | CS% from FPLJoe bookie markets | 65% NT / 35% club (flipped if <5 NT apps)")
+    view = _filter("r")
     cols_main = ["name", "country", "club", "pos", "price", "own_%",
                  "GD1 xG", "GD2 xG", "xPts_GS", "goals/90", "assists/90",
-                 "xg90_club", "xg90_nt", "value", "scout"]
-    st.dataframe(fmt(view[cols_main]), use_container_width=True, height=560)
-
-    with st.expander("📋 Full stats breakdown"):
-        st.caption("International stats")
-        intl_cols = ["name", "pos", "country", "intl_games", "intl_goals", "intl_assists",
-                     "intl_cs", "intl_sot", "intl_chances", "intl_tackles", "intl_saves"]
-        st.dataframe(view[intl_cols], use_container_width=True)
-        st.caption("Club stats (current season)")
-        club_cols = ["name", "pos", "club", "club_games", "club_goals", "club_assists",
-                     "club_cs", "club_sot", "club_chances", "club_tackles", "club_saves"]
-        st.dataframe(view[club_cols], use_container_width=True)
+                 "xg90_club", "xg90_nt", "nt_weight", "value", "scout"]
+    st.dataframe(fmt(view[cols_main]), use_container_width=True, height=580)
 
 
-# ── TAB 2: Squad Builder ──────────────────────────────────────────────────────
+# ── TAB 2: Club Form ──────────────────────────────────────────────────────────
 with tab2:
+    st.subheader("Club Form — 2024/25 Season Stats")
+    st.caption("Per-90 stats from API-Football club season. Used at 35% weight in model (65% if <5 NT apps).")
+    view2 = _filter("cl")
+    club_cols = ["name", "country", "club", "pos", "price",
+                 "club_games", "club_goals", "club_assists", "club_cs",
+                 "xg90_club", "xa90_club", "sot90_club", "kp90_club", "tackles90_club",
+                 "club_sot", "club_chances", "club_tackles", "club_saves"]
+    st.dataframe(
+        view2[club_cols].style
+            .background_gradient(subset=["xg90_club", "xa90_club"], cmap="Greens")
+            .format({
+                "xg90_club": "{:.3f}", "xa90_club": "{:.3f}",
+                "sot90_club": "{:.3f}", "kp90_club": "{:.3f}", "tackles90_club": "{:.3f}",
+            }, na_rep="—"),
+        use_container_width=True, height=580,
+    )
+    with st.expander("ℹ️ About Club Form data"):
+        st.markdown("""
+**Source**: API-Football, 2024/25 club season stats.
+
+**Available when**: `API_FOOTBALL_KEY` is set and player IDs are matched.
+*Pre-tournament, most players will show 0 club stats until the ID mapping is built.*
+
+**What each column means**:
+- `xg90_club` = goals/90 from club (proxy for xG/90 until FBRef scraper is added)
+- `xa90_club` = assists/90 from club
+- `sot90_club` = shots on target/90 (FWD relevance)
+- `kp90_club` = key passes/90 (MID relevance)
+- `tackles90_club` = tackles/90 (MID relevance)
+        """)
+
+
+# ── TAB 3: International Form ─────────────────────────────────────────────────
+with tab3:
+    st.subheader("International Form — Last 20 NT Matches")
+    st.caption("Per-90 stats from API-Football international competitions (WC qualifiers, Nations League, friendlies). Used at 65% weight in model.")
+    view3 = _filter("nt")
+    nt_cols = ["name", "country", "club", "pos", "price",
+               "intl_games", "intl_goals", "intl_assists", "intl_cs",
+               "xg90_nt", "xa90_nt", "sot90_nt", "kp90_nt", "tackles90_nt",
+               "intl_sot", "intl_chances", "intl_tackles", "intl_saves",
+               "nt_weight"]
+    st.dataframe(
+        view3[nt_cols].style
+            .background_gradient(subset=["xg90_nt", "xa90_nt"], cmap="Blues")
+            .format({
+                "xg90_nt": "{:.3f}", "xa90_nt": "{:.3f}",
+                "sot90_nt": "{:.3f}", "kp90_nt": "{:.3f}", "tackles90_nt": "{:.3f}",
+            }, na_rep="—"),
+        use_container_width=True, height=580,
+    )
+    with st.expander("ℹ️ About International Form data"):
+        st.markdown("""
+**Source**: API-Football, international competitions:
+- WC 2026 (live from June 11)
+- UEFA Nations League 2024/25
+- WC Qualifying (all confederations, 2024–2025)
+
+**NT weight**: `65% NT` = 5+ international appearances → NT data is trusted.
+`35% NT` = fewer than 5 apps → club form is the primary signal.
+
+**Clean sheets** are particularly important for **GK** and **DEF** —
+CS probability from FPLJoe bookie markets overrides historical CS rate in the model.
+        """)
+
+    st.subheader("Country Deep Dive")
+    sel_country = st.selectbox("Select country", sorted(TEAM_NAMES.values()), key="nt_country_drill")
+    sel_code = next((c for c, n in TEAM_NAMES.items() if n == sel_country), None)
+    if sel_code:
+        cp = df[df["team_code"] == sel_code].sort_values("xPts_GS", ascending=False)
+        cp.index = range(1, len(cp) + 1)
+        if cp.empty:
+            st.info("No players loaded for this country.")
+        else:
+            st.dataframe(
+                fmt(cp[["name", "pos", "club", "price", "own_%",
+                         "GD1 xG", "GD2 xG", "xPts_GS",
+                         "xg90_nt", "xa90_nt", "xg90_club", "xa90_club",
+                         "intl_games", "club_games", "nt_weight", "value"]]),
+                use_container_width=True,
+            )
+
+
+# ── TAB 4: Squad Builder ──────────────────────────────────────────────────────
+with tab4:
     st.subheader("Build Your Best Squad")
 
     b1, b2 = st.columns(2)
@@ -259,14 +339,8 @@ with tab2:
             st.success(f"⭐ Captain: **{captain['name']}** ({captain['xPts/game']:.2f} → ×2 = {captain['xPts/game']*2:.2f} xPts/game)  |  👑 Vice: **{vice['name']}**")
 
             squad_cols = ["name", "pos", "country", "club", "price", "own_%",
-                          "xPts_GS", "xPts/game", "value", "team_fdr", "scout"]
-            st.dataframe(
-                squad[squad_cols].style
-                    .background_gradient(subset=["xPts_GS"], cmap="Greens")
-                    .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                             "xPts_GS": "{:.2f}", "xPts/game": "{:.2f}", "value": "{:.3f}"}),
-                use_container_width=True,
-            )
+                          "GD1 xG", "GD2 xG", "xPts_GS", "value"]
+            st.dataframe(fmt(squad[squad_cols]), use_container_width=True)
 
             for pos in ["GK", "DEF", "MID", "FWD"]:
                 sub = squad[squad["pos"] == pos]
@@ -277,12 +351,12 @@ with tab2:
                 st.markdown(f"**{pos}:** {line}")
 
 
-# ── TAB 3: Scouts & Value ────────────────────────────────────────────────────
-with tab3:
+# ── TAB 5: Scouts & Value ─────────────────────────────────────────────────────
+with tab5:
     c1, c2 = st.columns(2)
 
     with c1:
-        st.subheader(f"🔍 Scout Candidates (<{int(SCOUT_OWNERSHIP_THRESHOLD)}% owned, >4 xPts/game)")
+        st.subheader(f"🔍 Scout Picks  (<{int(SCOUT_OWNERSHIP_THRESHOLD)}% owned)")
         scouts = df[df["scout"]].sort_values("xPts/game", ascending=False)
         pos_s = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="scout_pos")
         if pos_s != "All":
@@ -290,15 +364,16 @@ with tab3:
         scouts.index = range(1, len(scouts) + 1)
         st.dataframe(
             scouts[["name", "pos", "country", "club", "price", "own_%",
-                     "xPts_GS", "xPts/game", "value"]].style
-                .background_gradient(subset=["xPts/game"], cmap="Reds")
+                     "GD1 xG", "GD2 xG", "xPts_GS", "value"]].style
+                .background_gradient(subset=["xPts_GS"], cmap="Reds")
                 .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                         "xPts/game": "{:.2f}", "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
-            use_container_width=True, height=400,
+                         "GD1 xG": "{:.3f}", "GD2 xG": "{:.3f}",
+                         "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
+            use_container_width=True, height=420,
         )
 
     with c2:
-        st.subheader("💰 Best Value by Position (xPts GS / $m)")
+        st.subheader("💰 Best Value (xPts GS / $m)")
         pos_v = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="val_pos")
         max_pv = st.number_input("Max price", 4.0, 15.0, 12.0, 0.5, key="val_price")
         val_view = df[df["price"] <= max_pv].copy()
@@ -308,40 +383,40 @@ with tab3:
         val_view.index += 1
         st.dataframe(
             val_view[["name", "pos", "country", "club", "price", "own_%",
-                       "xPts_GS", "xPts/game", "value"]].style
+                       "GD1 xG", "GD2 xG", "xPts_GS", "value"]].style
                 .background_gradient(subset=["value"], cmap="Blues")
                 .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                         "xPts/game": "{:.2f}", "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
-            use_container_width=True, height=400,
+                         "GD1 xG": "{:.3f}", "GD2 xG": "{:.3f}",
+                         "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
+            use_container_width=True, height=420,
         )
 
 
-# ── TAB 4: Fixtures & FDR ────────────────────────────────────────────────────
-with tab4:
-    st.subheader("Group Stage Fixtures, FDR & Projections")
-    st.caption("FDR: 1 = easiest, 5 = hardest | CS% = clean sheet probability | Proj.G = projected goals | Source: FPLJoe.com / @FPL_Marcello")
+# ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
+with tab6:
+    st.subheader("Group Stage Fixtures — CS% & Projected Goals")
+    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (27.05.26). CS% directly drives DEF/GK clean sheet points in model.")
 
     fdr_rows = []
     for code, name in sorted(TEAM_NAMES.items(), key=lambda x: get_team_fdr_total(x[0])):
-        fdr_vals = FDR.get(code, [3, 3, 3])
-        cs_vals = CS_PCT.get(code, [0.3, 0.3, 0.3])
-        g_vals = PROJ_GOALS.get(code, [1.0, 1.0, 1.0])
-        fixtures = FIXTURES.get(code, ["?", "?", "?"])
+        fdr_vals  = FDR.get(code, [3, 3, 3])
+        cs_vals   = CS_PCT.get(code, [0.3, 0.3, 0.3])
+        g_vals    = PROJ_GOALS.get(code, [1.0, 1.0, 1.0])
+        fixtures  = FIXTURES.get(code, ["?", "?", "?"])
         fdr_rows.append({
             "Country": name,
-            "Code": code,
-            "MD1 vs": TEAM_NAMES.get(fixtures[0], fixtures[0]) if len(fixtures) > 0 else "?",
+            "MD1 vs":  TEAM_NAMES.get(fixtures[0], "?") if fixtures else "?",
             "FDR1": fdr_vals[0],
             "CS%1": f"{int(cs_vals[0]*100)}%",
-            "xG1": g_vals[0],
-            "MD2 vs": TEAM_NAMES.get(fixtures[1], fixtures[1]) if len(fixtures) > 1 else "?",
+            "xG1":  g_vals[0],
+            "MD2 vs":  TEAM_NAMES.get(fixtures[1], "?") if len(fixtures) > 1 else "?",
             "FDR2": fdr_vals[1],
             "CS%2": f"{int(cs_vals[1]*100)}%",
-            "xG2": g_vals[1],
-            "MD3 vs": TEAM_NAMES.get(fixtures[2], fixtures[2]) if len(fixtures) > 2 else "?",
+            "xG2":  g_vals[1],
+            "MD3 vs":  TEAM_NAMES.get(fixtures[2], "?") if len(fixtures) > 2 else "?",
             "FDR3": fdr_vals[2],
             "CS%3": f"{int(cs_vals[2]*100)}%",
-            "xG3": g_vals[2],
+            "xG3":  g_vals[2],
             "Total FDR": sum(fdr_vals),
             "Avg CS%": f"{int(sum(cs_vals)/3*100)}%",
         })
@@ -349,36 +424,20 @@ with tab4:
     fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR")
 
     def color_fdr(val):
-        colors = {1: "background-color:#1a7a1a;color:white",
-                  2: "background-color:#5cb85c;color:white",
-                  3: "background-color:#f0ad4e;color:black",
-                  4: "background-color:#d9534f;color:white",
-                  5: "background-color:#8b0000;color:white"}
-        return colors.get(val, "")
+        return {
+            1: "background-color:#1a7a1a;color:white",
+            2: "background-color:#5cb85c;color:white",
+            3: "background-color:#f0ad4e;color:black",
+            4: "background-color:#d9534f;color:white",
+            5: "background-color:#8b0000;color:white",
+        }.get(val, "")
 
-    # pandas >= 2.1 renamed applymap → map
     styler = fdr_df.style
     try:
         styler = styler.map(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
     except AttributeError:
         styler = styler.applymap(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
-    st.dataframe(styler, use_container_width=True, height=600)
-
-    st.subheader("Drill into a Country")
-    sel_country = st.selectbox("Select country", sorted(TEAM_NAMES.values()))
-    sel_code = next((c for c, n in TEAM_NAMES.items() if n == sel_country), None)
-    if sel_code:
-        country_players = df[df["team_code"] == sel_code].sort_values("xPts_GS", ascending=False)
-        if country_players.empty:
-            st.info("No players loaded for this country in current dataset.")
-        else:
-            country_players.index = range(1, len(country_players) + 1)
-            st.dataframe(
-                fmt(country_players[["name", "pos", "club", "price", "own_%",
-                                     "GD1 xG", "GD2 xG", "xPts_GS", "goals/90",
-                                     "assists/90", "xg90_club", "xg90_nt", "value", "scout"]]),
-                use_container_width=True,
-            )
+    st.dataframe(styler, use_container_width=True, height=640)
 
 st.divider()
-st.caption("Scoring: Official FIFA WC Fantasy 2026 rules | Model: ratio-based xG share × team projection | Stats: 65% NT / 35% club (flipped if <5 NT apps) | Team projections: FPLJoe.com (bookie-derived)")
+st.caption("Scoring: Official FIFA WC Fantasy 2026 | Model: xG ratio share × team projection | Weights: 65% NT / 35% club | CS% & xG: FPLJoe.com bookie markets (SBOBET/Betfair)")

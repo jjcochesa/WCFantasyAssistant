@@ -125,18 +125,25 @@ class Player:
     club_stats: PlayerStats = field(default_factory=PlayerStats)
 
     # Per-90 stats (blended: 65% NT / 35% club if NT >= 5 apps, else flipped)
-    xg90: float = 0.0        # goals or xG per 90 (proxy: goals/90)
-    xa90: float = 0.0        # assists or xA per 90
-    sot90: float = 0.0       # shots on target per 90 (FWD)
-    kp90: float = 0.0        # key passes per 90 (MID)
-    tackles90: float = 0.0   # tackles per 90 (MID)
-    save_rate: float = 0.7   # GK: saves / shots faced
+    xg90: float = 0.0
+    xa90: float = 0.0
+    sot90: float = 0.0
+    kp90: float = 0.0
+    tackles90: float = 0.0
+    save_rate: float = 0.7
 
-    # Raw per-90 by source (for display)
+    # Raw per-90 split by source (for separate club / NT display tabs)
     xg90_club: float = 0.0
     xa90_club: float = 0.0
+    sot90_club: float = 0.0
+    kp90_club: float = 0.0
+    tackles90_club: float = 0.0
+
     xg90_nt: float = 0.0
     xa90_nt: float = 0.0
+    sot90_nt: float = 0.0
+    kp90_nt: float = 0.0
+    tackles90_nt: float = 0.0
 
     # Computed by engine
     xpts_per_match: float = 0.0
@@ -364,12 +371,25 @@ def _parse_stats(data: dict, team_id: Optional[int] = None) -> Optional[PlayerSt
 
 
 def fetch_stats_national(player_id: int) -> Optional[PlayerStats]:
-    data = _api_football_get("players", {
-        "id": player_id,
-        "season": WC_2026_SEASON,
-        "league": WC_2026_LEAGUE_ID,
-    })
-    return _parse_stats(data) if data else None
+    """
+    Fetch NT stats for a player. Tries WC 2026 first (empty pre-tournament),
+    then WC qualifying seasons (2024/2025) for each major confederation.
+    API-Football league IDs for international competitions:
+      WC 2026=1, UEFA NL=5, WC Qual EU=960, WC Qual SA=29, WC Qual CAF=29,
+      WC Qual AFC=30, WC Qual CONCACAF=31, WC Qual OFC=32
+    """
+    intl_leagues = [WC_2026_LEAGUE_ID, 5, 960, 961, 29, 30, 31, 32]
+    for season in [2026, 2025, 2024]:
+        for league in intl_leagues:
+            data = _api_football_get("players", {
+                "id": player_id,
+                "season": season,
+                "league": league,
+            })
+            stats = _parse_stats(data) if data else None
+            if stats and stats.matches > 0:
+                return stats
+    return None
 
 
 def fetch_stats_club(player_id: int) -> Optional[PlayerStats]:
@@ -408,15 +428,25 @@ def _compute_per90(p: Player) -> None:
 
     nt_w, cl_w = (0.65, 0.35) if nt.matches >= 5 else (0.35, 0.65)
 
-    p.xg90_nt   = nt_xg
-    p.xa90_nt   = nt_xa
-    p.xg90_club = cl_xg
-    p.xa90_club = cl_xa
+    # Club split
+    p.xg90_club     = cl_xg
+    p.xa90_club     = cl_xa
+    p.sot90_club    = cl_sot
+    p.kp90_club     = cl_kp
+    p.tackles90_club = cl_tk
 
-    p.xg90     = nt_w * nt_xg  + cl_w * cl_xg
-    p.xa90     = nt_w * nt_xa  + cl_w * cl_xa
-    p.sot90    = nt_w * nt_sot + cl_w * cl_sot
-    p.kp90     = nt_w * nt_kp  + cl_w * cl_kp
+    # NT split
+    p.xg90_nt     = nt_xg
+    p.xa90_nt     = nt_xa
+    p.sot90_nt    = nt_sot
+    p.kp90_nt     = nt_kp
+    p.tackles90_nt = nt_tk
+
+    # Blended
+    p.xg90      = nt_w * nt_xg  + cl_w * cl_xg
+    p.xa90      = nt_w * nt_xa  + cl_w * cl_xa
+    p.sot90     = nt_w * nt_sot + cl_w * cl_sot
+    p.kp90      = nt_w * nt_kp  + cl_w * cl_kp
     p.tackles90 = nt_w * nt_tk  + cl_w * cl_tk
 
     if p.position == "GK":
@@ -558,7 +588,16 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "goals/90": round(p.xg90, 3),
             "assists/90": round(p.xa90, 3),
             "xg90_club": round(p.xg90_club, 3),
+            "xa90_club": round(p.xa90_club, 3),
+            "sot90_club": round(p.sot90_club, 3),
+            "kp90_club": round(p.kp90_club, 3),
+            "tackles90_club": round(p.tackles90_club, 3),
             "xg90_nt": round(p.xg90_nt, 3),
+            "xa90_nt": round(p.xa90_nt, 3),
+            "sot90_nt": round(p.sot90_nt, 3),
+            "kp90_nt": round(p.kp90_nt, 3),
+            "tackles90_nt": round(p.tackles90_nt, 3),
+            "nt_weight": "65% NT" if p.national_stats.matches >= 5 else "35% NT",
             # Raw stats for expander
             "intl_games": p.national_stats.matches,
             "intl_goals": p.national_stats.goals,
