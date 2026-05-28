@@ -22,8 +22,19 @@ import unicodedata
 import pandas as pd
 import requests
 
-# curl bypasses Cloudflare's TLS fingerprint check; requests gets 403
+# curl_cffi impersonates Chrome's TLS+HTTP2 fingerprint — most reliable Cloudflare bypass
+try:
+    from curl_cffi import requests as cffi_requests
+    _CFFI_OK = True
+except ImportError:
+    _CFFI_OK = False
+
+# System curl as fallback (works on macOS/Linux)
 _HAS_CURL = shutil.which("curl") is not None
+
+if not _CFFI_OK and not _HAS_CURL:
+    print("WARNING: Neither curl_cffi nor system curl available.")
+    print("Install curl_cffi for best results:  pip3 install curl-cffi\n")
 
 DELAY       = 4.0   # seconds between requests (FBref rate-limit guard)
 CACHE_FILE  = "data/fbref_cache.json"
@@ -149,12 +160,36 @@ def _fetch_with_requests(url: str) -> str:
         return ""
 
 
+def _fetch_with_cffi(url: str) -> str:
+    """Use curl_cffi to impersonate Chrome — bypasses Cloudflare JS challenges."""
+    try:
+        r = cffi_requests.get(url, impersonate="chrome120", timeout=30)
+        if r.status_code == 429:
+            print(f"    Rate-limited. Waiting 60s ...")
+            time.sleep(60)
+            return ""
+        if r.status_code != 200:
+            print(f"    [HTTP {r.status_code}] {url}")
+            return ""
+        html = r.text
+        if "Just a moment" in html or "cf-browser-verification" in html:
+            print(f"    [CF challenge] even curl_cffi blocked — waiting 30s")
+            time.sleep(30)
+            return ""
+        return html
+    except Exception as e:
+        print(f"    [curl_cffi] {e}")
+        return ""
+
+
 def _fetch_html(url: str) -> str:
-    """Fetch with delay. Uses curl (preferred) or requests as fallback."""
+    """Fetch with delay. Tries curl_cffi → system curl → requests."""
     time.sleep(DELAY)
+    if _CFFI_OK:
+        return _fetch_with_cffi(url)
     if _HAS_CURL:
         return _fetch_with_curl(url)
-    print("    [WARN] curl not found, trying requests (may hit 403)")
+    print("    [WARN] no curl available, trying requests (may hit 403)")
     return _fetch_with_requests(url)
 
 
