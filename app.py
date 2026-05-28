@@ -35,18 +35,15 @@ with st.sidebar:
     st.title("⚽ WC Fantasy 2026")
     st.caption("Official FIFA World Cup Fantasy assistant")
 
-    # Live API is the only source that matches the real game
-    # Fallback to offline only when FIFA API is unreachable
+    # Player list always loads from the maintained wc_squads.json (instant).
+    # Live prices + ownership are overlaid from the FIFA Fantasy API separately.
+    # The advanced expander exists only for debugging / local JSON import.
     with st.expander("Data source (advanced)", expanded=False):
         data_mode = st.radio("Load from", [
-            "FIFA Fantasy API (live)",
             "WC Squads (offline, all players)",
             "Local JSON export",
             "Demo data (40 players)",
         ], index=0)
-    # Keep data_mode default consistent without expander state across reloads
-    if "data_mode" not in st.session_state:
-        st.session_state.data_mode = "FIFA Fantasy API (live)"
 
     players_file = None
     _sidebar_token = ""
@@ -54,10 +51,8 @@ with st.sidebar:
     if data_mode == "Local JSON export":
         players_file = st.text_input("JSON file path", "data/players_export.json")
 
-    # Token only needed if API starts requiring auth (currently public)
-    if _SECRET_TOKEN:
-        pass  # Secret already loaded — no prompt needed
-    else:
+    # Token only needed if FIFA API starts requiring auth
+    if not _SECRET_TOKEN:
         with st.expander("Session token (optional)", expanded=False):
             _sidebar_token = st.text_input(
                 "Bearer token", type="password", key="wc_token",
@@ -87,7 +82,7 @@ with st.sidebar:
 # ── Cached loaders ────────────────────────────────────────────────────────────
 
 # Heavy load: stats + projections. Long TTL — stats don't change between loads.
-@st.cache_data(ttl=21600, show_spinner="Loading players... (FIFA Fantasy API, up to 20s)")
+@st.cache_data(ttl=21600, show_spinner="Scoring players...")
 def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     import config as cfg_mod
     cfg_mod.NATIONAL_TEAM_WEIGHT = iw
@@ -96,7 +91,7 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
         session_token=token or None,
         players_file=pfile or None,
         use_demo=(mode == "Demo data (40 players)"),
-        use_squads=(mode == "WC Squads (offline, all players)"),
+        use_squads=(mode != "Demo data (40 players)" and mode != "Local JSON export"),
     )
 
 
@@ -164,28 +159,15 @@ if df is None or df.empty:
 
 # Sidebar live data status badge
 with live_status_placeholder:
-    source = _de.PLAYER_SOURCE
-    # Detect static fallback from player IDs (reliable even on cache hits)
-    if df is not None and not df.empty:
-        has_static_ids = df["id"].astype(str).str.contains("_").any()
-        if has_static_ids and source not in ("squads", "local", "demo"):
-            source = "squads_fallback"
-
-    if source == "squads_fallback":
-        st.warning(
-            "FIFA API unreachable — showing **offline squad data**. "
-            "Players and prices may not match the live game."
-        )
-    elif source in ("squads", "local"):
-        st.info("Offline data loaded.")
-    elif st.session_state.live_refreshed_at:
+    if st.session_state.live_refreshed_at:
         mins_ago = int((datetime.datetime.now() - st.session_state.live_refreshed_at).total_seconds() / 60)
-        st.success(f"Live from FIFA Fantasy ({mins_ago}m ago)")
+        st.success(f"Live prices & ownership: {mins_ago}m ago")
+    else:
+        st.warning("Prices & ownership: using estimates (no API)")
 
 # ── KPI strip ─────────────────────────────────────────────────────────────────
 k1, k2, k3, k4, k5 = st.columns(5)
-_src = _de.PLAYER_SOURCE
-k1.metric("Players", len(df), delta="live" if _src == "api" else "offline", delta_color="normal" if _src == "api" else "off")
+k1.metric("Players", len(df))
 k2.metric("Countries", df["country"].nunique())
 k3.metric("Scout candidates", int(df["scout"].sum()))
 best = df.iloc[0]
