@@ -277,7 +277,7 @@
           "id": "ARG_18",
           "name": "Julian Alvarez",
           "position": "FWD",
-          "price": 9.5,
+          "price": 8.6,
           "ownership_pct": 25.0,
           "club": "Atletico Madrid"
         },
@@ -1625,8 +1625,8 @@
         {
           "id": "COL_13",
           "name": "Luis Diaz",
-          "position": "FWD",
-          "price": 9.0,
+          "position": "MID",
+          "price": 8.1,
           "ownership_pct": 20.0,
           "club": "Liverpool"
         },
@@ -2645,7 +2645,7 @@
           "id": "ENG_12",
           "name": "Jude Bellingham",
           "position": "MID",
-          "price": 9.5,
+          "price": 8.3,
           "ownership_pct": 45.0,
           "club": "Real Madrid"
         },
@@ -2834,7 +2834,7 @@
           "id": "ESP_11",
           "name": "Pedri",
           "position": "MID",
-          "price": 8.5,
+          "price": 8.1,
           "ownership_pct": 30.0,
           "club": "Barcelona"
         },
@@ -2873,7 +2873,7 @@
         {
           "id": "ESP_16",
           "name": "Lamine Yamal",
-          "position": "FWD",
+          "position": "MID",
           "price": 10.0,
           "ownership_pct": 38.0,
           "club": "Barcelona"
@@ -2925,6 +2925,14 @@
           "price": 7.0,
           "ownership_pct": 5.0,
           "club": "Villarreal"
+        },
+        {
+          "id": "ESP_23",
+          "name": "Mikel Oyarzabal",
+          "position": "FWD",
+          "price": 8.1,
+          "ownership_pct": 10.0,
+          "club": "Real Sociedad"
         }
       ]
     },
@@ -3110,10 +3118,18 @@
         {
           "id": "FRA_23",
           "name": "Michael Olise",
-          "position": "FWD",
+          "position": "MID",
           "price": 9.5,
           "ownership_pct": 26.0,
           "club": "Bayern Munich"
+        },
+        {
+          "id": "FRA_24",
+          "name": "Rayan Cherki",
+          "position": "MID",
+          "price": 8.0,
+          "ownership_pct": 8.0,
+          "club": "Lyon"
         }
       ]
     },
@@ -3228,7 +3244,7 @@
           "id": "GER_14",
           "name": "Jamal Musiala",
           "position": "MID",
-          "price": 9.0,
+          "price": 8.0,
           "ownership_pct": 30.0,
           "club": "Bayern Munich"
         },
@@ -6562,7 +6578,7 @@
           "id": "SWE_15",
           "name": "Alexander Isak",
           "position": "FWD",
-          "price": 9.5,
+          "price": 8.0,
           "ownership_pct": 20.0,
           "club": "Newcastle"
         },

@@ -678,7 +678,7 @@
   "lamine yamal": {
     "name": "Lamine Yamal",
     "nation": "ESP",
-    "pos": "FWD",
+    "pos": "MID",
     "mp": 20,
     "starter_rate": 0.88,
     "xg90": 0.35,
@@ -2771,7 +2771,7 @@
   "michael olise": {
     "name": "Michael Olise",
     "nation": "FRA",
-    "pos": "FWD",
+    "pos": "MID",
     "mp": 16,
     "starter_rate": 0.65,
     "xg90": 0.38,
@@ -2780,5 +2780,31 @@
     "sot90": 2.0,
     "kp90": 1.8,
     "tackles90": 0.6
+  },
+  "mikel oyarzabal": {
+    "name": "Mikel Oyarzabal",
+    "nation": "ESP",
+    "pos": "FWD",
+    "mp": 45,
+    "starter_rate": 0.75,
+    "xg90": 0.45,
+    "xa90": 0.18,
+    "goals90": 0.45,
+    "sot90": 2.2,
+    "kp90": 1.2,
+    "tackles90": 0.5
+  },
+  "rayan cherki": {
+    "name": "Rayan Cherki",
+    "nation": "FRA",
+    "pos": "MID",
+    "mp": 12,
+    "starter_rate": 0.55,
+    "xg90": 0.22,
+    "xa90": 0.28,
+    "goals90": 0.22,
+    "sot90": 1.5,
+    "kp90": 2.5,
+    "tackles90": 0.9
   }
 }
