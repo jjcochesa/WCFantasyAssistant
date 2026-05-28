@@ -42,21 +42,44 @@ MIN_MINUTES_NT   = 180
 # ---------------------------------------------------------------------------
 
 CLUB_LEAGUES = {
-    "Premier League":     39,
-    "La Liga":            140,
-    "Bundesliga":         78,
-    "Serie A":            135,
-    "Ligue 1":            61,
-    "Saudi Pro League":   307,
-    "Eredivisie":         88,
-    "Primeira Liga":      94,
-    "Süper Lig":          203,
-    "Scottish Prem":      179,
-    "Belgian Pro League": 144,
-    "MLS":                253,
-    "Liga MX":            262,
-    "Série A (Brazil)":   71,
-    "Primera Div (ARG)":  128,
+    # Big 5 Europe
+    "Premier League":        39,
+    "La Liga":               140,
+    "Bundesliga":            78,
+    "Serie A":               135,
+    "Ligue 1":               61,
+    # Other Europe (confirmed from HTML)
+    "Eredivisie":            88,
+    "Primeira Liga":         94,
+    "Süper Lig":             203,
+    "Scottish Prem":         179,
+    "Belgian Pro League":    144,
+    "Austrian Bundesliga":   218,
+    "Swiss Super League":    207,
+    "Greek Super League":    197,
+    "Croatian HNL":          210,
+    "Serbian Super Liga":    286,
+    "Danish Superliga":      119,
+    "Norwegian Eliteserien": 103,
+    "Swedish Allsvenskan":   113,
+    "Czech Liga":            345,
+    "Ukrainian Premier":     333,
+    # Americas
+    "MLS":                   253,
+    "Liga MX":               262,
+    "Série A (Brazil)":      71,
+    "Primera Div (ARG)":     128,
+    "Colombia Primera A":    239,
+    # Middle East / Africa
+    "Saudi Pro League":      307,
+    "Qatar Stars League":    305,
+    "Egypt Premier League":  233,
+    "Morocco Botola Pro":    200,
+    # Asia / Oceania
+    "J1 League":             98,
+    "K League 1":            292,
+    "A-League (AUS)":        188,
+    "China Super League":    169,
 }
 
 CLUB_LEAGUE_IDS = set(CLUB_LEAGUES.values())
@@ -94,7 +117,7 @@ _TRANS = str.maketrans({
     "æ": "ae", "Æ": "AE", "œ": "oe", "þ": "th",
 })
 
-_ALIASES = {
+_PLAYER_ALIASES = {
     "vinicius jr":                  "vinicius junior",
     "savinho":                      "savio",
     "mat ryan":                     "mathew ryan",
@@ -108,12 +131,46 @@ _ALIASES = {
     "mustafa mohammed":             "mostafa mohamed",
 }
 
+# Club name aliases: wc_squads name → API-Football name (both will be norm'd)
+_TEAM_ALIASES = {
+    "atlanta united":        "atlanta united fc",
+    "atletico mineiro":      "atletico mineiro",   # same, but forces exact match
+    "atletico-mg":           "atletico mineiro",
+    "flamengo":              "flamengo",
+    "boca juniors":          "boca juniors",
+    "al sadd":               "al-sadd",
+    "al-sadd":               "al-sadd",
+    "al ahly":               "al ahly",
+    "al duhail":             "al-duhail",
+    "al-duhail":             "al-duhail",
+    "al rayyan":             "al-rayyan",
+    "al-rayyan":             "al-rayyan",
+    "al qadsiah":            "al qadsiah",
+    "seattle sounders":      "seattle sounders fc",
+    "sporting kansas city":  "sporting kc",
+    "new york city":         "new york city fc",
+    "new york red bulls":    "ny red bulls",
+    "inter miami":           "inter miami cf",
+    "aek athens":            "aek athens fc",
+    "panathinaikos":         "panathinaikos fc",
+    "olympiakos":            "olympiakos piraeus",
+    "slavia prague":         "sk slavia prague",
+    "sparta prague":         "ac sparta prague",
+    "dinamo zagreb":         "gnk dinamo zagreb",
+}
+
 
 def norm(name: str) -> str:
     name = str(name).translate(_TRANS)
     s = unicodedata.normalize("NFKD", name)
     n = "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
-    return _ALIASES.get(n, n)
+    return _PLAYER_ALIASES.get(n, n)
+
+
+def norm_team(name: str) -> str:
+    """Normalise a club name, applying team-specific aliases."""
+    n = norm(name)
+    return _TEAM_ALIASES.get(n, n)
 
 
 # ---------------------------------------------------------------------------
@@ -150,18 +207,16 @@ def build_team_ids(wc_players: dict) -> dict:
     """Returns {club_name: team_id} for clubs in WC squads."""
     print("Phase 1: Fetching team IDs from leagues...")
 
-    # Build name → id map from all 15 leagues
-    api_teams: dict[str, int] = {}   # norm_name → team_id
-    api_teams_raw: dict[str, str] = {}  # norm_name → display name
+    # Build name → id map from all leagues (apply team alias to API names too)
+    api_teams: dict[str, int] = {}   # norm_team_name → team_id
 
     for league_name, lid in CLUB_LEAGUES.items():
         data = _get("teams", {"league": lid, "season": CLUB_SEASON})
         entries = (data or {}).get("response", [])
         for entry in entries:
             t = entry["team"]
-            nk = norm(t["name"])
+            nk = norm_team(t["name"])
             api_teams[nk] = t["id"]
-            api_teams_raw[nk] = t["name"]
         print(f"  {league_name}: {len(entries)} teams")
         time.sleep(0.3)
 
@@ -171,18 +226,23 @@ def build_team_ids(wc_players: dict) -> dict:
     unmatched = []
 
     for club in sorted(unique_clubs):
-        nk = norm(club)
+        nk = norm_team(club)
         if nk in api_teams:
             team_ids[club] = api_teams[nk]
         else:
-            # Partial match — try if any API team name contains key words
-            words = [w for w in nk.split() if len(w) > 3]
-            matches = [
-                (api_name, tid) for api_name, tid in api_teams.items()
-                if any(w in api_name for w in words)
-            ]
-            if len(matches) == 1:
-                team_ids[club] = matches[0][1]
+            # Partial word match — score by number of matching long words
+            words = [w for w in nk.split() if len(w) > 4]
+            if words:
+                scored = [
+                    (sum(1 for w in words if w in api_name), api_name, tid)
+                    for api_name, tid in api_teams.items()
+                ]
+                best_score = max(s for s, _, _ in scored)
+                best = [(n, t) for s, n, t in scored if s == best_score and s > 0]
+                if len(best) == 1:
+                    team_ids[club] = best[0][1]
+                else:
+                    unmatched.append(club)
             else:
                 unmatched.append(club)
 
