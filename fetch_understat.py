@@ -50,9 +50,15 @@ def fetch_league(league: str, season: int) -> dict:
         print(f"  [ERROR] {url}: {e}")
         return {}
 
-    match = re.search(r"var\s+playersData\s*=\s*JSON\.parse\('(.+?)'\)", r.text)
+    match = re.search(
+        r"(?:var|let|const)\s+playersData\s*=\s*JSON\.parse\(['\"](.+?)['\"]\)",
+        r.text, re.DOTALL,
+    )
     if not match:
+        # Debug: show what JS variables are on the page
+        found_vars = re.findall(r"(?:var|let|const)\s+(\w+)\s*=", r.text)
         print(f"  [WARN] playersData not found in {url}")
+        print(f"         JS vars on page: {found_vars[:15]}")
         return {}
 
     raw = match.group(1).encode("raw_unicode_escape").decode("unicode_escape")
