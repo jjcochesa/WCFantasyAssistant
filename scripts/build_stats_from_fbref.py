@@ -272,16 +272,18 @@ def parse_fbref_html(path: Path, file_type: str) -> dict:
 
         elif file_type in ("passing", "gca"):
             minutes_90s = safe_float(cell("minutes_90s"))
-            # passing page: key_passes = passes leading directly to a shot
-            kp = safe_float(cell("key_passes") or cell("passes_leading_to_shot"))
-            # gca page: sca = shot-creating actions (broader than key passes)
-            sca = safe_float(cell("sca") or cell("sca_per90"))
             if minutes_90s <= 0:
                 continue
-            kp90 = per90(kp, minutes_90s) if kp > 0 else 0.0
+            # assisted_shots = passes directly leading to a shot (key passes)
+            kp     = safe_float(cell("assisted_shots") or cell("key_passes"))
+            # xg_assist = expected assists (better creativity metric than raw assists)
+            xag    = safe_float(cell("xg_assist"))
+            kp90   = per90(kp, minutes_90s) if kp > 0 else 0.0
+            xag90  = per90(xag, minutes_90s) if xag > 0 else 0.0
             result[key] = {
                 "_squad": squad,
                 "kp90":   round(kp90, 3),
+                "xag90":  round(xag90, 3),  # will upgrade xa90 if standard page had none
             }
 
         else:
@@ -378,6 +380,9 @@ def build_club_stats(wc_players: dict) -> dict:
         msc = misc_data.get(fbref_key)     or misc_data.get(norm_name, {})
         pas = passing_data.get(fbref_key)  or passing_data.get(norm_name, {})
 
+        # xa90: prefer xg_assist from passing page (expected), fall back to actual assists/90
+        xa90 = pas.get("xag90") or std.get("xa90", 0.0)
+
         out[norm_name] = {
             "name":         wcp["name"],
             "squad":        wcp["club"],
@@ -386,7 +391,7 @@ def build_club_stats(wc_players: dict) -> dict:
             "starts":       std["starts"],
             "minutes":      std["minutes"],
             "xg90":         sht.get("xg90") or std.get("xg90", 0.0),
-            "xa90":         std.get("xa90", 0.0),
+            "xa90":         xa90,
             "goals90":      std["goals90"],
             "sot90":        sht.get("sot90", 0.0),
             "tackles90":    msc.get("tackles90", 0.0),
