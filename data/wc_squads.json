@@ -2658,28 +2658,12 @@
           "club": "Arsenal"
         },
         {
-          "id": "ENG_14",
-          "name": "Phil Foden",
-          "position": "MID",
-          "price": 8.5,
-          "ownership_pct": 25.0,
-          "club": "Man City"
-        },
-        {
           "id": "ENG_15",
           "name": "Declan Rice",
           "position": "MID",
           "price": 7.5,
           "ownership_pct": 18.0,
           "club": "Arsenal"
-        },
-        {
-          "id": "ENG_16",
-          "name": "Cole Palmer",
-          "position": "MID",
-          "price": 8.5,
-          "ownership_pct": 20.0,
-          "club": "Chelsea"
         },
         {
           "id": "ENG_17",
@@ -5663,14 +5647,6 @@
           "price": 10.0,
           "ownership_pct": 15.0,
           "club": "Al-Nassr"
-        },
-        {
-          "id": "POR_17",
-          "name": "Diogo Jota",
-          "position": "FWD",
-          "price": 8.5,
-          "ownership_pct": 15.0,
-          "club": "Liverpool"
         },
         {
           "id": "POR_18",
