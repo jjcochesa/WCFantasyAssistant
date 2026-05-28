@@ -34,9 +34,10 @@ WC_2026_SEASON = 2026
 CLUB_SEASON = 2024
 
 CACHE_DIR = "data/cache"
+STATS_PATH        = "data/stats.json"           # primary — output of fetch_player_stats.py
 FBREF_MAP_PATH    = "data/fbref_player_map.json"
-MANUAL_STATS_PATH = "data/manual_stats.json"
-MANUAL_NT_PATH    = "data/manual_nt_stats.json"
+MANUAL_STATS_PATH = "data/manual_stats.json"    # legacy fallback
+MANUAL_NT_PATH    = "data/manual_nt_stats.json" # legacy fallback
 
 # FBref/manual stats keyed two ways for fast lookup
 _FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> stats
@@ -47,32 +48,57 @@ _NT_BY_NAME:    dict[str, dict] = {}  # norm_name      -> NT per-90 stats
 def _load_fbref_map() -> None:
     global _FBREF_BY_ID, _FBREF_BY_NAME, _NT_BY_NAME
 
-    # 1. Load manual stats (norm_name keyed) — baseline for all key WC players
+    # 1. Primary: data/stats.json — output of fetch_player_stats.py
+    #    Format: {norm_name: {name, club: {...}, nt: {...}}}
+    if os.path.exists(STATS_PATH):
+        try:
+            with open(STATS_PATH) as f:
+                stats_data: dict[str, dict] = json.load(f)
+            club_count = nt_count = 0
+            for norm_key, entry in stats_data.items():
+                if "club" in entry:
+                    _FBREF_BY_NAME[norm_key] = entry["club"]
+                    club_count += 1
+                if "nt" in entry:
+                    _NT_BY_NAME[norm_key] = entry["nt"]
+                    nt_count += 1
+            print(f"[Stats] Loaded {club_count} club + {nt_count} NT records from stats.json")
+        except Exception as e:
+            print(f"[Stats] Could not load stats.json: {e}")
+
+    # 2. Legacy: manual_stats.json — fills gaps not covered by stats.json
     if os.path.exists(MANUAL_STATS_PATH):
         try:
             with open(MANUAL_STATS_PATH) as f:
                 manual: dict[str, dict] = json.load(f)
+            added = 0
             for norm_key, stats in manual.items():
-                # Ensure norm_name field is set
-                if "norm_name" not in stats:
-                    stats["norm_name"] = norm_key
-                _FBREF_BY_NAME[norm_key] = stats
-            print(f"[Stats] Loaded {len(manual)} manual player records")
+                if norm_key not in _FBREF_BY_NAME:
+                    if "norm_name" not in stats:
+                        stats["norm_name"] = norm_key
+                    _FBREF_BY_NAME[norm_key] = stats
+                    added += 1
+            if added:
+                print(f"[Stats] +{added} club records from manual_stats.json (legacy)")
         except Exception as e:
             print(f"[Stats] Could not load manual_stats.json: {e}")
 
-    # 2. Load manual NT stats (per-90 international form for ~200 key players)
+    # 3. Legacy: manual_nt_stats.json — fills NT gaps
     if os.path.exists(MANUAL_NT_PATH):
         try:
             with open(MANUAL_NT_PATH) as f:
                 nt_data: dict[str, dict] = json.load(f)
+            added = 0
             for norm_key, stats in nt_data.items():
-                _NT_BY_NAME[norm_key] = stats
-            print(f"[Stats] Loaded {len(nt_data)} manual NT records")
+                if norm_key not in _NT_BY_NAME:
+                    _NT_BY_NAME[norm_key] = stats
+                    added += 1
+            if added:
+                print(f"[Stats] +{added} NT records from manual_nt_stats.json (legacy)")
         except Exception as e:
             print(f"[Stats] Could not load manual_nt_stats.json: {e}")
 
-    # 3. Load name_match output (may override manual with fresher data)
+    # 4. Load name_match output (may override manual with fresher data)
     if os.path.exists(FBREF_MAP_PATH):
         try:
             with open(FBREF_MAP_PATH) as f:
