@@ -4,7 +4,7 @@ import datetime
 import streamlit as st
 import pandas as pd
 
-from data_engine import load_data, fetch_ownership_map, _norm_name
+from data_engine import load_data, fetch_live_player_data, _norm_name
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
     MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
@@ -17,6 +17,17 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# ── Token: secrets first, sidebar as one-time override ───────────────────────
+# Set FIFA_SESSION_TOKEN once in Streamlit Cloud → App settings → Secrets.
+# Format:  FIFA_SESSION_TOKEN = "Bearer eyJ..."
+# The sidebar input only shows when no secret is configured.
+_SECRET_TOKEN: str = ""
+try:
+    _SECRET_TOKEN = st.secrets.get("FIFA_SESSION_TOKEN", "")
+except Exception:
+    pass  # No secrets file in local dev — that's fine
+
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
@@ -31,30 +42,35 @@ with st.sidebar:
         "Demo data (40 players)",
     ])
 
-    session_token = None
     players_file = None
+    _sidebar_token = ""
 
     if data_mode == "FIFA Fantasy API (live)":
-        st.info(
-            "**How to get your session token:**\n"
-            "1. Log into play.fifa.com/fantasy\n"
-            "2. Open DevTools → Network tab\n"
-            "3. Filter by 'fantasy' → copy the `Authorization` header value\n"
-            "4. Paste it below (starts with 'Bearer ...')"
-        )
-        session_token = st.text_input("Session token", type="password")
+        if _SECRET_TOKEN:
+            st.success("Session token loaded from Streamlit secrets")
+        else:
+            st.info(
+                "**One-time setup:** add your token to Streamlit secrets "
+                "(`FIFA_SESSION_TOKEN = \"Bearer ...\"`) so you never paste it again.\n\n"
+                "**Get it now:** log into play.fifa.com/fantasy → DevTools → "
+                "Network tab → copy the `Authorization` header."
+            )
+            _sidebar_token = st.text_input("Session token (temporary)", type="password")
         api_key = st.text_input("API-Football key (optional)", type="password")
         if api_key:
             os.environ["API_FOOTBALL_KEY"] = api_key
     elif data_mode == "Local JSON export":
         players_file = st.text_input("JSON file path", "data/players_export.json")
-    else:
-        # WC Squads / Demo — token still used for live ownership refresh
-        with st.expander("FIFA Fantasy session token (for live ownership %)"):
-            session_token = st.text_input(
-                "Bearer token", type="password", key="wc_token",
-                help="Optional. Paste your Authorization header from play.fifa.com/fantasy to get real ownership % instead of estimates.",
-            )
+    elif data_mode != "Demo data (40 players)":
+        if not _SECRET_TOKEN:
+            with st.expander("FIFA session token (optional — for live prices & ownership)"):
+                _sidebar_token = st.text_input(
+                    "Bearer token", type="password", key="wc_token",
+                    help="Set FIFA_SESSION_TOKEN in Streamlit secrets to skip this forever.",
+                )
+
+    # Resolved token: secret beats sidebar input
+    session_token = _SECRET_TOKEN or _sidebar_token or None
 
     st.divider()
     st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
@@ -64,8 +80,8 @@ with st.sidebar:
 
     load_btn = st.button("Load / Refresh Data", type="primary", use_container_width=True)
 
-    # Ownership status — filled in after the refresh below
-    own_status_placeholder = st.empty()
+    # Live data status — filled in after the refresh below
+    live_status_placeholder = st.empty()
 
 
 # ── Cached loaders ────────────────────────────────────────────────────────────
@@ -84,25 +100,35 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     )
 
 
-# Ownership refresh: short TTL, always runs on page load.
-# Keyed on token so a new token immediately gets fresh data.
+# Live prices + ownership: short TTL, runs on every page render.
+# Keyed on token hash so rotating the token immediately gets fresh data.
 @st.cache_data(ttl=600, show_spinner=False)
-def _get_ownership(token: str) -> dict:
-    return fetch_ownership_map(token or None)
+def _get_live_data(token: str) -> dict:
+    return fetch_live_player_data(token or None)
 
 
-def _apply_ownership(df: pd.DataFrame, own_map: dict) -> pd.DataFrame:
-    """Overlay live ownership % and recompute scout flag."""
-    if not own_map:
+def _apply_live_data(df: pd.DataFrame, live: dict) -> pd.DataFrame:
+    """
+    Overlay real prices AND ownership % from the FIFA Fantasy API.
+    Recomputes scout flag and value ratio with the updated numbers.
+    """
+    if not live:
         return df
     df = df.copy()
-    def _lookup(row):
-        v = own_map.get(str(row.get("id", "")))
-        if v is None:
-            v = own_map.get(_norm_name(str(row.get("name", ""))))
-        return float(v) if v is not None else row["own_%"]
-    df["own_%"] = df.apply(_lookup, axis=1)
-    # Scout = under 5% ownership AND projected to earn >4 pts/game
+
+    def _get(row, field: str, fallback):
+        entry = live.get(str(row.get("id", ""))) or live.get(_norm_name(str(row.get("name", ""))))
+        if entry and isinstance(entry, dict):
+            v = entry.get(field)
+            if v is not None and float(v) > 0:
+                return float(v)
+        return fallback
+
+    df["own_%"] = df.apply(lambda r: _get(r, "own_pct", r["own_%"]), axis=1)
+    df["price"] = df.apply(lambda r: _get(r, "price",   r["price"]),  axis=1)
+
+    # Recompute value and scout with real prices/ownership
+    df["value"] = (df["xPts_GS"] / df["price"].replace(0, float("nan"))).round(3)
     df["scout"] = (df["own_%"] < SCOUT_OWNERSHIP_THRESHOLD) & (df["xPts/game"] > SCOUT_POINTS_THRESHOLD)
     return df
 
@@ -110,12 +136,12 @@ def _apply_ownership(df: pd.DataFrame, own_map: dict) -> pd.DataFrame:
 # ── Load data ─────────────────────────────────────────────────────────────────
 if "df" not in st.session_state:
     st.session_state.df = None
-if "own_refreshed_at" not in st.session_state:
-    st.session_state.own_refreshed_at = None
+if "live_refreshed_at" not in st.session_state:
+    st.session_state.live_refreshed_at = None
 
 if load_btn:
     _load.clear()
-    _get_ownership.clear()
+    _get_live_data.clear()
 
 if load_btn or st.session_state.df is None:
     try:
@@ -124,25 +150,25 @@ if load_btn or st.session_state.df is None:
         st.error(f"Error loading data: {e}")
         st.stop()
 
-# Always refresh ownership on every page render (cached for 10 min)
+# Always refresh live prices + ownership on every page render (cached 10 min)
 if st.session_state.df is not None and data_mode != "Demo data (40 players)":
-    own_map = _get_ownership(session_token or "")
-    if own_map:
-        st.session_state.df = _apply_ownership(st.session_state.df, own_map)
-        st.session_state.own_refreshed_at = datetime.datetime.now()
+    live_data = _get_live_data(session_token or "")
+    if live_data:
+        st.session_state.df = _apply_live_data(st.session_state.df, live_data)
+        st.session_state.live_refreshed_at = datetime.datetime.now()
 
 df = st.session_state.df
 if df is None or df.empty:
     st.info("👈 Click **Load / Refresh Data** to get started.")
     st.stop()
 
-# Sidebar ownership status badge
-with own_status_placeholder:
-    if st.session_state.own_refreshed_at:
-        mins_ago = int((datetime.datetime.now() - st.session_state.own_refreshed_at).total_seconds() / 60)
-        st.success(f"Live ownership updated {mins_ago}m ago")
+# Sidebar live data status badge
+with live_status_placeholder:
+    if st.session_state.live_refreshed_at:
+        mins_ago = int((datetime.datetime.now() - st.session_state.live_refreshed_at).total_seconds() / 60)
+        st.success(f"Live prices & ownership: {mins_ago}m ago")
     else:
-        st.warning("Ownership: using estimates (no API connection)")
+        st.warning("Prices & ownership: using estimates (no API)")
 
 # ── KPI strip ─────────────────────────────────────────────────────────────────
 k1, k2, k3, k4, k5 = st.columns(5)

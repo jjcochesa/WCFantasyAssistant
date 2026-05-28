@@ -293,12 +293,16 @@ _FIFA_HEADERS = {
 }
 
 
-def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
+def fetch_live_player_data(session_token: Optional[str] = None) -> dict:
     """
-    Fetch live ownership % for all players from the FIFA Fantasy API.
-    Never uses file cache — always hits the live endpoint so the 5%
-    scout threshold reflects current ownership.
-    Returns {norm_name: pct, player_id_str: pct}.
+    Fetch live ownership % AND prices for all players from the FIFA Fantasy API.
+    Never uses file cache — always hits live so the 5% scout threshold and
+    squad builder budget use real numbers, not estimates.
+
+    Returns {key: {"own_pct": float, "price": float}} where key is either
+    the norm_name string or str(player_id). Both keys are added per player
+    so lookups work whether we match by name or ID.
+
     Falls back to {} silently if the API is unreachable.
     """
     headers = dict(_FIFA_HEADERS)
@@ -321,6 +325,10 @@ def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
                     raw.get("percentSelected") or raw.get("ownershipPercent") or
                     raw.get("selectedBy") or raw.get("ownership") or 0.0
                 )
+                # Price: stored in millions; divide if suspiciously large (>200)
+                price_raw = float(raw.get("price") or raw.get("value") or raw.get("cost") or 0.0)
+                price = price_raw / 10 if price_raw > 200 else price_raw
+
                 pid = str(raw.get("id") or raw.get("playerId") or "")
                 known = raw.get("knownName")
                 if known:
@@ -329,16 +337,24 @@ def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
                     first = raw.get("firstName") or ""
                     last  = raw.get("lastName") or ""
                     name  = f"{first} {last}".strip()
+
+                entry = {"own_pct": own, "price": price}
                 if pid:
-                    result[pid] = own
+                    result[pid] = entry
                 if name:
-                    result[_norm_name(name)] = own
+                    result[_norm_name(name)] = entry
+
             if result:
-                print(f"[FIFA] Live ownership fetched: {len(raw_list)} players")
+                print(f"[FIFA] Live data fetched: {len(raw_list)} players")
                 return result
         except Exception as e:
-            print(f"[FIFA] Ownership fetch failed ({url}): {e}")
+            print(f"[FIFA] Live data fetch failed ({url}): {e}")
     return {}
+
+
+# Keep old name as alias so nothing else breaks
+def fetch_ownership_map(session_token: Optional[str] = None) -> dict:
+    return fetch_live_player_data(session_token)
 
 
 def fetch_fantasy_players(session_token: Optional[str] = None) -> list:
