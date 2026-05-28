@@ -15,7 +15,15 @@ import sys
 import time
 import unicodedata
 
-import requests
+try:
+    from curl_cffi import requests
+    _SESSION = requests.Session(impersonate="chrome120")
+    print("Using curl_cffi (Chrome impersonation)")
+except ImportError:
+    import requests as _req
+    _SESSION = _req.Session()
+    _SESSION.headers["User-Agent"] = "Mozilla/5.0"
+    print("curl_cffi not found — falling back to requests (may get bot stub)")
 
 UNDERSTAT_BASE = "https://understat.com"
 
@@ -31,10 +39,6 @@ SEASON = 2024   # 2024/25 season on Understat
 
 OUTPUT_FILE = "data/fbref_stats.json"
 
-session = requests.Session()
-session.headers["User-Agent"] = "Mozilla/5.0"
-
-
 def norm_name(name: str) -> str:
     name = name.replace("ı", "i").replace("İ", "i")
     nfkd = unicodedata.normalize("NFKD", name.lower().strip())
@@ -44,7 +48,7 @@ def norm_name(name: str) -> str:
 def fetch_league(league: str, season: int) -> dict:
     url = f"{UNDERSTAT_BASE}/league/{league}/{season}"
     try:
-        r = session.get(url, timeout=15)
+        r = _SESSION.get(url, timeout=15)
         r.raise_for_status()
     except Exception as e:
         print(f"  [ERROR] {url}: {e}")
