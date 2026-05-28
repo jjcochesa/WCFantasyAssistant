@@ -2811,13 +2811,13 @@
     "name": "Mohamed Salah",
     "nation": "EGY",
     "pos": "MID",
-    "mp": 52,
-    "starter_rate": 0.92,
-    "xg90": 0.45,
-    "xa90": 0.28,
-    "goals90": 0.48,
-    "sot90": 2.3,
-    "kp90": 2.0,
-    "tackles90": 0.7
+    "mp": 20,
+    "starter_rate": 0.95,
+    "xg90": 0.50,
+    "xa90": 0.22,
+    "goals90": 0.55,
+    "sot90": 2.0,
+    "kp90": 1.9,
+    "tackles90": 0.8
   }
 }

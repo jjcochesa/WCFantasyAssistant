@@ -5765,14 +5765,15 @@
     "name": "Mohamed Salah",
     "squad": "Liverpool",
     "league": "Premier League",
-    "mp": 38,
-    "starts": 37,
-    "minutes": 3285,
-    "xg90": 0.55,
-    "xa90": 0.32,
-    "goals90": 0.58,
-    "sot90": 2.8,
-    "starter_rate": 0.97,
+    "mp": 27,
+    "starts": 24,
+    "minutes": 2148,
+    "xg90": 0.35,
+    "xa90": 0.30,
+    "goals90": 0.29,
+    "sot90": 1.30,
+    "kp90": 2.09,
+    "starter_rate": 0.89,
     "norm_name": "mohamed salah"
   }
 }
