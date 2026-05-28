@@ -143,18 +143,25 @@ def _fbref_stats(p: dict) -> dict:
 
 
 def match_players() -> None:
-    # ── Load FBref stats ──────────────────────────────────────────────────────
+    # ── Load player stats (FBref list or Understat dict) ─────────────────────
     if not os.path.exists(FBREF_STATS_FILE):
-        print(f"[ERROR] {FBREF_STATS_FILE} not found. Run fetch_fbref.py first.")
+        print(f"[ERROR] {FBREF_STATS_FILE} not found.")
+        print("Run fetch_understat.py (or fetch_fbref.py) first.")
         sys.exit(1)
     with open(FBREF_STATS_FILE) as f:
-        fbref_players: list[dict] = json.load(f)
-    print(f"FBref stats: {len(fbref_players)} players loaded")
+        raw_data = json.load(f)
 
-    # Build norm_name -> list[dict] index
-    by_norm: dict[str, list[dict]] = {}
-    for p in fbref_players:
-        by_norm.setdefault(p["norm_name"], []).append(p)
+    # Support both formats:
+    #   dict  {norm_name: stats}   — Understat output
+    #   list  [{norm_name:..., ...}] — FBref output
+    if isinstance(raw_data, dict):
+        by_norm: dict[str, list[dict]] = {k: [v] for k, v in raw_data.items()}
+    else:
+        by_norm = {}
+        for p in raw_data:
+            by_norm.setdefault(p["norm_name"], []).append(p)
+
+    print(f"Stats source: {len(by_norm)} players loaded")
 
     # Build token-set index for fuzzy matching
     token_index: list[tuple[frozenset, str, list[dict]]] = [
