@@ -64,19 +64,20 @@ CLUB_LEAGUE_IDS = set(CLUB_LEAGUES.values())
 # International competition league IDs — any stat block with these is NT form
 NT_LEAGUE_IDS = {
     1,    # World Cup
-    4,    # UEFA Euro (Euro 2024 = season 2024)
+    4,    # UEFA European Championship
     5,    # UEFA Nations League
+    6,    # AFCON (Africa Cup of Nations)
     9,    # Copa América
-    10,   # AFCON
-    29,   # CONMEBOL WCQ
+    10,   # International Friendlies
+    16,   # CONCACAF Nations League
+    22,   # CONCACAF Gold Cup
     30,   # AFC WCQ
     31,   # CONCACAF WCQ
-    32,   # OFC WCQ
-    34,   # CONCACAF Gold Cup (probable ID — verify with --inspect)
-    35,   # CONCACAF Nations League (probable ID — verify with --inspect)
-    6,    # CAF WCQ / CHAN (probable — verify with --inspect)
-    960,  # UEFA WCQ 2026
-    961,  # WCQ playoff
+    32,   # UEFA WCQ
+    34,   # CONMEBOL WCQ
+    36,   # AFCON Qualification
+    37,   # WCQ Playoffs (all confederations)
+    # CAF WCQ (Africa WC qualifying) — ID unknown, check API-Football search
 }
 
 # ---------------------------------------------------------------------------
