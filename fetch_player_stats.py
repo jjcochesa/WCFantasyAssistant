@@ -64,6 +64,7 @@ CLUB_LEAGUE_IDS = set(CLUB_LEAGUES.values())
 # International competition league IDs — any stat block with these is NT form
 NT_LEAGUE_IDS = {
     1,    # World Cup
+    4,    # UEFA Euro (Euro 2024 = season 2024)
     5,    # UEFA Nations League
     9,    # Copa América
     10,   # AFCON
@@ -71,6 +72,9 @@ NT_LEAGUE_IDS = {
     30,   # AFC WCQ
     31,   # CONCACAF WCQ
     32,   # OFC WCQ
+    34,   # CONCACAF Gold Cup (probable ID — verify with --inspect)
+    35,   # CONCACAF Nations League (probable ID — verify with --inspect)
+    6,    # CAF WCQ / CHAN (probable — verify with --inspect)
     960,  # UEFA WCQ 2026
     961,  # WCQ playoff
 }
@@ -354,6 +358,8 @@ def main():
     parser.add_argument("--dry-run",    action="store_true", help="Preview — don't write")
     parser.add_argument("--rebuild-ids", action="store_true",
                         help="Force re-run Phases 1+2 even if cache exists")
+    parser.add_argument("--inspect",    type=int, metavar="PLAYER_ID",
+                        help="Dump all raw stat blocks for a player ID (use to discover NT league IDs)")
     args = parser.parse_args()
     _API_KEY = args.key
 
@@ -365,6 +371,26 @@ def main():
         print(f"Account : {acct.get('firstname')} {acct.get('lastname')}")
         print(f"Requests: {reqs.get('current', '?')} used / "
               f"{reqs.get('limit_day', '?')} daily limit\n")
+
+    # --inspect: dump all stat blocks for a player so you can discover league IDs
+    if args.inspect:
+        print(f"\nInspecting player ID {args.inspect}...")
+        for season in [2025, 2024, 2023]:
+            data = _get("players", {"id": args.inspect, "season": season})
+            entries = (data or {}).get("response", [])
+            if not entries:
+                print(f"  season {season}: no data")
+                continue
+            blocks = entries[0].get("statistics", [])
+            name = entries[0].get("player", {}).get("name", "?")
+            print(f"\n  {name} — season {season} ({len(blocks)} blocks):")
+            for b in blocks:
+                lg = b.get("league") or {}
+                gm = b.get("games") or {}
+                print(f"    league_id={lg.get('id'):>5}  name={lg.get('name','?'):<35} "
+                      f"country={lg.get('country','?'):<15} mins={gm.get('minutes') or 0}")
+            time.sleep(0.4)
+        return
 
     # Load WC squads
     raw = json.loads(SQUADS.read_text())
