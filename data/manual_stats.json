@@ -5760,5 +5760,19 @@
     "sot90": 0.12,
     "starter_rate": 0.82,
     "norm_name": "patrick pedersen"
+  },
+  "mohamed salah": {
+    "name": "Mohamed Salah",
+    "squad": "Liverpool",
+    "league": "Premier League",
+    "mp": 38,
+    "starts": 37,
+    "minutes": 3285,
+    "xg90": 0.55,
+    "xa90": 0.32,
+    "goals90": 0.58,
+    "sot90": 2.8,
+    "starter_rate": 0.97,
+    "norm_name": "mohamed salah"
   }
 }

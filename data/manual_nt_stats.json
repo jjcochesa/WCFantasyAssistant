@@ -327,7 +327,7 @@
   "vinicius jr": {
     "name": "Vinicius Jr",
     "nation": "BRA",
-    "pos": "FWD",
+    "pos": "MID",
     "mp": 35,
     "starter_rate": 0.88,
     "xg90": 0.52,
@@ -2806,5 +2806,18 @@
     "sot90": 1.5,
     "kp90": 2.5,
     "tackles90": 0.9
+  },
+  "mohamed salah": {
+    "name": "Mohamed Salah",
+    "nation": "EGY",
+    "pos": "MID",
+    "mp": 52,
+    "starter_rate": 0.92,
+    "xg90": 0.45,
+    "xa90": 0.28,
+    "goals90": 0.48,
+    "sot90": 2.3,
+    "kp90": 2.0,
+    "tackles90": 0.7
   }
 }

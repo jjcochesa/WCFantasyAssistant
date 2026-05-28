@@ -1013,7 +1013,7 @@
         {
           "id": "BRA_13",
           "name": "Vinicius Jr",
-          "position": "FWD",
+          "position": "MID",
           "price": 10.0,
           "ownership_pct": 45.0,
           "club": "Real Madrid"
@@ -2495,7 +2495,7 @@
         {
           "id": "EGY_12",
           "name": "Mohamed Salah",
-          "position": "FWD",
+          "position": "MID",
           "price": 10.0,
           "ownership_pct": 40.0,
           "club": "Liverpool"
