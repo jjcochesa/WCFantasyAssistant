@@ -279,15 +279,20 @@ def _match_in_squad(wc_norm: str, sq_full: dict, sq_last: dict) -> int | None:
 
 # ---------------------------------------------------------------------------
 # Phase 3: Fetch stats per player
-# Two calls per player: season=2025 (club) + season=2024 (NT qualifying)
+# Club: season=2025 only (2025/26 season)
+# NT: seasons 2023+2024+2025 — accumulate raw totals across ALL NT competitions
+#     so per-90s reflect combined recent international minutes, not just one cup
 # ---------------------------------------------------------------------------
 
 def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
     """Returns (club_stats, nt_stats) for a player. None if no data."""
     club_stats = None
-    nt_stats   = None
 
-    for season in [CLUB_SEASON, 2024]:
+    # NT accumulators — sum raw counts, compute per-90 at the end
+    nt_acc = {"goals": 0, "assists": 0, "sot": 0, "kp": 0, "tackles": 0,
+              "minutes": 0, "apps": 0, "lineups": 0, "comps": []}
+
+    for season in [CLUB_SEASON, 2024, 2023]:
         data = _get("players", {"id": player_id, "season": season})
         entries = (data or {}).get("response", [])
         if not entries:
@@ -298,6 +303,8 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
 
         for block in blocks:
             lid = (block.get("league") or {}).get("id")
+            games = block.get("games") or {}
+            mins  = games.get("minutes") or 0
 
             if lid in CLUB_LEAGUE_IDS and season == CLUB_SEASON:
                 parsed = _parse_block(block, MIN_MINUTES_CLUB)
@@ -307,13 +314,40 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
                     )
                     club_stats = parsed
 
-            elif lid in NT_LEAGUE_IDS:
-                parsed = _parse_block(block, MIN_MINUTES_NT)
-                if parsed and (not nt_stats or parsed["minutes"] > nt_stats["minutes"]):
-                    parsed["source"] = (block.get("league") or {}).get("name", str(lid))
-                    nt_stats = parsed
+            elif lid in NT_LEAGUE_IDS and mins >= MIN_MINUTES_NT:
+                comp_name = (block.get("league") or {}).get("name", str(lid))
+                if comp_name not in nt_acc["comps"]:
+                    nt_acc["goals"]   += (block.get("goals")   or {}).get("total")   or 0
+                    nt_acc["assists"] += (block.get("goals")   or {}).get("assists")  or 0
+                    nt_acc["sot"]     += (block.get("shots")   or {}).get("on")       or 0
+                    nt_acc["kp"]      += (block.get("passes")  or {}).get("key")      or 0
+                    nt_acc["tackles"] += (block.get("tackles") or {}).get("total")    or 0
+                    nt_acc["minutes"] += mins
+                    nt_acc["apps"]    += games.get("appearences") or 0
+                    nt_acc["lineups"] += games.get("lineups") or 0
+                    nt_acc["comps"].append(comp_name)
 
         time.sleep(0.35)
+
+    nt_stats = None
+    if nt_acc["minutes"] >= MIN_MINUTES_NT:
+        m = nt_acc["minutes"]
+        a = nt_acc["apps"]
+
+        def p90(v):
+            return round(v / m * 90, 3)
+
+        nt_stats = {
+            "goals90":      p90(nt_acc["goals"]),
+            "xa90":         p90(nt_acc["assists"]),
+            "sot90":        p90(nt_acc["sot"]),
+            "kp90":         p90(nt_acc["kp"]),
+            "tackles90":    p90(nt_acc["tackles"]),
+            "mp":           a,
+            "minutes":      m,
+            "starter_rate": round(nt_acc["lineups"] / a, 2) if a else 0.0,
+            "source":       ", ".join(nt_acc["comps"]),
+        }
 
     return club_stats, nt_stats
 
