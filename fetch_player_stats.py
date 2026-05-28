@@ -28,7 +28,8 @@ OUT    = ROOT / "data" / "stats.json"
 
 BASE = "https://v3.football.api-sports.io"
 
-MIN_MINUTES = 450   # ~5 full games — below this per-90 stats are noisy
+MIN_MINUTES_CLUB = 450   # ~5 full league games
+MIN_MINUTES_NT   = 180   # ~2 full international games
 
 # ---------------------------------------------------------------------------
 # API-Football league IDs
@@ -54,16 +55,17 @@ CLUB_LEAGUES = {
 }
 CLUB_SEASON = 2025   # API-Football uses the year the season started
 
-# NT competitions — covers all WC 2026 qualifying confederations + Copa/AFCON
+# NT competitions — multiple (league, season) pairs tried in order; first with
+# data wins. WCQ leagues span 2023-2025 so we try both years.
 NT_COMPETITIONS = {
-    "Copa América 2024":        (9,   2024),
-    "AFCON 2025":               (34,  2025),
-    "UEFA Nations League 24-25":(5,   2024),
-    "UEFA WCQ 2026":            (960, 2025),
-    "CONMEBOL WCQ 2026":        (29,  2025),
-    "AFC WCQ 2026":             (30,  2025),
-    "CAF WCQ 2026":             (29,  2025),
-    "CONCACAF WCQ 2026":        (31,  2025),
+    "Copa América 2024":         [(9,   2024)],
+    "AFCON 2025":                [(10,  2025), (10,  2024)],
+    "UEFA Nations League 24-25": [(5,   2024)],
+    "UEFA WCQ 2026":             [(960, 2024), (960, 2025), (960, 2023)],
+    "CONMEBOL WCQ 2026":         [(29,  2024), (29,  2025), (29,  2023)],
+    "AFC WCQ 2026":              [(30,  2024), (30,  2025), (30,  2023)],
+    "CAF WCQ 2026":              [(6,   2024), (6,   2025)],
+    "CONCACAF WCQ 2026":         [(31,  2024), (31,  2025), (31,  2023)],
 }
 
 # ---------------------------------------------------------------------------
@@ -148,53 +150,106 @@ def fetch_league_players(league_id: int, season: int) -> list:
     return all_players
 
 
-def parse_to_per90(raw_players: list, squad_override: str = "") -> dict:
-    """Convert API-Football player responses → {norm_name: stats_dict}."""
-    out = {}
+def _parse_entry(entry: dict, min_minutes: int) -> tuple | None:
+    """Parse one API-Football player entry. Returns (norm_full, norm_last, norm_team, stats) or None."""
+    player     = entry.get("player", {})
+    name       = player.get("name", "")
+    firstname  = player.get("firstname", "")
+    lastname   = player.get("lastname", "")
+    if not name:
+        return None
+
+    stats_list = entry.get("statistics", [])
+    if not stats_list:
+        return None
+    s    = stats_list[0]
+    games = s.get("games", {})
+    mins  = games.get("minutes") or 0
+    apps  = games.get("appearences") or 0   # API typo
+    team  = (s.get("team") or {}).get("name", "")
+
+    if mins < min_minutes:
+        return None
+
+    goals   = (s.get("goals")   or {}).get("total")   or 0
+    assists = (s.get("goals")   or {}).get("assists")  or 0
+    sot     = (s.get("shots")   or {}).get("on")       or 0
+    kp      = (s.get("passes")  or {}).get("key")      or 0
+    tackles = (s.get("tackles") or {}).get("total")    or 0
+
+    def p90(val):
+        return round((val or 0) / mins * 90, 3) if mins else 0.0
+
+    stats = {
+        "goals90":      p90(goals),
+        "xa90":         p90(assists),
+        "sot90":        p90(sot),
+        "kp90":         p90(kp),
+        "tackles90":    p90(tackles),
+        "mp":           apps,
+        "minutes":      mins,
+        "squad":        team,
+        "starter_rate": round(games.get("lineups", 0) / apps, 2) if apps else 0.0,
+    }
+
+    norm_full = norm(name)
+    # Use API's own lastname field for more reliable last-name matching
+    norm_last = norm(lastname) if lastname else (norm_full.split()[-1] if norm_full else "")
+    norm_team = norm(team)
+    return norm_full, norm_last, norm_team, stats
+
+
+def build_indexes(raw_players: list, min_minutes: int) -> tuple[dict, dict]:
+    """
+    Returns:
+      by_full: {norm_full_name: stats}
+      by_last: {norm_last_name: [(norm_full, norm_team, stats)]}
+    """
+    by_full: dict[str, dict] = {}
+    by_last: dict[str, list] = defaultdict(list)
+
     for entry in raw_players:
-        player = entry.get("player", {})
-        name   = player.get("name", "")
-        if not name:
+        parsed = _parse_entry(entry, min_minutes)
+        if not parsed:
             continue
+        norm_full, norm_last, norm_team, stats = parsed
+        by_full[norm_full] = stats
+        if norm_last:
+            by_last[norm_last].append((norm_full, norm_team, stats))
 
-        # API-Football returns one stat block per team per season
-        stats_list = entry.get("statistics", [])
-        if not stats_list:
-            continue
-        s = stats_list[0]   # take first (most recent) team
+    return by_full, by_last
 
-        games  = s.get("games", {})
-        mins   = games.get("minutes") or 0
-        apps   = games.get("appearences") or 0   # API typo: "appearences"
-        team   = (s.get("team") or {}).get("name", "")
 
-        if (mins or 0) < MIN_MINUTES:
-            continue
+def match_player(wc_norm: str, wc_club_norm: str,
+                 by_full: dict, by_last: dict) -> dict | None:
+    """
+    Three-tier matching:
+    1. Exact normalised full name
+    2. Last name + club name confirmation (handles "M. Salah" vs "Mohamed Salah")
+    3. Last name unique across all fetched players in this league
+    """
+    if wc_norm in by_full:
+        return by_full[wc_norm]
 
-        goals  = (s.get("goals") or {}).get("total") or 0
-        assists= (s.get("goals") or {}).get("assists") or 0
-        shots  = s.get("shots") or {}
-        sot    = shots.get("on") or 0
-        passes = s.get("passes") or {}
-        kp     = passes.get("key") or 0
-        tackles= (s.get("tackles") or {}).get("total") or 0
+    parts = wc_norm.split()
+    if not parts:
+        return None
+    last = parts[-1]
+    candidates = by_last.get(last, [])
 
-        def p90(val):
-            return round((val or 0) / mins * 90, 3) if mins else 0.0
+    if not candidates:
+        return None
 
-        key = norm(name)
-        out[key] = {
-            "goals90":     p90(goals),
-            "xa90":        p90(assists),
-            "sot90":       p90(sot),
-            "kp90":        p90(kp),
-            "tackles90":   p90(tackles),
-            "mp":          apps,
-            "minutes":     mins,
-            "squad":       squad_override or team,
-            "starter_rate": round(games.get("lineups", 0) / apps, 2) if apps else 0.0,
-        }
-    return out
+    # Try club match first
+    for _, cand_team, cand_stats in candidates:
+        if wc_club_norm and wc_club_norm == cand_team:
+            return cand_stats
+
+    # Unique last name across the league — safe to assume it's the same player
+    if len(candidates) == 1:
+        return candidates[0][2]
+
+    return None
 
 
 # ---------------------------------------------------------------------------
@@ -202,27 +257,39 @@ def parse_to_per90(raw_players: list, squad_override: str = "") -> dict:
 # ---------------------------------------------------------------------------
 
 def build_club(wc_players: dict) -> dict:
-    combined: dict[str, dict] = {}
+    # Accumulate all league data into merged indexes
+    all_by_full: dict[str, dict] = {}
+    all_by_last: dict[str, list] = defaultdict(list)
 
     for league_name, lid in CLUB_LEAGUES.items():
         print(f"  {league_name} (league={lid}, season={CLUB_SEASON})")
         raw = fetch_league_players(lid, CLUB_SEASON)
-        stats = parse_to_per90(raw)
-        print(f"    {len(raw)} players fetched, {len(stats)} with ≥{MIN_MINUTES} min")
-        for nk, s in stats.items():
-            if nk not in combined or s["minutes"] > combined[nk]["minutes"]:
-                s["league"] = league_name
-                combined[nk] = s
+        by_full, by_last = build_indexes(raw, MIN_MINUTES_CLUB)
+        print(f"    {len(raw)} players fetched, {len(by_full)} with ≥{MIN_MINUTES_CLUB} min")
+        for nk, s in by_full.items():
+            s["league"] = league_name
+            if nk not in all_by_full or s["minutes"] > all_by_full[nk]["minutes"]:
+                all_by_full[nk] = s
+        for last, entries in by_last.items():
+            all_by_last[last].extend(entries)
         time.sleep(0.5)
 
-    print(f"\n  Total: {len(combined)} players with club data")
+    print(f"\n  Total: {len(all_by_full)} unique players across all leagues")
     out = {}
+    exact = fallback = 0
     for nk, wcp in wc_players.items():
-        if nk in combined:
-            entry = dict(combined[nk])
+        wc_club_norm = norm(wcp.get("club", ""))
+        s = match_player(nk, wc_club_norm, all_by_full, all_by_last)
+        if s:
+            entry = dict(s)
             entry["squad"] = wcp["club"] or entry.get("squad", "")
             out[nk] = entry
-    print(f"  Matched {len(out)}/{len(wc_players)} WC players")
+            if nk in all_by_full:
+                exact += 1
+            else:
+                fallback += 1
+    print(f"  Matched {len(out)}/{len(wc_players)} WC players "
+          f"({exact} exact name, {fallback} last-name fallback)")
     return out
 
 
@@ -232,24 +299,36 @@ def build_club(wc_players: dict) -> dict:
 
 def build_nt(wc_players: dict) -> dict:
     best_mins: dict[str, int]  = {}
-    combined:  dict[str, dict] = {}
+    all_by_full: dict[str, dict] = {}
+    all_by_last: dict[str, list] = defaultdict(list)
+    sources: dict[str, str] = {}
 
-    for comp_name, (lid, season) in NT_COMPETITIONS.items():
-        print(f"  {comp_name} (league={lid}, season={season})")
-        raw = fetch_league_players(lid, season)
-        stats = parse_to_per90(raw)
-        print(f"    {len(raw)} players fetched, {len(stats)} with ≥{MIN_MINUTES} min")
-        for nk, s in stats.items():
-            if s["minutes"] > best_mins.get(nk, 0):
-                best_mins[nk] = s["minutes"]
-                s["source"] = comp_name
-                combined[nk] = s
+    for comp_name, season_pairs in NT_COMPETITIONS.items():
+        # Try each (league, season) pair — use first that returns data
+        for lid, season in season_pairs:
+            print(f"  {comp_name} (league={lid}, season={season})")
+            raw = fetch_league_players(lid, season)
+            by_full, by_last = build_indexes(raw, MIN_MINUTES_NT)
+            print(f"    {len(raw)} players fetched, {len(by_full)} with ≥{MIN_MINUTES_NT} min")
+            if by_full:
+                for nk, s in by_full.items():
+                    if s["minutes"] > best_mins.get(nk, 0):
+                        best_mins[nk] = s["minutes"]
+                        sources[nk] = comp_name
+                        all_by_full[nk] = s
+                for last, entries in by_last.items():
+                    all_by_last[last].extend(entries)
+                break   # found data for this competition — don't try next season
+            time.sleep(0.4)
         time.sleep(0.5)
 
     out = {}
-    for nk in wc_players:
-        if nk in combined:
-            out[nk] = combined[nk]
+    for nk, wcp in wc_players.items():
+        s = match_player(nk, "", all_by_full, all_by_last)
+        if s:
+            entry = dict(s)
+            entry["source"] = sources.get(nk, "")
+            out[nk] = entry
     print(f"\n  Matched {len(out)}/{len(wc_players)} WC players")
     return out
 
