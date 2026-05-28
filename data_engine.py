@@ -34,6 +34,35 @@ WC_2026_SEASON = 2026
 CLUB_SEASON = 2024
 
 CACHE_DIR = "data/cache"
+FBREF_MAP_PATH = "data/fbref_player_map.json"
+
+# FBref stats keyed two ways for fast lookup
+_FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> fbref stats
+_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> fbref stats
+
+
+def _load_fbref_map() -> None:
+    global _FBREF_BY_ID, _FBREF_BY_NAME
+    if not os.path.exists(FBREF_MAP_PATH):
+        return
+    try:
+        with open(FBREF_MAP_PATH) as f:
+            data: dict[str, dict] = json.load(f)
+        for key, stats in data.items():
+            if key.isdigit():
+                _FBREF_BY_ID[key] = stats
+            else:
+                _FBREF_BY_NAME[key] = stats
+            # Also index by norm_name stored inside the dict
+            nn = stats.get("norm_name", "")
+            if nn:
+                _FBREF_BY_NAME[nn] = stats
+        print(f"[FBref] Loaded {len(data)} player records from {FBREF_MAP_PATH}")
+    except Exception as e:
+        print(f"[FBref] Could not load map: {e}")
+
+
+_load_fbref_map()
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -150,6 +179,7 @@ class Player:
     xpts_group_stage: float = 0.0
     value: float = 0.0
     scout_flag: bool = False
+    starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
 
     @property
     def team_name(self) -> str:
@@ -426,6 +456,20 @@ def _compute_per90(p: Player) -> None:
     cl_kp  = _per90(cl.chances_created,  cl_mins)
     cl_tk  = _per90(cl.tackles,          cl_mins)
 
+    # Override club stats with FBref data when available.
+    # FBref uses xG/xAG (expected, more predictive) rather than actual goals/assists.
+    fbref = _FBREF_BY_ID.get(p.id) or _FBREF_BY_NAME.get(_norm_name(p.name))
+    if fbref:
+        if fbref.get("xg90",  0.0) > 0: cl_xg  = fbref["xg90"]
+        if fbref.get("xa90",  0.0) > 0: cl_xa  = fbref["xa90"]
+        if fbref.get("sot90", 0.0) > 0: cl_sot = fbref["sot90"]
+        # Populate club_stats.matches so nt_weight logic works correctly
+        if p.club_stats.matches == 0 and fbref.get("mp", 0) > 0:
+            p.club_stats.matches = fbref["mp"]
+        sr = fbref.get("starter_rate", 0.0)
+        if sr > 0:
+            p.starter_rate = sr
+
     nt_w, cl_w = (0.65, 0.35) if nt.matches >= 5 else (0.35, 0.65)
 
     # Club split
@@ -597,7 +641,8 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "sot90_nt": round(p.sot90_nt, 3),
             "kp90_nt": round(p.kp90_nt, 3),
             "tackles90_nt": round(p.tackles90_nt, 3),
-            "nt_weight": "65% NT" if p.national_stats.matches >= 5 else "35% NT",
+            "nt_weight":    "65% NT" if p.national_stats.matches >= 5 else "35% NT",
+            "starter_rate": round(p.starter_rate, 2),
             # Raw stats for expander
             "intl_games": p.national_stats.matches,
             "intl_goals": p.national_stats.goals,
