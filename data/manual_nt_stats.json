@@ -938,7 +938,7 @@
   "joshua kimmich": {
     "name": "Joshua Kimmich",
     "nation": "GER",
-    "pos": "MID",
+    "pos": "DEF",
     "mp": 80,
     "starter_rate": 0.9,
     "xg90": 0.15,
@@ -2767,5 +2767,18 @@
     "sot90": 2.0,
     "kp90": 0.6,
     "tackles90": 0.4
+  },
+  "michael olise": {
+    "name": "Michael Olise",
+    "nation": "FRA",
+    "pos": "FWD",
+    "mp": 16,
+    "starter_rate": 0.65,
+    "xg90": 0.38,
+    "xa90": 0.22,
+    "goals90": 0.38,
+    "sot90": 2.0,
+    "kp90": 1.8,
+    "tackles90": 0.6
   }
 }

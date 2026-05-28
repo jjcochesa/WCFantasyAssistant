@@ -261,7 +261,7 @@
           "id": "ARG_16",
           "name": "Lionel Messi",
           "position": "FWD",
-          "price": 10.5,
+          "price": 10.0,
           "ownership_pct": 20.0,
           "club": "Inter Miami"
         },
@@ -950,7 +950,7 @@
           "id": "BRA_5",
           "name": "Gabriel Magalhaes",
           "position": "DEF",
-          "price": 6.5,
+          "price": 5.5,
           "ownership_pct": 7.0,
           "club": "Arsenal"
         },
@@ -1014,7 +1014,7 @@
           "id": "BRA_13",
           "name": "Vinicius Jr",
           "position": "FWD",
-          "price": 11.0,
+          "price": 10.0,
           "ownership_pct": 45.0,
           "club": "Real Madrid"
         },
@@ -2496,7 +2496,7 @@
           "id": "EGY_12",
           "name": "Mohamed Salah",
           "position": "FWD",
-          "price": 11.0,
+          "price": 10.0,
           "ownership_pct": 40.0,
           "club": "Liverpool"
         },
@@ -2653,7 +2653,7 @@
           "id": "ENG_13",
           "name": "Bukayo Saka",
           "position": "FWD",
-          "price": 9.0,
+          "price": 9.5,
           "ownership_pct": 30.0,
           "club": "Arsenal"
         },
@@ -2874,7 +2874,7 @@
           "id": "ESP_16",
           "name": "Lamine Yamal",
           "position": "FWD",
-          "price": 10.5,
+          "price": 10.0,
           "ownership_pct": 38.0,
           "club": "Barcelona"
         },
@@ -3039,7 +3039,7 @@
           "id": "FRA_14",
           "name": "Ousmane Dembele",
           "position": "MID",
-          "price": 8.5,
+          "price": 10.0,
           "ownership_pct": 20.0,
           "club": "PSG"
         },
@@ -3071,7 +3071,7 @@
           "id": "FRA_18",
           "name": "Kylian Mbappe",
           "position": "FWD",
-          "price": 12.0,
+          "price": 10.5,
           "ownership_pct": 60.0,
           "club": "Real Madrid"
         },
@@ -3106,6 +3106,14 @@
           "price": 8.0,
           "ownership_pct": 12.0,
           "club": "PSG"
+        },
+        {
+          "id": "FRA_23",
+          "name": "Michael Olise",
+          "position": "FWD",
+          "price": 9.5,
+          "ownership_pct": 26.0,
+          "club": "Bayern Munich"
         }
       ]
     },
@@ -3171,8 +3179,8 @@
         {
           "id": "GER_8",
           "name": "Joshua Kimmich",
-          "position": "MID",
-          "price": 7.5,
+          "position": "DEF",
+          "price": 5.5,
           "ownership_pct": 15.0,
           "club": "Bayern Munich"
         },
@@ -3212,7 +3220,7 @@
           "id": "GER_13",
           "name": "Florian Wirtz",
           "position": "MID",
-          "price": 9.5,
+          "price": 7.5,
           "ownership_pct": 38.0,
           "club": "Bayer Leverkusen"
         },
@@ -4010,7 +4018,7 @@
           "id": "JPN_7",
           "name": "Hiroki Sakai",
           "position": "DEF",
-          "price": 5.5,
+          "price": 5.0,
           "ownership_pct": 2.5,
           "club": ""
         },
@@ -5056,7 +5064,7 @@
           "id": "NOR_14",
           "name": "Erling Haaland",
           "position": "FWD",
-          "price": 12.0,
+          "price": 10.5,
           "ownership_pct": 45.0,
           "club": "Man City"
         },
