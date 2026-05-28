@@ -217,15 +217,112 @@ def _filter(key_prefix: str) -> pd.DataFrame:
     return v
 
 
-# ── TAB 1: Combined Rankings ──────────────────────────────────────────────────
+# ── TAB 1: Master Table ───────────────────────────────────────────────────────
 with tab1:
-    st.subheader("Player Rankings — Combined Model (GD1 + GD2)")
-    st.caption("Model: player_xG = team_xG × pos_fraction × (player_xg90 / pos_avg_xg90) | CS% from FPLJoe bookie markets | 65% NT / 35% club (flipped if <5 NT apps)")
-    view = _filter("r")
-    cols_main = ["name", "country", "club", "pos", "price", "own_%",
-                 "GD1 xG", "GD2 xG", "xPts_GS", "goals/90", "assists/90",
-                 "xg90_club", "xg90_nt", "nt_weight", "value", "scout"]
-    st.dataframe(fmt(view[cols_main]), use_container_width=True, height=580)
+    st.subheader("Player Rankings — Group Stage (MD1 + MD2)")
+
+    # ── Filters ───────────────────────────────────────────────────────────────
+    f1, f2 = st.columns([3, 1])
+    with f1:
+        pos_filter = st.radio(
+            "Position", ["All", "GK", "DEF", "MID", "FWD"],
+            horizontal=True, key="t1_pos",
+        )
+    with f2:
+        nation_filter = st.selectbox(
+            "Nation", ["All"] + sorted(df["country"].unique().tolist()),
+            key="t1_nation",
+        )
+
+    view = df.copy()
+    if pos_filter != "All":
+        view = view[view["pos"] == pos_filter]
+    if nation_filter != "All":
+        view = view[view["country"] == nation_filter]
+    view = view.sort_values("xPts_GS", ascending=False).reset_index(drop=True)
+    view.index += 1
+
+    # ── Column group legend ───────────────────────────────────────────────────
+    st.markdown(
+        "<div style='font-size:12px;color:#aaa;padding:2px 0 6px'>"
+        "🪪 <b>Identity</b> &nbsp;│&nbsp; "
+        "🗓️ <b>Fixtures</b>: opponents &nbsp;│&nbsp; "
+        "<span style='color:#4ade80'>⚽ <b>Club·</b> 2025/26 per-90</span> &nbsp;│&nbsp; "
+        "<span style='color:#60a5fa'>🌍 <b>NT·</b> last 10 matches per-90</span> &nbsp;│&nbsp; "
+        "📊 <b>MD· CS% / xG</b> from TEAM_PROJECTIONS &nbsp;│&nbsp; "
+        "<span style='color:#fb923c'>🎯 <b>Proj Pts</b></span>"
+        "</div>",
+        unsafe_allow_html=True,
+    )
+
+    # ── Build display dataframe with renamed columns ──────────────────────────
+    COL_MAP = {
+        # Identity
+        "name":           "Name",
+        "country":        "Nation",
+        "pos":            "Pos",
+        "club":           "Club",
+        "price":          "Price",
+        "own_%":          "Own%",
+        # Fixtures
+        "md1_opp":        "MD1 Opp",
+        "md2_opp":        "MD2 Opp",
+        # Club season stats
+        "xg90_club":      "Cl Gls/90",
+        "xa90_club":      "Cl Ast/90",
+        "sot90_club":     "Cl SOT/90",
+        "kp90_club":      "Cl KP/90",
+        "tackles90_club": "Cl Tkl/90",
+        # NT stats
+        "xg90_nt":        "NT Gls/90",
+        "xa90_nt":        "NT Ast/90",
+        "sot90_nt":       "NT SOT/90",
+        "kp90_nt":        "NT KP/90",
+        "tackles90_nt":   "NT Tkl/90",
+        # Fixture data
+        "cs_md1_pct":     "MD1 CS%",
+        "cs_md2_pct":     "MD2 CS%",
+        "goals_md1":      "MD1 xG",
+        "goals_md2":      "MD2 xG",
+        # Output
+        "md1_pts":        "MD1 Pts",
+        "md2_pts":        "MD2 Pts",
+        "xPts_GS":        "Total Pts",
+    }
+
+    display_cols = [c for c in COL_MAP if c in view.columns]
+    disp = view[display_cols].rename(columns=COL_MAP)
+
+    per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
+    per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
+    pts_cols   = ["MD1 Pts", "MD2 Pts", "Total Pts"]
+    pct_cols   = [c for c in ["MD1 CS%", "MD2 CS%"] if c in disp.columns]
+    xg_cols    = [c for c in ["MD1 xG", "MD2 xG"] if c in disp.columns]
+
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%"}
+    fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt})
+    fmt_map.update({c: "{:.2f}" for c in xg_cols})
+    fmt_map.update({c: "{:.0%}" for c in pct_cols})
+    fmt_map.update({c: "{:.1f}" for c in pts_cols})
+
+    styler = (
+        disp.style
+        .format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
+        .background_gradient(
+            subset=[c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns],
+            cmap="YlOrRd",
+        )
+        .background_gradient(
+            subset=[c for c in per90_club if c in disp.columns],
+            cmap="Greens",
+        )
+        .background_gradient(
+            subset=[c for c in per90_nt if c in disp.columns],
+            cmap="Blues",
+        )
+    )
+
+    st.dataframe(styler, use_container_width=True, height=620)
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
