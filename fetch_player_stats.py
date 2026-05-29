@@ -281,94 +281,103 @@ def build_team_ids(wc_players: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Phase 2: Player IDs — search by name directly, no club data needed
-# wc_squads.json club field is unreliable (transfers, stale data), so we
-# search the API by player last name and match on name similarity.
-# ~890 calls, one per WC player.
+# Phase 2: Player IDs — scan all covered league rosters page by page.
+# Builds a name→id index of ~15,000 players locally, then matches WC players
+# against it. Avoids the /players?search= endpoint which requires league/team.
+# Club leagues: ~1,200 calls. NT leagues (catches uncovered club players): ~200.
 # ---------------------------------------------------------------------------
 
 def build_player_ids(wc_players: dict) -> dict:
-    """Returns {norm_wc_name: player_id} via direct player name search."""
-    print("\nPhase 2: Searching player IDs by name (~890 calls)...")
+    """Build {norm_wc_name: player_id} by scanning all covered league rosters."""
+    print("\nPhase 2: Scanning league rosters for player IDs...")
 
+    api_index: dict[str, int] = {}  # norm_name → player_id
+
+    for league_name, lid in CLUB_LEAGUES.items():
+        n = _fetch_league_players(lid, CLUB_SEASON, api_index)
+        print(f"  {league_name}: +{n}  (index: {len(api_index)})")
+        time.sleep(0.3)
+
+    # NT leagues — finds players from clubs in leagues we don't cover (e.g. South Africa)
+    print("  Scanning NT leagues for remaining coverage...")
+    for lid in sorted(NT_LEAGUE_IDS):
+        for season in [2025, 2024]:
+            _fetch_league_players(lid, season, api_index)
+            time.sleep(0.3)
+
+    print(f"  Index: {len(api_index)} unique players")
+
+    # Match WC players to API IDs
     player_ids: dict[str, int] = {}
     unmatched: list[str] = []
 
-    for i, (nk, wcp) in enumerate(wc_players.items(), 1):
-        pid = _search_player_id(nk)
+    for nk, wcp in wc_players.items():
+        pid = api_index.get(nk)
+        if not pid:
+            pid = _fuzzy_match(nk, api_index)
         if pid:
             player_ids[nk] = pid
         else:
             unmatched.append(wcp["name"])
 
-        if i % 100 == 0:
-            print(f"  {i}/{len(wc_players)} searched — {len(player_ids)} matched")
-
-        time.sleep(0.35)
-
-    print(f"  Matched {len(player_ids)}/{len(wc_players)} WC players to IDs")
+    pct = len(player_ids) / len(wc_players) * 100
+    print(f"  Matched {len(player_ids)}/{len(wc_players)} ({pct:.0f}%)")
     if unmatched:
-        print(f"  Unmatched ({len(unmatched)}): {', '.join(unmatched[:8])}"
-              + (" ..." if len(unmatched) > 8 else ""))
+        print(f"  Unmatched: {', '.join(unmatched[:10])}"
+              + (" ..." if len(unmatched) > 10 else ""))
 
     PLAYER_CACHE.write_text(json.dumps(player_ids, indent=2, ensure_ascii=False))
     print(f"  Saved → {PLAYER_CACHE}")
     return player_ids
 
 
-def _search_player_id(wc_norm: str) -> int | None:
-    """Search API-Football for a WC player by name. Returns player_id or None."""
+def _fetch_league_players(league_id: int, season: int, index: dict) -> int:
+    """Paginate /players?league=&season= and add all entries to index. Returns # new."""
+    added = 0
+    page = 1
+    while True:
+        data = _get("players", {"league": league_id, "season": season, "page": page})
+        if not data:
+            break
+        resp = data.get("response", [])
+        paging = data.get("paging", {})
+        for entry in resp:
+            p = entry.get("player") or {}
+            pid = p.get("id")
+            raw = p.get("name", "")
+            if pid and raw:
+                nk = norm(raw)
+                if nk not in index:
+                    index[nk] = pid
+                    added += 1
+        if paging.get("current", page) >= paging.get("total", 1):
+            break
+        page += 1
+        time.sleep(0.3)
+    return added
+
+
+def _fuzzy_match(wc_norm: str, api_index: dict) -> int | None:
+    """Last-name + first-initial match, or unique last-name match."""
     parts = wc_norm.split()
-    if not parts:
+    if len(parts) < 2:
         return None
+    wc_last = parts[-1]
+    wc_initial = parts[0][0]
 
-    last = parts[-1]
-    # API requires ≥4 chars; fall back to first name or full name
-    if len(last) < 4:
-        search = parts[0] if len(parts[0]) >= 4 else wc_norm[:8]
-    else:
-        search = last
+    candidates = [
+        (name, pid) for name, pid in api_index.items()
+        if name.split()[-1:] == [wc_last]
+    ]
+    if not candidates:
+        return None
+    if len(candidates) == 1:
+        return candidates[0][1]
 
-    for season in [CLUB_SEASON, 2024]:
-        data = _get("players", {"search": search, "season": season})
-        hits = (data or {}).get("response", [])
-        if hits:
-            pid = _best_name_match(wc_norm, hits)
-            if pid:
-                return pid
-        time.sleep(0.35)
-
-    return None
-
-
-def _best_name_match(wc_norm: str, hits: list) -> int | None:
-    """Pick the best API-Football hit for a WC player name."""
-    wc_parts = wc_norm.split()
-    wc_last  = wc_parts[-1]
-
-    for hit in hits:
-        raw   = (hit.get("player") or {}).get("name", "")
-        pid   = (hit.get("player") or {}).get("id")
-        api_n = norm(raw)
-        api_parts = api_n.split()
-        api_last  = api_parts[-1] if api_parts else ""
-
-        if api_last != wc_last:
-            continue  # last name must match
-
-        # Exact full name
-        if api_n == wc_norm:
-            return pid
-
-        # First initial match (handles "M. Salah" vs "Mohamed Salah")
-        if (len(wc_parts) > 1 and len(api_parts) > 1
-                and wc_parts[0][0] == api_parts[0][0]):
-            return pid
-
-        # Last name only (unique enough if only one hit with this last name)
-        if sum(1 for h in hits
-               if norm((h.get("player") or {}).get("name", "")).split()[-1:] == [wc_last]) == 1:
-            return pid
+    by_initial = [(n, p) for n, p in candidates
+                  if n.split() and n.split()[0][0] == wc_initial]
+    if len(by_initial) == 1:
+        return by_initial[0][1]
 
     return None
 
