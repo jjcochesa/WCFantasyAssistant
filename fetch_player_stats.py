@@ -284,8 +284,12 @@ def build_team_ids(wc_players: dict) -> dict:
 # Phase 2: Player IDs — scan all covered league rosters page by page.
 # Builds a name→id index of ~15,000 players locally, then matches WC players
 # against it. Avoids the /players?search= endpoint which requires league/team.
-# Club leagues: ~1,200 calls. NT leagues (catches uncovered club players): ~200.
+# Club leagues: ~856 calls. WCQ leagues (one per confederation): ~60 calls.
 # ---------------------------------------------------------------------------
+
+# One WCQ league per confederation — covers every WC-qualified player without
+# double-counting. Friendlies/tournaments/other quals are redundant here.
+_PHASE2_NT_LEAGUES = {29, 30, 31, 32, 33, 34}  # CAF/AFC/CONCACAF/UEFA/OFC/CONMEBOL WCQ
 
 def build_player_ids(wc_players: dict) -> dict:
     """Build {norm_wc_name: player_id} by scanning all covered league rosters."""
@@ -298,9 +302,10 @@ def build_player_ids(wc_players: dict) -> dict:
         print(f"  {league_name}: +{n}  (index: {len(api_index)})")
         time.sleep(0.3)
 
-    # NT leagues — finds players from clubs in leagues we don't cover (e.g. South Africa)
-    print("  Scanning NT leagues for remaining coverage...")
-    for lid in sorted(NT_LEAGUE_IDS):
+    # WCQ leagues only — one per confederation, catches players from uncovered
+    # club leagues (e.g. South Africa PSL) without redundant calls
+    print("  Scanning WCQ leagues for remaining coverage...")
+    for lid in sorted(_PHASE2_NT_LEAGUES):
         for season in [2025, 2024]:
             _fetch_league_players(lid, season, api_index)
             time.sleep(0.3)
