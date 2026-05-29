@@ -363,26 +363,28 @@ def _fetch_league_players(league_id: int, season: int, index: dict) -> int:
 
 
 def _fuzzy_match(wc_norm: str, api_index: dict) -> int | None:
-    """Last-name + first-initial match, or unique last-name match."""
+    """Try compound last name (2 words) then single, + first-initial filter."""
     parts = wc_norm.split()
     if len(parts) < 2:
         return None
-    wc_last = parts[-1]
     wc_initial = parts[0][0]
 
-    candidates = [
-        (name, pid) for name, pid in api_index.items()
-        if name.split()[-1:] == [wc_last]
-    ]
-    if not candidates:
-        return None
-    if len(candidates) == 1:
-        return candidates[0][1]
-
-    by_initial = [(n, p) for n, p in candidates
-                  if n.split() and n.split()[0][0] == wc_initial]
-    if len(by_initial) == 1:
-        return by_initial[0][1]
+    for n_last in (2, 1):
+        if n_last >= len(parts):
+            continue
+        wc_last = " ".join(parts[-n_last:])
+        candidates = [
+            (name, pid) for name, pid in api_index.items()
+            if " ".join(name.split()[-n_last:]) == wc_last
+        ]
+        if not candidates:
+            continue
+        if len(candidates) == 1:
+            return candidates[0][1]
+        by_initial = [(nm, p) for nm, p in candidates
+                      if nm.split() and nm.split()[0][0] == wc_initial]
+        if len(by_initial) == 1:
+            return by_initial[0][1]
 
     return None
 
