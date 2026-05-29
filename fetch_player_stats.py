@@ -29,8 +29,9 @@ import requests
 ROOT       = Path(__file__).resolve().parent
 SQUADS     = ROOT / "data" / "wc_squads.json"
 OUT        = ROOT / "data" / "stats.json"
-TEAM_CACHE = ROOT / "data" / "apif_team_ids.json"    # club name → team_id (stable)
-PLAYER_CACHE = ROOT / "data" / "apif_player_ids.json" # norm_name → player_id (stable)
+TEAM_CACHE   = ROOT / "data" / "apif_team_ids.json"    # club name → team_id (stable)
+PLAYER_CACHE = ROOT / "data" / "apif_player_ids.json"  # norm_name → player_id (matched WC players)
+INDEX_CACHE  = ROOT / "data" / "apif_league_index.json" # norm_name → player_id (all ~20k league players)
 
 BASE         = "https://v3.football.api-sports.io"
 CLUB_SEASON  = 2025   # API-Football labels 2025/26 season as 2025
@@ -291,26 +292,32 @@ def build_team_ids(wc_players: dict) -> dict:
 # double-counting. Friendlies/tournaments/other quals are redundant here.
 _PHASE2_NT_LEAGUES = {29, 30, 31, 32, 33, 34}  # CAF/AFC/CONCACAF/UEFA/OFC/CONMEBOL WCQ
 
-def build_player_ids(wc_players: dict) -> dict:
+def build_player_ids(wc_players: dict, use_cached_index: bool = False) -> dict:
     """Build {norm_wc_name: player_id} by scanning all covered league rosters."""
-    print("\nPhase 2: Scanning league rosters for player IDs...")
 
-    api_index: dict[str, int] = {}  # norm_name → player_id
+    if use_cached_index and INDEX_CACHE.exists():
+        print("\nPhase 2: Re-matching from saved league index (0 API calls)...")
+        api_index: dict[str, int] = json.loads(INDEX_CACHE.read_text())
+        print(f"  Loaded index: {len(api_index)} players")
+    else:
+        print("\nPhase 2: Scanning league rosters for player IDs...")
+        api_index = {}
 
-    for league_name, lid in CLUB_LEAGUES.items():
-        n = _fetch_league_players(lid, CLUB_SEASON, api_index)
-        print(f"  {league_name}: +{n}  (index: {len(api_index)})")
-        time.sleep(0.3)
-
-    # WCQ leagues only — one per confederation, catches players from uncovered
-    # club leagues (e.g. South Africa PSL) without redundant calls
-    print("  Scanning WCQ leagues for remaining coverage...")
-    for lid in sorted(_PHASE2_NT_LEAGUES):
-        for season in [2025, 2024]:
-            _fetch_league_players(lid, season, api_index)
+        for league_name, lid in CLUB_LEAGUES.items():
+            n = _fetch_league_players(lid, CLUB_SEASON, api_index)
+            print(f"  {league_name}: +{n}  (index: {len(api_index)})")
             time.sleep(0.3)
 
-    print(f"  Index: {len(api_index)} unique players")
+        # WCQ leagues only — one per confederation, catches players from uncovered
+        # club leagues (e.g. South Africa PSL) without redundant calls
+        print("  Scanning WCQ leagues for remaining coverage...")
+        for lid in sorted(_PHASE2_NT_LEAGUES):
+            for season in [2025, 2024]:
+                _fetch_league_players(lid, season, api_index)
+                time.sleep(0.3)
+
+        INDEX_CACHE.write_text(json.dumps(api_index, indent=2, ensure_ascii=False))
+        print(f"  Index: {len(api_index)} players saved → {INDEX_CACHE}")
 
     # Match WC players to API IDs
     player_ids: dict[str, int] = {}
@@ -508,6 +515,8 @@ def main():
     parser.add_argument("--dry-run",    action="store_true", help="Preview — don't write")
     parser.add_argument("--rebuild-ids", action="store_true",
                         help="Force re-run Phases 1+2 even if cache exists")
+    parser.add_argument("--rematch",    action="store_true",
+                        help="Re-run name matching against saved index — 0 API calls")
     parser.add_argument("--inspect",    type=int, metavar="PLAYER_ID",
                         help="Dump all raw stat blocks for a player ID (use to discover NT league IDs)")
     args = parser.parse_args()
@@ -563,7 +572,9 @@ def main():
         print(f"Phase 1: Using cached team IDs ({len(team_ids)} clubs)")
 
     if args.rebuild_ids or not PLAYER_CACHE.exists():
-        player_ids = build_player_ids(wc_players)
+        player_ids = build_player_ids(wc_players, use_cached_index=False)
+    elif args.rematch:
+        player_ids = build_player_ids(wc_players, use_cached_index=True)
     else:
         player_ids = json.loads(PLAYER_CACHE.read_text())
         print(f"Phase 2: Using cached player IDs ({len(player_ids)} players)")
