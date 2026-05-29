@@ -118,52 +118,75 @@ _TRANS = str.maketrans({
 })
 
 _PLAYER_ALIASES = {
-    "vinicius jr":                  "vinicius junior",
-    "savinho":                      "savio",
-    "mat ryan":                     "mathew ryan",
-    "maxwell cornet":               "maxwel cornet",
-    "billal brahimi":               "bilal brahimi",
-    "abdessamad ezzalzouli":        "abde ezzalzouli",
-    "yeremy pino":                  "yeremi pino",
-    "giovanni lo celso":            "giovani lo celso",
-    "ransford-yeboah konigsdorfer": "ransford konigsdorffer",
-    "mohamed amine amoura":         "mohamed amoura",
-    "mustafa mohammed":             "mostafa mohamed",
+    "vinicius jr":                   "vinicius junior",
+    "savinho":                       "savio",
+    "mat ryan":                      "mathew ryan",
+    "maxwell cornet":                "maxwel cornet",
+    "billal brahimi":                "bilal brahimi",
+    "abdessamad ezzalzouli":         "abde ezzalzouli",
+    "yeremy pino":                   "yeremi pino",
+    "giovanni lo celso":             "giovani lo celso",
+    "ransford yeboah konigsdorfer":  "ransford konigsdorffer",
+    "mohamed amine amoura":          "mohamed amoura",
+    "mustafa mohammed":              "mostafa mohamed",
+    "nicolas de la cruz":            "nicolas de la cruz",
 }
 
-# Club name aliases: wc_squads name → API-Football name (both will be norm'd)
+# Club name aliases: wc_squads name (norm'd) → API-Football name (norm'd)
 _TEAM_ALIASES = {
-    "atlanta united":        "atlanta united fc",
-    "atletico mineiro":      "atletico mineiro",   # same, but forces exact match
-    "atletico-mg":           "atletico mineiro",
-    "flamengo":              "flamengo",
-    "boca juniors":          "boca juniors",
-    "al sadd":               "al-sadd",
-    "al-sadd":               "al-sadd",
-    "al ahly":               "al ahly",
-    "al duhail":             "al-duhail",
-    "al-duhail":             "al-duhail",
-    "al rayyan":             "al-rayyan",
-    "al-rayyan":             "al-rayyan",
-    "al qadsiah":            "al qadsiah",
-    "seattle sounders":      "seattle sounders fc",
-    "sporting kansas city":  "sporting kc",
-    "new york city":         "new york city fc",
-    "new york red bulls":    "ny red bulls",
-    "inter miami":           "inter miami cf",
-    "aek athens":            "aek athens fc",
-    "panathinaikos":         "panathinaikos fc",
-    "olympiakos":            "olympiakos piraeus",
-    "slavia prague":         "sk slavia prague",
-    "sparta prague":         "ac sparta prague",
-    "dinamo zagreb":         "gnk dinamo zagreb",
+    # MLS
+    "atlanta united":            "atlanta united fc",
+    "seattle sounders":          "seattle sounders fc",
+    "sporting kansas city":      "sporting kc",
+    "new york city":             "new york city fc",
+    "new york red bulls":        "ny red bulls",
+    "inter miami":               "inter miami cf",
+    "la galaxy":                 "la galaxy",
+    "toronto fc":                "toronto fc",
+    "cf montreal":               "cf montreal",
+    # Brazil
+    "atletico mineiro":          "atletico mineiro",
+    "atletico mg":               "atletico mineiro",
+    "atletico paranaense":       "atletico paranaense",
+    "atletico pr":               "atletico paranaense",
+    # Germany
+    "borussia mgladbach":        "borussia monchengladbach",
+    "borussia m gladbach":       "borussia monchengladbach",
+    # Belgium
+    "club brugge":               "club brugge kv",
+    # Scotland
+    "hearts":                    "heart of midlothian",
+    # Greece
+    "aek athens":                "aek athens fc",
+    "panathinaikos":             "panathinaikos fc",
+    "olympiakos":                "olympiakos piraeus",
+    # Czech Republic
+    "slavia prague":             "sk slavia prague",
+    "sparta prague":             "ac sparta prague",
+    # Croatia
+    "dinamo zagreb":             "gnk dinamo zagreb",
+    # Middle East (hyphens now stripped by norm, but keep for safety)
+    "al ahly":                   "al ahly sc",
+    "al hilal":                  "al hilal",
+    "al nassr":                  "al nassr",
+    "al ittihad":                "al ittihad",
+    "al qadsiah":                "al qadsiah",
+    # Japan
+    "urawa red diamonds":        "urawa reds",
+    "kashima antlers":           "kashima antlers",
+    # Korea
+    "jeonbuk":                   "jeonbuk hyundai motors",
+    "ulsan":                     "ulsan hd",
+    # Australia
+    "western sydney wanderers":  "western sydney",
 }
 
 
 def norm(name: str) -> str:
-    name = str(name).translate(_TRANS)
+    name = str(name).replace("-", " ").replace("'", "").translate(_TRANS)
     s = unicodedata.normalize("NFKD", name)
     n = "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
+    n = " ".join(n.split())  # collapse multiple spaces
     return _PLAYER_ALIASES.get(n, n)
 
 
@@ -294,12 +317,36 @@ def build_player_ids(wc_players: dict, team_ids: dict) -> dict:
             if last:
                 sq_last[last].append((snk, sp["id"]))
 
+        still_needed = []
         for nk, wcp in members:
             pid = _match_in_squad(nk, sq_full, sq_last)
             if pid:
                 player_ids[nk] = pid
             else:
+                still_needed.append((nk, wcp))
+
+        # Fallback: API name search for players not found in squad roster
+        # (handles transfers, abbreviated API names, etc.)
+        for nk, wcp in still_needed:
+            last = nk.split()[-1] if nk else ""
+            if len(last) < 3:
                 unmatched.append(wcp["name"])
+                continue
+            data2 = _get("players", {"search": last, "team": team_id, "season": CLUB_SEASON})
+            hits = (data2 or {}).get("response", [])
+            matched_pid = None
+            for hit in hits:
+                api_name = norm((hit.get("player") or {}).get("name", ""))
+                if _match_in_squad(nk, {api_name: hit["player"]["id"]},
+                                   defaultdict(list, {api_name.split()[-1]:
+                                       [(api_name, hit["player"]["id"])]})):
+                    matched_pid = hit["player"]["id"]
+                    break
+            if matched_pid:
+                player_ids[nk] = matched_pid
+            else:
+                unmatched.append(wcp["name"])
+            time.sleep(0.3)
 
         time.sleep(0.3)
 
