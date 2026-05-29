@@ -281,74 +281,30 @@ def build_team_ids(wc_players: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Phase 2: Player IDs
-# Fetch squad rosters for each matched team — ~1 call per team
+# Phase 2: Player IDs — search by name directly, no club data needed
+# wc_squads.json club field is unreliable (transfers, stale data), so we
+# search the API by player last name and match on name similarity.
+# ~890 calls, one per WC player.
 # ---------------------------------------------------------------------------
 
-def build_player_ids(wc_players: dict, team_ids: dict) -> dict:
-    """Returns {norm_wc_name: player_id} by matching squad rosters."""
-    print("\nPhase 2: Fetching squad rosters for player IDs...")
-
-    # Group WC players by club
-    by_club: dict[str, list] = defaultdict(list)
-    for nk, wcp in wc_players.items():
-        by_club[wcp.get("club", "")].append((nk, wcp))
+def build_player_ids(wc_players: dict) -> dict:
+    """Returns {norm_wc_name: player_id} via direct player name search."""
+    print("\nPhase 2: Searching player IDs by name (~890 calls)...")
 
     player_ids: dict[str, int] = {}
-    unmatched = []
+    unmatched: list[str] = []
 
-    for club, members in by_club.items():
-        team_id = team_ids.get(club)
-        if not team_id:
-            unmatched.extend(wcp["name"] for _, wcp in members)
-            continue
+    for i, (nk, wcp) in enumerate(wc_players.items(), 1):
+        pid = _search_player_id(nk)
+        if pid:
+            player_ids[nk] = pid
+        else:
+            unmatched.append(wcp["name"])
 
-        data = _get("players/squads", {"team": team_id})
-        entries = (data or {}).get("response", [])
-        squad = entries[0].get("players", []) if entries else []
+        if i % 100 == 0:
+            print(f"  {i}/{len(wc_players)} searched — {len(player_ids)} matched")
 
-        # Index squad by full norm name and by last name
-        sq_full: dict[str, int] = {}
-        sq_last: dict[str, list] = defaultdict(list)
-        for sp in squad:
-            snk = norm(sp["name"])
-            sq_full[snk] = sp["id"]
-            last = snk.split()[-1] if snk else ""
-            if last:
-                sq_last[last].append((snk, sp["id"]))
-
-        still_needed = []
-        for nk, wcp in members:
-            pid = _match_in_squad(nk, sq_full, sq_last)
-            if pid:
-                player_ids[nk] = pid
-            else:
-                still_needed.append((nk, wcp))
-
-        # Fallback: API name search for players not found in squad roster
-        # (handles transfers, abbreviated API names, etc.)
-        for nk, wcp in still_needed:
-            last = nk.split()[-1] if nk else ""
-            if len(last) < 3:
-                unmatched.append(wcp["name"])
-                continue
-            data2 = _get("players", {"search": last, "team": team_id, "season": CLUB_SEASON})
-            hits = (data2 or {}).get("response", [])
-            matched_pid = None
-            for hit in hits:
-                api_name = norm((hit.get("player") or {}).get("name", ""))
-                if _match_in_squad(nk, {api_name: hit["player"]["id"]},
-                                   defaultdict(list, {api_name.split()[-1]:
-                                       [(api_name, hit["player"]["id"])]})):
-                    matched_pid = hit["player"]["id"]
-                    break
-            if matched_pid:
-                player_ids[nk] = matched_pid
-            else:
-                unmatched.append(wcp["name"])
-            time.sleep(0.3)
-
-        time.sleep(0.3)
+        time.sleep(0.35)
 
     print(f"  Matched {len(player_ids)}/{len(wc_players)} WC players to IDs")
     if unmatched:
@@ -360,26 +316,59 @@ def build_player_ids(wc_players: dict, team_ids: dict) -> dict:
     return player_ids
 
 
-def _match_in_squad(wc_norm: str, sq_full: dict, sq_last: dict) -> int | None:
-    """Match a WC player name against a team squad. Returns player_id or None."""
-    if wc_norm in sq_full:
-        return sq_full[wc_norm]
-
+def _search_player_id(wc_norm: str) -> int | None:
+    """Search API-Football for a WC player by name. Returns player_id or None."""
     parts = wc_norm.split()
     if not parts:
         return None
+
     last = parts[-1]
-    candidates = sq_last.get(last, [])
+    # API requires ≥4 chars; fall back to first name or full name
+    if len(last) < 4:
+        search = parts[0] if len(parts[0]) >= 4 else wc_norm[:8]
+    else:
+        search = last
 
-    if len(candidates) == 1:
-        return candidates[0][1]
-
-    # Multiple same-last-name players: try first-name initial match
-    if len(candidates) > 1 and len(parts) > 1:
-        first_initial = parts[0][0]
-        for snk, pid in candidates:
-            if snk.startswith(first_initial):
+    for season in [CLUB_SEASON, 2024]:
+        data = _get("players", {"search": search, "season": season})
+        hits = (data or {}).get("response", [])
+        if hits:
+            pid = _best_name_match(wc_norm, hits)
+            if pid:
                 return pid
+        time.sleep(0.35)
+
+    return None
+
+
+def _best_name_match(wc_norm: str, hits: list) -> int | None:
+    """Pick the best API-Football hit for a WC player name."""
+    wc_parts = wc_norm.split()
+    wc_last  = wc_parts[-1]
+
+    for hit in hits:
+        raw   = (hit.get("player") or {}).get("name", "")
+        pid   = (hit.get("player") or {}).get("id")
+        api_n = norm(raw)
+        api_parts = api_n.split()
+        api_last  = api_parts[-1] if api_parts else ""
+
+        if api_last != wc_last:
+            continue  # last name must match
+
+        # Exact full name
+        if api_n == wc_norm:
+            return pid
+
+        # First initial match (handles "M. Salah" vs "Mohamed Salah")
+        if (len(wc_parts) > 1 and len(api_parts) > 1
+                and wc_parts[0][0] == api_parts[0][0]):
+            return pid
+
+        # Last name only (unique enough if only one hit with this last name)
+        if sum(1 for h in hits
+               if norm((h.get("player") or {}).get("name", "")).split()[-1:] == [wc_last]) == 1:
+            return pid
 
     return None
 
@@ -558,7 +547,7 @@ def main():
         print(f"Phase 1: Using cached team IDs ({len(team_ids)} clubs)")
 
     if args.rebuild_ids or not PLAYER_CACHE.exists():
-        player_ids = build_player_ids(wc_players, team_ids)
+        player_ids = build_player_ids(wc_players)
     else:
         player_ids = json.loads(PLAYER_CACHE.read_text())
         print(f"Phase 2: Using cached player IDs ({len(player_ids)} players)")
