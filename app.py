@@ -414,15 +414,20 @@ with tab2:
     st.caption("Per-90 stats from API-Football club season (league + continental + domestic cups aggregated). Used at 35% weight in model (65% if <5 NT apps).")
     view2 = _filter("cl")
     club_cols = ["name", "country", "club", "pos", "price",
-                 "club_games", "club_goals", "club_assists", "club_cs",
+                 "club_games", "club_minutes",
                  "xg90_club", "xa90_club", "sot90_club", "kp90_club", "tackles90_club",
-                 "club_sot", "club_chances", "club_tackles", "club_saves"]
+                 "club_goals", "club_assists", "club_sot", "club_chances", "club_tackles",
+                 "starter_rate"]
     st.dataframe(
         view2[club_cols].style
             .background_gradient(subset=["xg90_club", "xa90_club"], cmap="Greens")
             .format({
-                "xg90_club": "{:.3f}", "xa90_club": "{:.3f}",
-                "sot90_club": "{:.3f}", "kp90_club": "{:.3f}", "tackles90_club": "{:.3f}",
+                "price": "${:.1f}m", "starter_rate": "{:.0%}",
+                "club_games": "{:.0f}", "club_minutes": "{:.0f}",
+                "club_goals": "{:.0f}", "club_assists": "{:.0f}",
+                "club_sot": "{:.0f}", "club_chances": "{:.0f}", "club_tackles": "{:.0f}",
+                "xg90_club": "{:.2f}", "xa90_club": "{:.2f}",
+                "sot90_club": "{:.2f}", "kp90_club": "{:.2f}", "tackles90_club": "{:.2f}",
             }, na_rep="—"),
         use_container_width=True, height=580,
     )
@@ -445,16 +450,20 @@ with tab3:
     st.caption("Per-90 stats from API-Football international competitions (WC qualifiers, Nations League, friendlies). Used at 65% weight in model.")
     view3 = _filter("nt")
     nt_cols = ["name", "country", "club", "pos", "price",
-               "intl_games", "intl_goals", "intl_assists", "intl_cs",
+               "intl_games", "intl_minutes",
                "xg90_nt", "xa90_nt", "sot90_nt", "kp90_nt", "tackles90_nt",
-               "intl_sot", "intl_chances", "intl_tackles", "intl_saves",
+               "intl_goals", "intl_assists", "intl_sot", "intl_chances", "intl_tackles",
                "nt_weight"]
     st.dataframe(
         view3[nt_cols].style
             .background_gradient(subset=["xg90_nt", "xa90_nt"], cmap="Blues")
             .format({
-                "xg90_nt": "{:.3f}", "xa90_nt": "{:.3f}",
-                "sot90_nt": "{:.3f}", "kp90_nt": "{:.3f}", "tackles90_nt": "{:.3f}",
+                "price": "${:.1f}m",
+                "intl_games": "{:.0f}", "intl_minutes": "{:.0f}",
+                "intl_goals": "{:.0f}", "intl_assists": "{:.0f}",
+                "intl_sot": "{:.0f}", "intl_chances": "{:.0f}", "intl_tackles": "{:.0f}",
+                "xg90_nt": "{:.2f}", "xa90_nt": "{:.2f}",
+                "sot90_nt": "{:.2f}", "kp90_nt": "{:.2f}", "tackles90_nt": "{:.2f}",
             }, na_rep="—"),
         use_container_width=True, height=580,
     )

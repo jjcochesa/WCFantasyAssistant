@@ -663,6 +663,16 @@ def _compute_per90(p: Player) -> None:
         sr = fbref.get("starter_rate", 0.0)
         if sr > 0:
             p.starter_rate = sr
+        # Backfill raw season totals from per-90 × minutes (stats.json is per-90 based,
+        # so the count columns would otherwise show 0).
+        cmin = fbref.get("minutes", 0) or 0
+        if cmin > 0:
+            p.club_stats.minutes         = cmin
+            p.club_stats.goals           = round(cl_xg  * cmin / 90)
+            p.club_stats.assists         = round(cl_xa  * cmin / 90)
+            p.club_stats.shots_on_target = round(cl_sot * cmin / 90)
+            p.club_stats.chances_created = round(cl_kp  * cmin / 90)
+            p.club_stats.tackles         = round(cl_tk  * cmin / 90)
 
     # Override NT stats from manual_nt_stats.json when available.
     nt_manual = _NT_BY_NAME.get(_norm_name(p.name)) or _NT_BY_NAME.get(_match_key(p.name))
@@ -679,6 +689,15 @@ def _compute_per90(p: Player) -> None:
             p.national_stats.matches = nt_manual["mp"]
         if nt_manual.get("starter_rate", 0.0) > 0 and p.starter_rate == 1.0:
             p.starter_rate = nt_manual["starter_rate"]
+        # Backfill raw NT totals from per-90 × minutes for the count columns.
+        nmin = nt_manual.get("minutes", 0) or 0
+        if nmin > 0:
+            p.national_stats.minutes         = nmin
+            p.national_stats.goals           = round(nt_xg  * nmin / 90)
+            p.national_stats.assists         = round(nt_xa  * nmin / 90)
+            p.national_stats.shots_on_target = round(nt_sot * nmin / 90)
+            p.national_stats.chances_created = round(nt_kp  * nmin / 90)
+            p.national_stats.tackles         = round(nt_tk  * nmin / 90)
 
     # Position-based display defaults for KP/tackles — shown in table but
     # NOT used in scoring so they don't inflate projected points for
@@ -884,6 +903,7 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "starter_rate": round(p.starter_rate, 2),
             # Raw stats for expander
             "intl_games": p.national_stats.matches,
+            "intl_minutes": p.national_stats.minutes,
             "intl_goals": p.national_stats.goals,
             "intl_assists": p.national_stats.assists,
             "intl_cs": p.national_stats.clean_sheets,
@@ -892,6 +912,7 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "intl_tackles": round(p.national_stats.tackles, 1),
             "intl_saves": round(p.national_stats.saves, 1),
             "club_games": p.club_stats.matches,
+            "club_minutes": p.club_stats.minutes,
             "club_goals": p.club_stats.goals,
             "club_assists": p.club_stats.assists,
             "club_cs": p.club_stats.clean_sheets,
