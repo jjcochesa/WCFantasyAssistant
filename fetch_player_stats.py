@@ -525,6 +525,8 @@ def main():
                         help="Force re-run Phases 1+2 even if cache exists")
     parser.add_argument("--rematch",    action="store_true",
                         help="Re-run name matching against saved index — 0 API calls")
+    parser.add_argument("--only-missing", action="store_true",
+                        help="Phase 3 fetches ONLY players not already in stats.json (cheap top-up)")
     parser.add_argument("--inspect",    type=int, metavar="PLAYER_ID",
                         help="Dump all raw stat blocks for a player ID (use to discover NT league IDs)")
     args = parser.parse_args()
@@ -586,6 +588,15 @@ def main():
     else:
         player_ids = json.loads(PLAYER_CACHE.read_text())
         print(f"Phase 2: Using cached player IDs ({len(player_ids)} players)")
+
+    # --only-missing: skip players already present in stats.json so a top-up run
+    # after adding new aliases costs ~2 calls per new player instead of ~1400.
+    if args.only_missing and OUT.exists():
+        already = json.loads(OUT.read_text())
+        before = len(player_ids)
+        player_ids = {nk: pid for nk, pid in player_ids.items() if nk not in already}
+        print(f"[only-missing] {before - len(player_ids)} already in stats.json, "
+              f"fetching {len(player_ids)} new players")
 
     # Phase 3: fetch stats
     print(f"\nPhase 3: Fetching stats for {len(player_ids)} players "
