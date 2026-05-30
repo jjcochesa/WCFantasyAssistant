@@ -64,4 +64,9 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Johan Mojica", "Jefferson Lerma", "James Rodríguez", "Richard Ríos",
         "Jhon Arias", "Luis Díaz", "Luis Suárez",
     ],
+    "NOR": [
+        "Ørjan Nyland", "Julian Ryerson", "Kristoffer Ajer", "Torbjørn Heggem",
+        "David Møller Wolfe", "Oscar Bobb", "Sander Berge", "Martin Ødegaard",
+        "Erling Haaland", "Antonio Nusa", "Alexander Sørloth",
+    ],
 }
