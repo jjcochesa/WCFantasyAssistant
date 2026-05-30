@@ -80,6 +80,11 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Maxim De Cuyper", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne",
         "Leandro Trossard", "Charles De Ketelaere", "Romelu Lukaku", "Jérémy Doku",
     ],
+    "AUT": [
+        "Alexander Schlager", "Konrad Laimer", "Kevin Danso", "David Alaba",
+        "Phillipp Mwene", "Xaver Schlager", "Nicolas Seiwald", "Marcel Sabitzer",
+        "Marko Arnautovic", "Christoph Baumgartner", "Patrick Wimmer",
+    ],
     "SUI": [
         "Gregor Kobel", "Silvan Widmer", "Nico Elvedi", "Manuel Akanji",
         "Ricardo Rodríguez", "Granit Xhaka", "Dan Ndoye", "Breel Embolo",
