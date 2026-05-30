@@ -136,6 +136,26 @@ def _norm_name(name: str) -> str:
     return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
 
 
+# Display-name aliases for matching our roster names to the FIFA feed's names.
+# Keys/values are in _match_key space (punctuation-stripped, lowercased).
+# e.g. our "Vinicius Jr" and FIFA's "Vinícius Júnior" both resolve to "vinicius junior".
+_LIVE_NAME_ALIASES = {
+    "vinicius jr":      "vinicius junior",
+    "savinho":          "savio",
+    "gabriel jesus":    "gabriel jesus",
+    "rodri":            "rodrigo hernandez",
+}
+
+
+def _match_key(name: str) -> str:
+    """Stronger cross-source key: norm + strip punctuation + alias canonicalisation.
+    Used on BOTH sides of the live-ownership overlay so name-format differences
+    (Jr vs Júnior, hyphens, dots) don't drop matches."""
+    n = _norm_name(name).replace("-", " ").replace(".", "").replace("'", "")
+    n = " ".join(n.split())
+    return _LIVE_NAME_ALIASES.get(n, n)
+
+
 # Load stats maps now that _norm_name is defined (loader uses it for alias bridging)
 _load_fbref_map()
 
@@ -380,6 +400,7 @@ def fetch_live_player_data(session_token: Optional[str] = None) -> dict:
                     result[pid] = entry
                 if name:
                     result[_norm_name(name)] = entry
+                    result[_match_key(name)] = entry  # alias-aware fallback key
 
             if result:
                 print(f"[FIFA] Live data fetched: {len(raw_list)} players")

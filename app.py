@@ -5,7 +5,7 @@ import streamlit as st
 import pandas as pd
 
 import data_engine as _de
-from data_engine import load_data, fetch_live_player_data, _norm_name
+from data_engine import load_data, fetch_live_player_data, _norm_name, _match_key
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
     MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
@@ -108,7 +108,10 @@ def _apply_live_data(df: pd.DataFrame, live: dict) -> pd.DataFrame:
     df = df.copy()
 
     def _get(row, field: str, fallback):
-        entry = live.get(str(row.get("id", ""))) or live.get(_norm_name(str(row.get("name", ""))))
+        nm = str(row.get("name", ""))
+        entry = (live.get(str(row.get("id", "")))
+                 or live.get(_norm_name(nm))
+                 or live.get(_match_key(nm)))
         if entry and isinstance(entry, dict):
             v = entry.get(field)
             if v is not None and float(v) > 0:
