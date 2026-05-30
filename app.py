@@ -324,8 +324,8 @@ with tab1:
         "<div style='font-size:12px;color:#aaa;padding:2px 0 6px'>"
         "🪪 <b>Identity</b> &nbsp;│&nbsp; "
         "🗓️ <b>Fixtures</b>: opponents &nbsp;│&nbsp; "
-        "<span style='color:#4ade80'>⚽ <b>Club·</b> 2025/26 per-90</span> &nbsp;│&nbsp; "
-        "<span style='color:#60a5fa'>🌍 <b>NT·</b> last 10 matches per-90</span> &nbsp;│&nbsp; "
+        "<span style='color:#4ade80'>⚽ <b>Club·</b> 2025/26 per-90 (league + cups)</span> &nbsp;│&nbsp; "
+        "<span style='color:#60a5fa'>🌍 <b>NT·</b> recent NT form per-90</span> &nbsp;│&nbsp; "
         "📊 <b>MD· CS% / xG</b> from TEAM_PROJECTIONS &nbsp;│&nbsp; "
         "<span style='color:#fb923c'>🎯 <b>Proj Pts</b></span>"
         "</div>",
@@ -407,8 +407,8 @@ with tab1:
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
 with tab2:
-    st.subheader("Club Form — 2024/25 Season Stats")
-    st.caption("Per-90 stats from API-Football club season. Used at 35% weight in model (65% if <5 NT apps).")
+    st.subheader("Club Form — 2025/26 Season Stats")
+    st.caption("Per-90 stats from API-Football club season (league + continental + domestic cups aggregated). Used at 35% weight in model (65% if <5 NT apps).")
     view2 = _filter("cl")
     club_cols = ["name", "country", "club", "pos", "price",
                  "club_games", "club_goals", "club_assists", "club_cs",

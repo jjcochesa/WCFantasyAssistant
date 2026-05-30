@@ -56,11 +56,20 @@ def _load_fbref_map() -> None:
                 stats_data: dict[str, dict] = json.load(f)
             club_count = nt_count = 0
             for norm_key, entry in stats_data.items():
+                # stats.json keys use fetch_player_stats.norm() (applies aliases like
+                # "vinicius jr"→"vinicius junior"). The app looks up by _norm_name(),
+                # so also index under _norm_name(display name) to bridge the two.
+                display = entry.get("name", "")
+                alt_key = _norm_name(display) if display else None
                 if "club" in entry:
                     _FBREF_BY_NAME[norm_key] = entry["club"]
+                    if alt_key and alt_key not in _FBREF_BY_NAME:
+                        _FBREF_BY_NAME[alt_key] = entry["club"]
                     club_count += 1
                 if "nt" in entry:
                     _NT_BY_NAME[norm_key] = entry["nt"]
+                    if alt_key and alt_key not in _NT_BY_NAME:
+                        _NT_BY_NAME[alt_key] = entry["nt"]
                     nt_count += 1
             print(f"[Stats] Loaded {club_count} club + {nt_count} NT records from stats.json")
         except Exception as e:
@@ -119,14 +128,16 @@ def _load_fbref_map() -> None:
             print(f"[Stats] Could not load fbref_player_map.json: {e}")
 
 
-_load_fbref_map()
-
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _norm_name(name: str) -> str:
     """Accent-strip + lowercase + Turkish dotless-ı fix for cross-source matching."""
     name = name.lower().replace("ı", "i")
     return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
+
+
+# Load stats maps now that _norm_name is defined (loader uses it for alias bridging)
+_load_fbref_map()
 
 
 def _cache_path(key: str) -> str:
@@ -616,7 +627,10 @@ def _compute_per90(p: Player) -> None:
     # Override club stats from FBref/manual data (xG/kp90/tackles90 not in API raw counts).
     fbref = _FBREF_BY_ID.get(p.id) or _FBREF_BY_NAME.get(_norm_name(p.name))
     if fbref:
-        if fbref.get("xg90",     0.0) > 0: cl_xg  = fbref["xg90"]
+        # stats.json stores actual goals as "goals90"; legacy manual files also
+        # carry "xg90". Prefer real goals/90, fall back to xG/90 for legacy entries.
+        _cl_goals = fbref.get("goals90") or fbref.get("xg90") or 0.0
+        if _cl_goals > 0: cl_xg = _cl_goals
         if fbref.get("xa90",     0.0) > 0: cl_xa  = fbref["xa90"]
         if fbref.get("sot90",    0.0) > 0: cl_sot = fbref["sot90"]
         if fbref.get("kp90",     0.0) > 0: cl_kp  = fbref["kp90"]
@@ -630,8 +644,9 @@ def _compute_per90(p: Player) -> None:
     # Override NT stats from manual_nt_stats.json when available.
     nt_manual = _NT_BY_NAME.get(_norm_name(p.name))
     if nt_manual:
-        if nt_manual.get("xg90",     0.0) > 0 or nt_manual.get("mp", 0) >= 5:
-            nt_xg  = nt_manual.get("xg90",  nt_xg)
+        _nt_goals = nt_manual.get("goals90") or nt_manual.get("xg90") or 0.0
+        if _nt_goals > 0 or nt_manual.get("mp", 0) >= 5:
+            if _nt_goals > 0:           nt_xg = _nt_goals
             nt_xa  = nt_manual.get("xa90",  nt_xa)
             nt_sot = nt_manual.get("sot90", nt_sot)
             nt_kp  = nt_manual.get("kp90",  nt_kp)
