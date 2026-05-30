@@ -14459,5 +14459,165 @@
       "starter_rate": 1.0,
       "league": "Süper Lig"
     }
+  },
+  "c. romero": {
+    "name": "Cristian Romero",
+    "club": {
+      "goals90": 0.192,
+      "xa90": 0.048,
+      "sot90": 0.288,
+      "kp90": 0.577,
+      "tackles90": 2.788,
+      "mp": 23,
+      "minutes": 1872,
+      "squad": "Tottenham",
+      "starter_rate": 0.96,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.135,
+      "tackles90": 3.519,
+      "mp": 7,
+      "minutes": 665,
+      "starter_rate": 1.0,
+      "source": "Friendlies, Copa America"
+    }
+  },
+  "m. acuna": {
+    "name": "Marcos Acuna",
+    "club": {
+      "goals90": 0.042,
+      "xa90": 0.042,
+      "sot90": 0.212,
+      "kp90": 1.948,
+      "tackles90": 1.652,
+      "mp": 26,
+      "minutes": 2125,
+      "squad": "Sevilla",
+      "starter_rate": 0.92,
+      "league": "Primera Div (ARG)"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.39,
+      "tackles90": 0.779,
+      "mp": 4,
+      "minutes": 231,
+      "starter_rate": 0.5,
+      "source": "Friendlies"
+    }
+  },
+  "g. rodriguez": {
+    "name": "Guido Rodriguez",
+    "club": {
+      "goals90": 0.275,
+      "xa90": 0.0,
+      "sot90": 0.344,
+      "kp90": 0.482,
+      "tackles90": 2.821,
+      "mp": 16,
+      "minutes": 1308,
+      "squad": "Betis",
+      "starter_rate": 0.88,
+      "league": "La Liga"
+    }
+  },
+  "a. preciado": {
+    "name": "Angelo Preciado",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.093,
+      "sot90": 0.371,
+      "kp90": 1.67,
+      "tackles90": 1.485,
+      "mp": 14,
+      "minutes": 970,
+      "squad": "Genk",
+      "starter_rate": 0.71,
+      "league": "Czech Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 1.002,
+      "tackles90": 2.146,
+      "mp": 7,
+      "minutes": 629,
+      "starter_rate": 1.0,
+      "source": "Copa America, Friendlies"
+    }
+  },
+  "d. ndoye": {
+    "name": "Dan Ndoye",
+    "club": {
+      "goals90": 0.077,
+      "xa90": 0.077,
+      "sot90": 0.306,
+      "kp90": 1.071,
+      "tackles90": 1.76,
+      "mp": 24,
+      "minutes": 1176,
+      "squad": "Bologna",
+      "starter_rate": 0.58,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.334,
+      "xa90": 0.267,
+      "sot90": 0.802,
+      "kp90": 0.802,
+      "tackles90": 1.003,
+      "mp": 20,
+      "minutes": 1346,
+      "starter_rate": 0.75,
+      "source": "Friendlies, Euro Championship, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "j. gimenez": {
+    "name": "Jose Maria Gimenez",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.076,
+      "sot90": 0.229,
+      "kp90": 0.076,
+      "tackles90": 1.912,
+      "mp": 16,
+      "minutes": 1177,
+      "squad": "Atletico Madrid",
+      "starter_rate": 0.81,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.3,
+      "sot90": 0.0,
+      "kp90": 0.3,
+      "tackles90": 1.2,
+      "mp": 6,
+      "minutes": 300,
+      "starter_rate": 0.5,
+      "source": "Copa America"
+    }
+  },
+  "m. gomez": {
+    "name": "Maxi Gomez",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.067,
+      "sot90": 0.134,
+      "kp90": 0.202,
+      "tackles90": 1.748,
+      "mp": 15,
+      "minutes": 1339,
+      "squad": "Celta Vigo",
+      "starter_rate": 1.0,
+      "league": "Swiss Super League"
+    }
   }
 }
