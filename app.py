@@ -203,6 +203,19 @@ def fmt(sub: pd.DataFrame):
     return s.format({k: v for k, v in fmt_map.items() if k in sub.columns}, na_rep="—")
 
 
+# ── Scout bonus (display-only, +2 per MD where own%<4.5 AND md_pts≥4) ────────
+def _with_scout_bonus(view: pd.DataFrame) -> pd.DataFrame:
+    v = view.copy()
+    low_own = v["own_%"] < 4.5
+    v["sb_md1"]      = ((low_own) & (v["md1_pts"] >= 4.0)).astype(int) * 2
+    v["sb_md2"]      = ((low_own) & (v["md2_pts"] >= 4.0)).astype(int) * 2
+    v["scout_bonus"] = v["sb_md1"] + v["sb_md2"]
+    v["adj_md1"]     = v["md1_pts"]  + v["sb_md1"]
+    v["adj_md2"]     = v["md2_pts"]  + v["sb_md2"]
+    v["adj_total"]   = v["xPts_GS"] + v["scout_bonus"]
+    return v.drop(columns=["sb_md1", "sb_md2"])
+
+
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
 def _greedy_squad(df, budget, sort_col, country_cap):
     """
@@ -270,6 +283,45 @@ def _greedy_squad(df, budget, sort_col, country_cap):
     return result.sort_values(["_o", sort_col], ascending=[True, False]).drop(columns=["_o"]).reset_index(drop=True)
 
 
+def _dual_squad(df, budget, country_cap):
+    """Build MD1 squad, then make 3 transfers to maximise MD2, return (md1, md2)."""
+    md1 = _greedy_squad(df, budget, "md1_pts", country_cap)
+    if md1 is None or md1.empty:
+        return None, None
+
+    worst3 = md1.nsmallest(3, "md2_pts")
+    keep12 = md1[~md1["id"].isin(worst3["id"])].copy()
+    freed  = worst3["price"].sum()
+    keep_country = keep12["team_code"].value_counts().to_dict()
+    used_ids = set(keep12["id"])
+
+    transfers, remaining = [], freed
+    for _, sold in worst3.sort_values("md2_pts").iterrows():
+        n_left    = 3 - len(transfers) - 1
+        min_res   = n_left * 4.0  # keep ≥$4m for each remaining slot
+        cur_cnt   = {**keep_country}
+        for p in transfers:
+            cur_cnt[p["team_code"]] = cur_cnt.get(p["team_code"], 0) + 1
+
+        pool = df[
+            (df["pos"] == sold["pos"]) &
+            (~df["id"].isin(used_ids)) &
+            (df["price"] <= remaining - min_res) &
+            (df["team_code"].apply(lambda tc: cur_cnt.get(tc, 0) < country_cap))
+        ].sort_values("md2_pts", ascending=False)
+
+        picked = pool.iloc[0] if not pool.empty else sold
+        transfers.append(picked)
+        used_ids.add(picked["id"])
+        remaining -= picked["price"]
+
+    md2 = pd.concat([keep12, pd.DataFrame(transfers)]).reset_index(drop=True)
+    pos_order = {"GK": 0, "DEF": 1, "MID": 2, "FWD": 3}
+    md2["_o"] = md2["pos"].map(pos_order)
+    md2 = md2.sort_values(["_o", "md2_pts"], ascending=[True, False]).drop(columns=["_o"]).reset_index(drop=True)
+    return md1, md2
+
+
 # ── Tabs ──────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🏅 Rankings",
@@ -301,106 +353,84 @@ def _filter(key_prefix: str) -> pd.DataFrame:
 with tab1:
     st.subheader("Player Rankings — Group Stage (MD1 + MD2)")
 
-    # ── Filters ───────────────────────────────────────────────────────────────
     f1, f2 = st.columns([3, 1])
     with f1:
-        pos_filter = st.radio(
-            "Position", ["All", "GK", "DEF", "MID", "FWD"],
-            horizontal=True, key="t1_pos",
-        )
+        pos_filter = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t1_pos")
     with f2:
-        nation_filter = st.selectbox(
-            "Nation", ["All"] + sorted(df["country"].unique().tolist()),
-            key="t1_nation",
-        )
+        nation_filter = st.selectbox("Nation", ["All"] + sorted(df["country"].unique().tolist()), key="t1_nation")
 
     view = df.copy()
     if pos_filter != "All":
         view = view[view["pos"] == pos_filter]
     if nation_filter != "All":
         view = view[view["country"] == nation_filter]
-    view = view.sort_values("xPts_GS", ascending=False).reset_index(drop=True)
+    view = _with_scout_bonus(view.sort_values("xPts_GS", ascending=False).reset_index(drop=True))
     view.index += 1
 
-    # ── Column group legend ───────────────────────────────────────────────────
     st.markdown(
         "<div style='font-size:12px;color:#aaa;padding:2px 0 6px'>"
-        "🪪 <b>Identity</b> &nbsp;│&nbsp; "
-        "🗓️ <b>Fixtures</b>: opponents &nbsp;│&nbsp; "
-        "<span style='color:#4ade80'>⚽ <b>Club·</b> 2025/26 per-90 (league + cups)</span> &nbsp;│&nbsp; "
-        "<span style='color:#60a5fa'>🌍 <b>NT·</b> recent NT form per-90</span> &nbsp;│&nbsp; "
-        "📊 <b>MD· CS% / xG</b> from TEAM_PROJECTIONS &nbsp;│&nbsp; "
-        "⏱️ <b>Proj Min</b>: predicted XI=70', bench=20' (else from starter rate) &nbsp;│&nbsp; "
-        "<span style='color:#fb923c'>🎯 <b>Proj Pts</b></span>"
+        "🪪 Identity &nbsp;│&nbsp; 🗓️ Opponents (3-letter) &nbsp;│&nbsp; "
+        "<span style='color:#4ade80'>🎯 Proj Pts → Adj Pts (+2 scout bonus if &lt;4.5% owned &amp; ≥4 pts)</span> &nbsp;│&nbsp; "
+        "📊 CS% / xG &nbsp;│&nbsp; "
+        "<span style='color:#4ade80'>⚽ Club·</span> <span style='color:#60a5fa'>🌍 NT· per-90</span>"
         "</div>",
         unsafe_allow_html=True,
     )
 
-    # ── Build display dataframe with renamed columns ──────────────────────────
     COL_MAP = {
-        # Identity
         "name":           "Name",
-        "country":        "Nation",
+        "team_code":      "Nation",
         "pos":            "Pos",
-        "club":           "Club",
         "price":          "Price",
         "own_%":          "Own%",
         "proj_min":       "Proj Min",
-        # Fixtures
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
-        # Club season stats
+        "md1_pts":        "MD1 Pts",
+        "md2_pts":        "MD2 Pts",
+        "xPts_GS":        "Total Pts",
+        "scout_bonus":    "Scout+",
+        "adj_total":      "Adj Pts",
+        "cs_md1_pct":     "MD1 CS%",
+        "cs_md2_pct":     "MD2 CS%",
+        "goals_md1":      "MD1 xG",
+        "goals_md2":      "MD2 xG",
         "xg90_club":      "Cl Gls/90",
         "xa90_club":      "Cl Ast/90",
         "sot90_club":     "Cl SOT/90",
         "kp90_club":      "Cl KP/90",
         "tackles90_club": "Cl Tkl/90",
-        # NT stats
         "xg90_nt":        "NT Gls/90",
         "xa90_nt":        "NT Ast/90",
         "sot90_nt":       "NT SOT/90",
         "kp90_nt":        "NT KP/90",
         "tackles90_nt":   "NT Tkl/90",
-        # Fixture data
-        "cs_md1_pct":     "MD1 CS%",
-        "cs_md2_pct":     "MD2 CS%",
-        "goals_md1":      "MD1 xG",
-        "goals_md2":      "MD2 xG",
-        # Output
-        "md1_pts":        "MD1 Pts",
-        "md2_pts":        "MD2 Pts",
-        "xPts_GS":        "Total Pts",
     }
 
     display_cols = [c for c in COL_MAP if c in view.columns]
-    disp = view[display_cols].rename(columns=COL_MAP)
-
-    # Set Name as index so it stays frozen when scrolling right
-    disp = disp.set_index("Name")
+    disp = view[display_cols].rename(columns=COL_MAP).set_index("Name")
 
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
-    pts_cols   = ["MD1 Pts", "MD2 Pts", "Total Pts"]
+    pts_cols   = ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"]
     pct_cols   = [c for c in ["MD1 CS%", "MD2 CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["MD1 xG", "MD2 xG"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'"}
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "Scout+": "{:.0f}"}
     fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt})
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    grad_pts  = [c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns and disp[c].notna().any()]
+    grad_pts  = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if c in disp.columns and disp[c].notna().any()]
     grad_club = [c for c in per90_club if c in disp.columns and disp[c].notna().any()]
     grad_nt   = [c for c in per90_nt   if c in disp.columns and disp[c].notna().any()]
 
-    styler = disp.style.format(
-        {k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—"
-    )
+    styler = disp.style.format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
     if grad_pts:
-        styler = styler.background_gradient(subset=grad_pts,  cmap="YlOrRd")
+        styler = styler.background_gradient(subset=grad_pts,  cmap="Greens")
     if grad_club:
-        styler = styler.background_gradient(subset=grad_club, cmap="Greens")
+        styler = styler.background_gradient(subset=grad_club, cmap="YlGn")
     if grad_nt:
         styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
@@ -505,38 +535,101 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
 with tab4:
     st.subheader("Build Your Best Squad")
 
-    b1, b2 = st.columns(2)
-    build_budget = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
-    build_sort = b2.selectbox("Optimise by", list(SORT_LABELS.keys()), key="build_sort")
-    build_cap = st.slider("Max per country", 1, 5, country_cap, key="build_cap")
+    b1, b2, b3 = st.columns(3)
+    build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
+    build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
+    use_transfers = b3.toggle("3 transfers MD1→MD2", value=False, key="build_transfers")
 
     if st.button("Build Optimal Squad", type="primary"):
-        squad = _greedy_squad(df, build_budget, SORT_LABELS[build_sort], build_cap)
-        if squad is None or squad.empty:
-            st.error("Could not fill squad within budget. Try increasing budget or country cap.")
-        else:
-            cost = squad["price"].sum()
-            total_xpts = squad["xPts_GS"].sum()
-            sc1, sc2, sc3 = st.columns(3)
-            sc1.metric("Total cost", f"${cost:.1f}m")
-            sc2.metric("Remaining", f"${build_budget - cost:.1f}m")
-            sc3.metric("Total xPts (GS)", f"{total_xpts:.1f}")
+        if use_transfers:
+            md1_squad, md2_squad = _dual_squad(df, build_budget, build_cap)
+            if md1_squad is None:
+                st.error("Could not build squad within budget. Try increasing budget or country cap.")
+            else:
+                md1_pts_total = md1_squad["md1_pts"].sum()
+                md2_pts_total = md2_squad["md2_pts"].sum()
+                combined      = md1_pts_total + md2_pts_total
+                cost          = md1_squad["price"].sum()
 
-            captain = squad.sort_values("xPts/game", ascending=False).iloc[0]
-            vice = squad.sort_values("xPts/game", ascending=False).iloc[1]
-            st.success(f"⭐ Captain: **{captain['name']}** ({captain['xPts/game']:.2f} → ×2 = {captain['xPts/game']*2:.2f} xPts/game)  |  👑 Vice: **{vice['name']}**")
+                sc1, sc2, sc3, sc4 = st.columns(4)
+                sc1.metric("Cost (MD1 squad)", f"${cost:.1f}m")
+                sc2.metric("MD1 xPts", f"{md1_pts_total:.1f}")
+                sc3.metric("MD2 xPts", f"{md2_pts_total:.1f}")
+                sc4.metric("Combined xPts", f"{combined:.1f}")
 
-            squad_cols = ["name", "pos", "country", "club", "price", "own_%",
-                          "GD1 xG", "GD2 xG", "xPts_GS", "value"]
-            st.dataframe(fmt(squad[squad_cols]), use_container_width=True)
+                # Show transfers
+                sold_ids = set(md1_squad["id"]) - set(md2_squad["id"])
+                bought_ids = set(md2_squad["id"]) - set(md1_squad["id"])
+                if sold_ids:
+                    out_names = md1_squad[md1_squad["id"].isin(sold_ids)]["name"].tolist()
+                    in_names  = md2_squad[md2_squad["id"].isin(bought_ids)]["name"].tolist()
+                    st.info(f"**3 transfers:** OUT {', '.join(out_names)}  →  IN {', '.join(in_names)}")
 
-            for pos in ["GK", "DEF", "MID", "FWD"]:
-                sub = squad[squad["pos"] == pos]
-                line = "  |  ".join(
-                    f"{r['name']} ${r['price']:.1f}m ({r['xPts_GS']:.1f} xPts)"
-                    for _, r in sub.iterrows()
+                sq_cols = ["name", "team_code", "pos", "price", "md1_pts", "md2_pts", "xPts_GS"]
+                sq_cols = [c for c in sq_cols if c in md1_squad.columns]
+
+                st.markdown("**MD1 Squad (15 players)**")
+                st.dataframe(
+                    md1_squad[sq_cols].rename(columns={
+                        "name": "Name", "team_code": "Nation", "pos": "Pos",
+                        "price": "Price", "md1_pts": "MD1 Pts",
+                        "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
+                    }).style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                                     "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
+                    use_container_width=True,
                 )
-                st.markdown(f"**{pos}:** {line}")
+                st.markdown("**MD2 Squad (after 3 transfers)**")
+                sq2_cols = [c for c in sq_cols if c in md2_squad.columns]
+                st.dataframe(
+                    md2_squad[sq2_cols].rename(columns={
+                        "name": "Name", "team_code": "Nation", "pos": "Pos",
+                        "price": "Price", "md1_pts": "MD1 Pts",
+                        "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
+                    }).style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                                     "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
+                    use_container_width=True,
+                )
+        else:
+            squad = _greedy_squad(df, build_budget, "xPts_GS", build_cap)
+            if squad is None or squad.empty:
+                st.error("Could not fill squad within budget. Try increasing budget or country cap.")
+            else:
+                cost          = squad["price"].sum()
+                md1_total     = squad["md1_pts"].sum()
+                md2_total     = squad["md2_pts"].sum()
+                total_xpts    = squad["xPts_GS"].sum()
+
+                sc1, sc2, sc3, sc4 = st.columns(4)
+                sc1.metric("Total cost",   f"${cost:.1f}m")
+                sc2.metric("Remaining",    f"${build_budget - cost:.1f}m")
+                sc3.metric("MD1 xPts",     f"{md1_total:.1f}")
+                sc4.metric("MD2 xPts",     f"{md2_total:.1f}")
+
+                captain = squad.sort_values("xPts/game", ascending=False).iloc[0]
+                vice    = squad.sort_values("xPts/game", ascending=False).iloc[1]
+                st.success(f"⭐ Captain: **{captain['name']}**  |  👑 Vice: **{vice['name']}**")
+
+                sq_cols = ["name", "team_code", "pos", "price", "own_%", "md1_pts", "md2_pts", "xPts_GS"]
+                sq_cols = [c for c in sq_cols if c in squad.columns]
+                st.dataframe(
+                    squad[sq_cols].rename(columns={
+                        "name": "Name", "team_code": "Nation", "pos": "Pos",
+                        "price": "Price", "own_%": "Own%",
+                        "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts",
+                    }).style.format({
+                        "Price": "${:.1f}m", "Own%": "{:.1f}%",
+                        "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}",
+                    }, na_rep="—"),
+                    use_container_width=True,
+                )
+
+                for pos in ["GK", "DEF", "MID", "FWD"]:
+                    sub = squad[squad["pos"] == pos]
+                    line = "  |  ".join(
+                        f"{r['name']} ${r['price']:.1f}m (MD1 {r['md1_pts']:.1f} / MD2 {r['md2_pts']:.1f})"
+                        for _, r in sub.iterrows()
+                    )
+                    st.markdown(f"**{pos}:** {line}")
 
 
 # ── TAB 5: Scouts & Value ─────────────────────────────────────────────────────
@@ -544,40 +637,76 @@ with tab5:
     c1, c2 = st.columns(2)
 
     with c1:
-        st.subheader(f"🔍 Scout Picks  (<{int(SCOUT_OWNERSHIP_THRESHOLD)}% owned)")
-        scouts = df[df["scout"]].sort_values("xPts/game", ascending=False)
+        st.subheader(f"🔍 Scout Picks  (<{SCOUT_OWNERSHIP_THRESHOLD}% owned, ≥{SCOUT_POINTS_THRESHOLD} pts/game)")
+        scouts = _with_scout_bonus(df[df["scout"]].sort_values("xPts/game", ascending=False).copy())
         pos_s = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="scout_pos")
         if pos_s != "All":
             scouts = scouts[scouts["pos"] == pos_s]
+        scouts = scouts.reset_index(drop=True)
         scouts.index = range(1, len(scouts) + 1)
-        st.dataframe(
-            scouts[["name", "pos", "country", "club", "price", "own_%",
-                     "GD1 xG", "GD2 xG", "xPts_GS", "value"]].style
-                .background_gradient(subset=["xPts_GS"], cmap="Reds")
-                .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                         "GD1 xG": "{:.3f}", "GD2 xG": "{:.3f}",
-                         "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
-            use_container_width=True, height=420,
-        )
+
+        s_cols = ["name", "team_code", "pos", "price", "own_%", "proj_min",
+                  "md1_opp", "md2_opp",
+                  "cs_md1_pct", "cs_md2_pct", "goals_md1", "goals_md2",
+                  "md1_pts", "md2_pts", "xPts_GS", "scout_bonus", "adj_total", "value"]
+        s_cols = [c for c in s_cols if c in scouts.columns]
+        s_disp = scouts[s_cols].rename(columns={
+            "name": "Name", "team_code": "Nation", "pos": "Pos",
+            "price": "Price", "own_%": "Own%", "proj_min": "Proj Min",
+            "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
+            "cs_md1_pct": "MD1 CS%", "cs_md2_pct": "MD2 CS%",
+            "goals_md1": "MD1 xG", "goals_md2": "MD2 xG",
+            "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
+            "xPts_GS": "Total Pts", "scout_bonus": "Scout+", "adj_total": "Adj Pts",
+            "value": "Value",
+        }).set_index("Name")
+
+        s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'",
+                 "MD1 CS%": "{:.0%}", "MD2 CS%": "{:.0%}",
+                 "MD1 xG": "{:.2f}", "MD2 xG": "{:.2f}",
+                 "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}",
+                 "Total Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
+                 "Value": "{:.3f}"}
+        s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].notna().any()]
+        s_styler = s_disp.style.format({k: v for k, v in s_fmt.items() if k in s_disp.columns}, na_rep="—")
+        if s_grad:
+            s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
+        try:
+            st.dataframe(s_styler, use_container_width=True, height=480)
+        except Exception:
+            st.dataframe(s_disp, use_container_width=True, height=480)
 
     with c2:
-        st.subheader("💰 Best Value (xPts GS / $m)")
-        pos_v = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="val_pos")
+        st.subheader("💰 Best Value (Adj Pts / $m)")
+        pos_v  = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="val_pos")
         max_pv = st.number_input("Max price", 4.0, 15.0, 12.0, 0.5, key="val_price")
-        val_view = df[df["price"] <= max_pv].copy()
+        val_view = _with_scout_bonus(df[df["price"] <= max_pv].copy())
         if pos_v != "All":
             val_view = val_view[val_view["pos"] == pos_v]
-        val_view = val_view.sort_values("value", ascending=False).head(20).reset_index(drop=True)
+        val_view["adj_value"] = (val_view["adj_total"] / val_view["price"].replace(0, float("nan"))).round(3)
+        val_view = val_view.sort_values("adj_value", ascending=False).head(20).reset_index(drop=True)
         val_view.index += 1
-        st.dataframe(
-            val_view[["name", "pos", "country", "club", "price", "own_%",
-                       "GD1 xG", "GD2 xG", "xPts_GS", "value"]].style
-                .background_gradient(subset=["value"], cmap="Blues")
-                .format({"price": "${:.1f}m", "own_%": "{:.1f}%",
-                         "GD1 xG": "{:.3f}", "GD2 xG": "{:.3f}",
-                         "xPts_GS": "{:.2f}", "value": "{:.3f}"}),
-            use_container_width=True, height=420,
-        )
+
+        v_cols = ["name", "team_code", "price", "adj_total", "adj_value",
+                  "md1_opp", "md2_opp", "md1_pts", "md2_pts"]
+        v_cols = [c for c in v_cols if c in val_view.columns]
+        v_disp = val_view[v_cols].rename(columns={
+            "name": "Name", "team_code": "Nation",
+            "price": "Price", "adj_total": "Adj Pts", "adj_value": "Value",
+            "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
+            "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
+        }).set_index("Name")
+
+        v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
+                 "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
+        v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].notna().any()]
+        v_styler = v_disp.style.format({k: v for k, v in v_fmt.items() if k in v_disp.columns}, na_rep="—")
+        if v_grad:
+            v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
+        try:
+            st.dataframe(v_styler, use_container_width=True, height=480)
+        except Exception:
+            st.dataframe(v_disp, use_container_width=True, height=480)
 
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
