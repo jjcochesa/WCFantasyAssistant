@@ -80,6 +80,13 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Maxim De Cuyper", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne",
         "Leandro Trossard", "Charles De Ketelaere", "Romelu Lukaku", "Jérémy Doku",
     ],
+    "SCO": [
+        # 14-man: high uncertainty in attack/midfield selection
+        "Angus Gunn", "Nathan Patterson", "Grant Hanley", "Scott McKenna",
+        "Andy Robertson", "Lewis Ferguson", "Billy Gilmour", "Scott McTominay",
+        "John McGinn", "Ben Gannon-Doak", "Ryan Christie",
+        "Lyndon Dykes", "Ché Adams", "Lawrence Shankland",
+    ],
     "URU": [
         "Sergio Rochet", "Guillermo Varela", "Ronald Araujo", "José María Giménez",
         "Mathías Olivera", "Agustín Canobbio", "Federico Valverde", "Manuel Ugarte",
