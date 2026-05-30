@@ -135,8 +135,9 @@ def _load_fbref_map() -> None:
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def _norm_name(name: str) -> str:
-    """Accent-strip + lowercase + Turkish dotless-ı fix for cross-source matching."""
-    name = name.lower().replace("ı", "i")
+    """Accent-strip + lowercase for cross-source matching.
+    Handles chars with no Unicode decomposition (ø→o, æ→ae, ß→ss) explicitly."""
+    name = name.lower().replace("ı", "i").replace("ø", "o").replace("æ", "ae").replace("ß", "ss")
     return unicodedata.normalize("NFKD", name).encode("ascii", "ignore").decode()
 
 

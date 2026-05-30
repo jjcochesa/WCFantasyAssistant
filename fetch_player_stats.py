@@ -193,6 +193,8 @@ _TEAM_ALIASES = {
 
 def norm(name: str) -> str:
     name = str(name).replace("-", " ").replace("'", "").translate(_TRANS)
+    # Handle chars with no Unicode decomposition before NFKD
+    name = name.replace("ø", "o").replace("Ø", "o").replace("æ", "ae").replace("Æ", "ae").replace("ß", "ss")
     s = unicodedata.normalize("NFKD", name)
     n = "".join(c for c in s if not unicodedata.combining(c)).lower().strip()
     n = " ".join(n.split())  # collapse multiple spaces
