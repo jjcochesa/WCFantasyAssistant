@@ -390,22 +390,19 @@ with tab1:
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    styler = (
-        disp.style
-        .format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
-        .background_gradient(
-            subset=[c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns],
-            cmap="YlOrRd",
-        )
-        .background_gradient(
-            subset=[c for c in per90_club if c in disp.columns],
-            cmap="Greens",
-        )
-        .background_gradient(
-            subset=[c for c in per90_nt if c in disp.columns],
-            cmap="Blues",
-        )
+    grad_pts  = [c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns]
+    grad_club = [c for c in per90_club if c in disp.columns]
+    grad_nt   = [c for c in per90_nt   if c in disp.columns]
+
+    styler = disp.style.format(
+        {k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—"
     )
+    if grad_pts:
+        styler = styler.background_gradient(subset=grad_pts,  cmap="YlOrRd")
+    if grad_club:
+        styler = styler.background_gradient(subset=grad_club, cmap="Greens")
+    if grad_nt:
+        styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
     st.dataframe(styler, use_container_width=True, height=620)
 
