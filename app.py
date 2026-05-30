@@ -390,9 +390,9 @@ with tab1:
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    grad_pts  = [c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns]
-    grad_club = [c for c in per90_club if c in disp.columns]
-    grad_nt   = [c for c in per90_nt   if c in disp.columns]
+    grad_pts  = [c for c in ["Total Pts", "MD1 Pts", "MD2 Pts"] if c in disp.columns and disp[c].notna().any()]
+    grad_club = [c for c in per90_club if c in disp.columns and disp[c].notna().any()]
+    grad_nt   = [c for c in per90_nt   if c in disp.columns and disp[c].notna().any()]
 
     styler = disp.style.format(
         {k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—"
@@ -404,7 +404,10 @@ with tab1:
     if grad_nt:
         styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
-    st.dataframe(styler, use_container_width=True, height=620)
+    try:
+        st.dataframe(styler, use_container_width=True, height=620)
+    except Exception:
+        st.dataframe(disp, use_container_width=True, height=620)
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
