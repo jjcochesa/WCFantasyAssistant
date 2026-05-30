@@ -59,4 +59,9 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Noussair Mazraoui", "Neil El Aynaoui", "Ismael Saibari", "Bilal El Khannouss",
         "Brahim Díaz", "Abde Ezzalzouli", "Ayoub El Kaabi",
     ],
+    "COL": [
+        "Camilo Vargas", "Daniel Muñoz", "Dávinson Sánchez", "Jhon Lucumí",
+        "Johan Mojica", "Jefferson Lerma", "James Rodríguez", "Richard Ríos",
+        "Jhon Arias", "Luis Díaz", "Luis Suárez",
+    ],
 }
