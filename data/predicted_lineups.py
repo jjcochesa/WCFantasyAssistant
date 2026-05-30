@@ -80,4 +80,10 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Maxim De Cuyper", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne",
         "Leandro Trossard", "Charles De Ketelaere", "Romelu Lukaku", "Jérémy Doku",
     ],
+    "ECU": [
+        # 9-man: Pacho + Hincapié not yet in FIFA feed — add when squad confirmed
+        "Hernán Galíndez", "Ángelo Preciado", "Pervis Estupiñán",
+        "Moisés Caicedo", "John Yeboah", "Kendry Páez",
+        "Gonzalo Plata", "Nilson Angulo", "Enner Valencia",
+    ],
 }
