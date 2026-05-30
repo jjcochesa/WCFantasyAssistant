@@ -54,4 +54,9 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Nuno Mendes", "João Neves", "Vitinha", "Bruno Fernandes",
         "Bernardo Silva", "João Félix", "Cristiano Ronaldo",
     ],
+    "MAR": [
+        "Yassine Bounou", "Achraf Hakimi", "Issa Diop", "Nayef Aguerd",
+        "Noussair Mazraoui", "Neil El Aynaoui", "Ismael Saibari", "Bilal El Khannouss",
+        "Brahim Díaz", "Abde Ezzalzouli", "Ayoub El Kaabi",
+    ],
 }
