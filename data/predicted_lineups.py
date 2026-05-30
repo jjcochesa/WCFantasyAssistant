@@ -69,4 +69,9 @@ PREDICTED_XI: dict[str, list[str]] = {
         "David Møller Wolfe", "Oscar Bobb", "Sander Berge", "Martin Ødegaard",
         "Erling Haaland", "Antonio Nusa", "Alexander Sørloth",
     ],
+    "TUR": [
+        "Ugurcan Çakir", "Zeki Çelik", "Merih Demiral", "Abdülkerim Bardakci",
+        "Ferdi Kadioglu", "Hakan Çalhanoglu", "Ismail Yüksek", "Arda Güler",
+        "Kenan Yildiz", "Baris Alper Yilmaz", "Kerem Aktürkoglu",
+    ],
 }
