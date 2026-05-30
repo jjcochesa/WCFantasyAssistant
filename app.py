@@ -394,7 +394,10 @@ with tab1:
     }
 
     display_cols = [c for c in COL_MAP if c in view.columns]
-    disp = view[display_cols].rename(columns=COL_MAP).set_index("Name")
+    # Keep Name as a column (not the index): duplicate player names — e.g. two
+    # "Emiliano Martínez" — make the index non-unique, which breaks
+    # Styler.background_gradient (it uses .apply, which requires a unique index).
+    disp = view[display_cols].rename(columns=COL_MAP).reset_index(drop=True)
 
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
@@ -423,7 +426,7 @@ with tab1:
     if grad_nt:
         styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
-    st.dataframe(styler, use_container_width=True, height=620)
+    st.dataframe(styler, use_container_width=True, height=620, hide_index=True)
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
@@ -645,7 +648,7 @@ with tab5:
             "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
             "xPts_GS": "Total Pts", "scout_bonus": "Scout+", "adj_total": "Adj Pts",
             "value": "Value",
-        }).set_index("Name")
+        }).reset_index(drop=True)
 
         s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%",
                  "MD1 CS%": "{:.0%}", "MD2 CS%": "{:.0%}",
@@ -657,7 +660,7 @@ with tab5:
         s_styler = s_disp.style.format({k: v for k, v in s_fmt.items() if k in s_disp.columns}, na_rep="—")
         if s_grad:
             s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
-        st.dataframe(s_styler, use_container_width=True, height=480)
+        st.dataframe(s_styler, use_container_width=True, height=480, hide_index=True)
 
     with c2:
         st.subheader("💰 Best Value (Adj Pts / $m)")
@@ -678,7 +681,7 @@ with tab5:
             "price": "Price", "adj_total": "Adj Pts", "adj_value": "Value",
             "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
             "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
-        }).set_index("Name")
+        }).reset_index(drop=True)
 
         v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
                  "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
@@ -686,7 +689,7 @@ with tab5:
         v_styler = v_disp.style.format({k: v for k, v in v_fmt.items() if k in v_disp.columns}, na_rep="—")
         if v_grad:
             v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
-        st.dataframe(v_styler, use_container_width=True, height=480)
+        st.dataframe(v_styler, use_container_width=True, height=480, hide_index=True)
 
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
