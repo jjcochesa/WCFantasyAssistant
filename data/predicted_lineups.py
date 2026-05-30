@@ -74,4 +74,10 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Ferdi Kadioglu", "Hakan Çalhanoglu", "Ismail Yüksek", "Arda Güler",
         "Kenan Yildiz", "Baris Alper Yilmaz", "Kerem Aktürkoglu",
     ],
+    "BEL": [
+        # 12-man: De Ketelaere competes with Trossard — both project at starter minutes
+        "Thibaut Courtois", "Thomas Meunier", "Brandon Mechele", "Zeno Debast",
+        "Maxim De Cuyper", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne",
+        "Leandro Trossard", "Charles De Ketelaere", "Romelu Lukaku", "Jérémy Doku",
+    ],
 }
