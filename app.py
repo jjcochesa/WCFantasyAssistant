@@ -219,61 +219,48 @@ def _with_scout_bonus(view: pd.DataFrame) -> pd.DataFrame:
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
 def _greedy_squad(df, budget, sort_col, country_cap):
     """
-    Budget-aware greedy squad builder.
-    Before selecting each player, reserves the minimum cost needed to fill
-    all remaining position slots — guarantees all 15 slots are filled.
+    Global greedy squad builder — sorts ALL players by sort_col together,
+    picks across positions simultaneously. Budget reservation prevents
+    running out of money for unfilled slots in any position.
     """
-    POS_ORDER = ["GK", "DEF", "MID", "FWD"]
-
-    # Pre-compute cheapest possible cost to fill each position with n players
-    min_pos_cost = {}
-    for pos in POS_ORDER:
-        cheapest = df[df["pos"] == pos].sort_values("price")["price"].tolist()
-        n = SQUAD_SLOTS[pos]
-        min_pos_cost[pos] = cheapest[:n] if len(cheapest) >= n else cheapest
-
+    pos_filled = {p: 0 for p in SQUAD_SLOTS}
     selected = []
-    selected_ids = set()
-    country_counts = {}
+    selected_ids: set = set()
+    country_counts: dict = {}
     rem = budget
 
-    for i, pos in enumerate(POS_ORDER):
-        n = SQUAD_SLOTS[pos]
-
-        # Minimum budget needed for ALL positions that come after this one
-        future_reserve = sum(
-            sum(min_pos_cost[fp]) for fp in POS_ORDER[i + 1:]
-        )
-
-        cands = df[
-            (df["pos"] == pos) & (~df["id"].isin(selected_ids))
-        ].sort_values(sort_col, ascending=False)
-
-        added = 0
-        for _, r in cands.iterrows():
-            if added >= n:
-                break
-
-            # Minimum cost to fill remaining slots in THIS position after this pick
-            slots_left_here = n - added - 1
-            if slots_left_here > 0:
-                pool = df[
-                    (df["pos"] == pos) & (~df["id"].isin(selected_ids | {r["id"]}))
-                ].sort_values("price")["price"].tolist()
-                pos_reserve = sum(pool[:slots_left_here]) if len(pool) >= slots_left_here else float("inf")
-            else:
-                pos_reserve = 0
-
-            if r["price"] + pos_reserve + future_reserve > rem:
+    def _min_reserve(excl_ids, filled):
+        total = 0.0
+        for p, slots in SQUAD_SLOTS.items():
+            still_need = slots - filled[p]
+            if still_need <= 0:
                 continue
-            if country_counts.get(r["team_code"], 0) >= country_cap:
-                continue
+            prices = df[(df["pos"] == p) & (~df["id"].isin(excl_ids))].sort_values("price")["price"].tolist()
+            if len(prices) < still_need:
+                return float("inf")
+            total += sum(prices[:still_need])
+        return total
 
-            selected.append(r)
-            selected_ids.add(r["id"])
-            rem -= r["price"]
-            country_counts[r["team_code"]] = country_counts.get(r["team_code"], 0) + 1
-            added += 1
+    for _, r in df.sort_values(sort_col, ascending=False).iterrows():
+        if sum(pos_filled.values()) == sum(SQUAD_SLOTS.values()):
+            break
+        pos = r["pos"]
+        if pos_filled[pos] >= SQUAD_SLOTS[pos]:
+            continue
+        if r["id"] in selected_ids:
+            continue
+        if country_counts.get(r["team_code"], 0) >= country_cap:
+            continue
+        tentative_ids = selected_ids | {r["id"]}
+        tentative_filled = {**pos_filled, pos: pos_filled[pos] + 1}
+        reserve = _min_reserve(tentative_ids, tentative_filled)
+        if r["price"] + reserve > rem:
+            continue
+        selected.append(r)
+        selected_ids.add(r["id"])
+        rem -= r["price"]
+        country_counts[r["team_code"]] = country_counts.get(r["team_code"], 0) + 1
+        pos_filled[pos] += 1
 
     if not selected:
         return None
@@ -284,22 +271,22 @@ def _greedy_squad(df, budget, sort_col, country_cap):
 
 
 def _dual_squad(df, budget, country_cap):
-    """Build MD1 squad, then make 3 transfers to maximise MD2, return (md1, md2)."""
+    """Build MD1 squad, then make 2 transfers to maximise MD2, return (md1, md2)."""
     md1 = _greedy_squad(df, budget, "md1_pts", country_cap)
     if md1 is None or md1.empty:
         return None, None
 
-    worst3 = md1.nsmallest(3, "md2_pts")
-    keep12 = md1[~md1["id"].isin(worst3["id"])].copy()
-    freed  = worst3["price"].sum()
-    keep_country = keep12["team_code"].value_counts().to_dict()
-    used_ids = set(keep12["id"])
+    worst2 = md1.nsmallest(2, "md2_pts")
+    keep13 = md1[~md1["id"].isin(worst2["id"])].copy()
+    freed  = worst2["price"].sum()
+    keep_country = keep13["team_code"].value_counts().to_dict()
+    used_ids = set(keep13["id"])
 
     transfers, remaining = [], freed
-    for _, sold in worst3.sort_values("md2_pts").iterrows():
-        n_left    = 3 - len(transfers) - 1
-        min_res   = n_left * 4.0  # keep ≥$4m for each remaining slot
-        cur_cnt   = {**keep_country}
+    for _, sold in worst2.sort_values("md2_pts").iterrows():
+        n_left  = 2 - len(transfers) - 1
+        min_res = n_left * 4.0
+        cur_cnt = {**keep_country}
         for p in transfers:
             cur_cnt[p["team_code"]] = cur_cnt.get(p["team_code"], 0) + 1
 
@@ -315,7 +302,7 @@ def _dual_squad(df, budget, country_cap):
         used_ids.add(picked["id"])
         remaining -= picked["price"]
 
-    md2 = pd.concat([keep12, pd.DataFrame(transfers)]).reset_index(drop=True)
+    md2 = pd.concat([keep13, pd.DataFrame(transfers)]).reset_index(drop=True)
     pos_order = {"GK": 0, "DEF": 1, "MID": 2, "FWD": 3}
     md2["_o"] = md2["pos"].map(pos_order)
     md2 = md2.sort_values(["_o", "md2_pts"], ascending=[True, False]).drop(columns=["_o"]).reset_index(drop=True)
@@ -383,13 +370,11 @@ with tab1:
         "pos":            "Pos",
         "price":          "Price",
         "own_%":          "Own%",
-        "proj_min":       "Proj Min",
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
         "md1_pts":        "MD1 Pts",
         "md2_pts":        "MD2 Pts",
         "xPts_GS":        "Total Pts",
-        "scout_bonus":    "Scout+",
         "adj_total":      "Adj Pts",
         "cs_md1_pct":     "MD1 CS%",
         "cs_md2_pct":     "MD2 CS%",
@@ -405,6 +390,7 @@ with tab1:
         "sot90_nt":       "NT SOT/90",
         "kp90_nt":        "NT KP/90",
         "tackles90_nt":   "NT Tkl/90",
+        "proj_min":       "Proj Min",
     }
 
     display_cols = [c for c in COL_MAP if c in view.columns]
@@ -416,15 +402,18 @@ with tab1:
     pct_cols   = [c for c in ["MD1 CS%", "MD2 CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["MD1 xG", "MD2 xG"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "Scout+": "{:.0f}"}
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'"}
     fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt})
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    grad_pts  = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if c in disp.columns and disp[c].notna().any()]
-    grad_club = [c for c in per90_club if c in disp.columns and disp[c].notna().any()]
-    grad_nt   = [c for c in per90_nt   if c in disp.columns and disp[c].notna().any()]
+    def _gradable(col):
+        return col in disp.columns and disp[col].dropna().nunique() >= 2
+
+    grad_pts  = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if _gradable(c)]
+    grad_club = [c for c in per90_club if _gradable(c)]
+    grad_nt   = [c for c in per90_nt   if _gradable(c)]
 
     styler = disp.style.format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
     if grad_pts:
@@ -434,10 +423,7 @@ with tab1:
     if grad_nt:
         styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
-    try:
-        st.dataframe(styler, use_container_width=True, height=620)
-    except Exception:
-        st.dataframe(disp, use_container_width=True, height=620)
+    st.dataframe(styler, use_container_width=True, height=620)
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
@@ -538,7 +524,7 @@ with tab4:
     b1, b2, b3 = st.columns(3)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
     build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
-    use_transfers = b3.toggle("3 transfers MD1→MD2", value=False, key="build_transfers")
+    use_transfers = b3.toggle("2 transfers MD1→MD2", value=False, key="build_transfers")
 
     if st.button("Build Optimal Squad", type="primary"):
         if use_transfers:
@@ -563,7 +549,7 @@ with tab4:
                 if sold_ids:
                     out_names = md1_squad[md1_squad["id"].isin(sold_ids)]["name"].tolist()
                     in_names  = md2_squad[md2_squad["id"].isin(bought_ids)]["name"].tolist()
-                    st.info(f"**3 transfers:** OUT {', '.join(out_names)}  →  IN {', '.join(in_names)}")
+                    st.info(f"**2 transfers:** OUT {', '.join(out_names)}  →  IN {', '.join(in_names)}")
 
                 sq_cols = ["name", "team_code", "pos", "price", "md1_pts", "md2_pts", "xPts_GS"]
                 sq_cols = [c for c in sq_cols if c in md1_squad.columns]
@@ -578,7 +564,7 @@ with tab4:
                                      "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
                     use_container_width=True,
                 )
-                st.markdown("**MD2 Squad (after 3 transfers)**")
+                st.markdown("**MD2 Squad (after 2 transfers)**")
                 sq2_cols = [c for c in sq_cols if c in md2_squad.columns]
                 st.dataframe(
                     md2_squad[sq2_cols].rename(columns={
@@ -645,14 +631,14 @@ with tab5:
         scouts = scouts.reset_index(drop=True)
         scouts.index = range(1, len(scouts) + 1)
 
-        s_cols = ["name", "team_code", "pos", "price", "own_%", "proj_min",
+        s_cols = ["name", "team_code", "pos", "price", "own_%",
                   "md1_opp", "md2_opp",
                   "cs_md1_pct", "cs_md2_pct", "goals_md1", "goals_md2",
                   "md1_pts", "md2_pts", "xPts_GS", "scout_bonus", "adj_total", "value"]
         s_cols = [c for c in s_cols if c in scouts.columns]
         s_disp = scouts[s_cols].rename(columns={
             "name": "Name", "team_code": "Nation", "pos": "Pos",
-            "price": "Price", "own_%": "Own%", "proj_min": "Proj Min",
+            "price": "Price", "own_%": "Own%",
             "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
             "cs_md1_pct": "MD1 CS%", "cs_md2_pct": "MD2 CS%",
             "goals_md1": "MD1 xG", "goals_md2": "MD2 xG",
@@ -661,20 +647,17 @@ with tab5:
             "value": "Value",
         }).set_index("Name")
 
-        s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'",
+        s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%",
                  "MD1 CS%": "{:.0%}", "MD2 CS%": "{:.0%}",
                  "MD1 xG": "{:.2f}", "MD2 xG": "{:.2f}",
                  "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}",
                  "Total Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
                  "Value": "{:.3f}"}
-        s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].notna().any()]
+        s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
         s_styler = s_disp.style.format({k: v for k, v in s_fmt.items() if k in s_disp.columns}, na_rep="—")
         if s_grad:
             s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
-        try:
-            st.dataframe(s_styler, use_container_width=True, height=480)
-        except Exception:
-            st.dataframe(s_disp, use_container_width=True, height=480)
+        st.dataframe(s_styler, use_container_width=True, height=480)
 
     with c2:
         st.subheader("💰 Best Value (Adj Pts / $m)")
@@ -699,14 +682,11 @@ with tab5:
 
         v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
                  "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
-        v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].notna().any()]
+        v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
         v_styler = v_disp.style.format({k: v for k, v in v_fmt.items() if k in v_disp.columns}, na_rep="—")
         if v_grad:
             v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
-        try:
-            st.dataframe(v_styler, use_container_width=True, height=480)
-        except Exception:
-            st.dataframe(v_disp, use_container_width=True, height=480)
+        st.dataframe(v_styler, use_container_width=True, height=480)
 
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
