@@ -131,6 +131,14 @@ _PLAYER_ALIASES = {
     "mohamed amine amoura":          "mohamed amoura",
     "mustafa mohammed":              "mostafa mohamed",
     "nicolas de la cruz":            "nicolas de la cruz",
+    # API-Football uses abbreviated names for these players
+    "cristian romero":               "c. romero",
+    "marcos acuna":                  "m. acuna",
+    "jose maria gimenez":            "j. gimenez",
+    "dan ndoye":                     "d. ndoye",
+    "angelo preciado":               "a. preciado",
+    "guido rodriguez":               "g. rodriguez",
+    "maxi gomez":                    "m. gomez",
 }
 
 # Club name aliases: wc_squads name (norm'd) → API-Football name (norm'd)
