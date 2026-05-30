@@ -646,7 +646,9 @@ def _compute_per90(p: Player) -> None:
     cl_tk  = _per90(cl.tackles,          cl_mins)
 
     # Override club stats from FBref/manual data (xG/kp90/tackles90 not in API raw counts).
-    fbref = _FBREF_BY_ID.get(p.id) or _FBREF_BY_NAME.get(_norm_name(p.name))
+    fbref = (_FBREF_BY_ID.get(p.id)
+             or _FBREF_BY_NAME.get(_norm_name(p.name))
+             or _FBREF_BY_NAME.get(_match_key(p.name)))
     if fbref:
         # stats.json stores actual goals as "goals90"; legacy manual files also
         # carry "xg90". Prefer real goals/90, fall back to xG/90 for legacy entries.
@@ -663,7 +665,7 @@ def _compute_per90(p: Player) -> None:
             p.starter_rate = sr
 
     # Override NT stats from manual_nt_stats.json when available.
-    nt_manual = _NT_BY_NAME.get(_norm_name(p.name))
+    nt_manual = _NT_BY_NAME.get(_norm_name(p.name)) or _NT_BY_NAME.get(_match_key(p.name))
     if nt_manual:
         _nt_goals = nt_manual.get("goals90") or nt_manual.get("xg90") or 0.0
         if _nt_goals > 0 or nt_manual.get("mp", 0) >= 5:
@@ -1042,9 +1044,74 @@ def get_demo_players() -> list:
 
 
 WC_SQUADS_FILE = "data/wc_squads.json"
+FIFA_FEED_FILE = "data/fifa_players.json"  # offline snapshot of the real FIFA Fantasy roster
 
 # Default price estimates by position (used when FIFA Fantasy prices not available)
 _DEFAULT_PRICE = {"GK": 5.0, "DEF": 5.5, "MID": 7.0, "FWD": 8.0}
+
+
+def _build_club_lookup() -> dict:
+    """match_key(name) -> club, from wc_squads.json (display only — feed has no club)."""
+    m: dict[str, str] = {}
+    if not os.path.exists(WC_SQUADS_FILE):
+        return m
+    try:
+        data = json.load(open(WC_SQUADS_FILE))
+    except Exception:
+        return m
+    for _, td in data.get("teams", {}).items():
+        for p in td.get("players", []):
+            club = p.get("club", "")
+            if club:
+                m.setdefault(_match_key(p.get("name", "")), club)
+    return m
+
+
+def load_from_fifa_feed() -> list:
+    """
+    Build the player pool from the real FIFA Fantasy feed (data/fifa_players.json).
+    This is the authoritative roster: only players actually in the game, with real
+    FIFA IDs, names, prices, and ownership. Per-90 stats are matched separately by
+    name in _compute_per90. Club names come from wc_squads (feed omits them).
+    """
+    if not os.path.exists(FIFA_FEED_FILE):
+        return []
+    try:
+        feed = json.load(open(FIFA_FEED_FILE))
+    except Exception as e:
+        print(f"[FIFA feed] Could not load {FIFA_FEED_FILE}: {e}")
+        return []
+
+    club_lookup = _build_club_lookup()
+    players, seen = [], set()
+    skipped_squad = 0
+    for e in feed:
+        if e.get("status") == "transferred":
+            continue
+        code = FIFA_TEAM_ID_TO_CODE.get(e.get("squadId"))
+        if not code or code not in TEAM_NAMES:
+            skipped_squad += 1
+            continue
+        name = e.get("knownName") or f"{e.get('firstName','')} {e.get('lastName','')}".strip()
+        if not name:
+            continue
+        pid = str(e.get("id"))
+        if pid in seen:
+            continue
+        seen.add(pid)
+        pos = POSITION_MAP.get(e.get("position"), "MID")
+        players.append(Player(
+            id=pid,
+            name=name,
+            position=pos,
+            team_code=code,
+            club=club_lookup.get(_match_key(name), ""),
+            price=float(e.get("price") or _DEFAULT_PRICE.get(pos, 6.0)),
+            ownership_pct=float(e.get("percentSelected") or 0.0),
+        ))
+    print(f"[FIFA feed] Loaded {len(players)} players "
+          f"({skipped_squad} skipped: unmapped squad / non-WC)")
+    return players
 
 
 def load_from_wc_squads() -> list:
@@ -1123,8 +1190,14 @@ def load_data(
         PLAYER_SOURCE = "demo"
         players = get_demo_players()
     elif use_squads:
-        PLAYER_SOURCE = "squads"
-        players = load_from_wc_squads() or get_demo_players()
+        # Prefer the real FIFA feed (authoritative roster + real prices/ownership);
+        # fall back to the older wc_squads.json, then demo.
+        players = load_from_fifa_feed()
+        if players:
+            PLAYER_SOURCE = "fifa_feed"
+        else:
+            PLAYER_SOURCE = "squads"
+            players = load_from_wc_squads() or get_demo_players()
     elif players_file:
         PLAYER_SOURCE = "local"
         players = load_players_from_json(players_file)
