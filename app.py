@@ -330,6 +330,7 @@ with tab1:
         "<span style='color:#4ade80'>⚽ <b>Club·</b> 2025/26 per-90 (league + cups)</span> &nbsp;│&nbsp; "
         "<span style='color:#60a5fa'>🌍 <b>NT·</b> recent NT form per-90</span> &nbsp;│&nbsp; "
         "📊 <b>MD· CS% / xG</b> from TEAM_PROJECTIONS &nbsp;│&nbsp; "
+        "⏱️ <b>Proj Min</b>: predicted XI=70', bench=20' (else from starter rate) &nbsp;│&nbsp; "
         "<span style='color:#fb923c'>🎯 <b>Proj Pts</b></span>"
         "</div>",
         unsafe_allow_html=True,
@@ -344,6 +345,7 @@ with tab1:
         "club":           "Club",
         "price":          "Price",
         "own_%":          "Own%",
+        "proj_min":       "Proj Min",
         # Fixtures
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
@@ -382,7 +384,7 @@ with tab1:
     pct_cols   = [c for c in ["MD1 CS%", "MD2 CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["MD1 xG", "MD2 xG"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%"}
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'"}
     fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt})
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})

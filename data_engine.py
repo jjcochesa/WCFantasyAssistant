@@ -19,6 +19,10 @@ import pandas as pd
 import requests
 
 from scoring_rules import SCORING, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
+try:
+    from data.predicted_lineups import PREDICTED_XI, STARTER_MINUTES, BENCH_MINUTES
+except Exception:
+    PREDICTED_XI, STARTER_MINUTES, BENCH_MINUTES = {}, 70, 20
 from data.team_stats import (
     CS_PCT, PROJ_GOALS, FDR, TEAM_NAMES, FIXTURES,
     get_avg_cs_pct, get_avg_proj_goals, get_team_fdr_total, get_group_balance,
@@ -268,6 +272,8 @@ class Player:
     value: float = 0.0
     scout_flag: bool = False
     starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
+    projected_minutes: float = 90.0  # set from predicted XI or starter_rate
+    predicted_starter: bool = False  # True if named in a predicted XI
 
     @property
     def team_name(self) -> str:
@@ -777,33 +783,66 @@ def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
 
 
 def _project_md(p: Player, md: int, avg_xg: dict, avg_xa: dict) -> tuple:
-    """Project points for one matchday. Returns (pts, player_xg)."""
+    """Project points for one matchday, scaled by projected minutes.
+    Returns (pts, player_xg-for-the-minutes-played)."""
     pos = p.position
     team_xg, cs_pct = get_team_proj(p.team_code, md)
     opp_xg = get_opponent_xg(p.team_code, md)
 
-    pxg = _player_xg(p, team_xg, avg_xg)
-    pxa = _player_xa(p, team_xg, avg_xa)
+    # Minutes scaling: returns accrue per minute on the pitch; clean sheets need
+    # 60+ minutes; appearance is 2 pts for 60+ min, else 1 pt.
+    mins = getattr(p, "projected_minutes", 90.0)
+    mf = mins / 90.0
 
-    pts = 2.0  # 90 min
+    pxg = _player_xg(p, team_xg, avg_xg) * mf
+    pxa = _player_xa(p, team_xg, avg_xa) * mf
+
+    pts = 2.0 if mins >= 60 else 1.0       # appearance points
     pts += pxg * SCORING["goal"][pos]
     pts += pxa * 3
-    pts += cs_pct * SCORING["clean_sheet_60"][pos]
+    if mins >= 60:
+        pts += cs_pct * SCORING["clean_sheet_60"][pos]
 
     if pos in ("GK", "DEF"):
-        pts += max(0.0, opp_xg - 1.0) * SCORING["goals_conceded_add"][pos]
+        pts += max(0.0, opp_xg - 1.0) * SCORING["goals_conceded_add"][pos] * mf
 
     if pos == "GK":
-        pts += (opp_xg * 3.5 * p.save_rate) / 3
+        pts += (opp_xg * 3.5 * p.save_rate) / 3 * mf
 
     if pos == "MID":
-        pts += p.tackles90 / 3
-        pts += p.kp90 / 2
+        pts += (p.tackles90 / 3 + p.kp90 / 2) * mf
 
     if pos == "FWD":
-        pts += p.sot90 / 2
+        pts += p.sot90 / 2 * mf
 
     return max(0.0, pts), pxg
+
+
+def _assign_minutes(players: list) -> None:
+    """
+    Set projected_minutes for every player.
+      - Team has a predicted XI (data/predicted_lineups.py):
+          in XI  -> STARTER_MINUTES (70),  not in XI -> BENCH_MINUTES (20)
+      - Team has no predicted XI: fall back to starter_rate from the stats
+        pipeline, mapped onto [BENCH, STARTER]  (sr 0 -> 20, sr 1 -> ~70).
+    """
+    xi_keys: dict[str, set] = {
+        code: {_match_key(n) for n in names} for code, names in PREDICTED_XI.items()
+    }
+    for p in players:
+        keys = xi_keys.get(p.team_code)
+        if keys is not None:
+            if _match_key(p.name) in keys:
+                p.projected_minutes = float(STARTER_MINUTES)
+                p.predicted_starter = True
+            else:
+                p.projected_minutes = float(BENCH_MINUTES)
+                p.predicted_starter = False
+        else:
+            # No XI for this team — use starter_rate as a soft minutes estimate
+            sr = max(0.0, min(1.0, p.starter_rate if p.starter_rate is not None else 1.0))
+            p.projected_minutes = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
+            p.predicted_starter = sr >= 0.6
 
 
 def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
@@ -816,6 +855,8 @@ def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
 
     for p in players:
         _compute_per90(p)
+
+    _assign_minutes(players)  # needs starter_rate set by _compute_per90
 
     avg_xg, avg_xa = _pos_averages(players)
 
@@ -901,6 +942,8 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "tackles90_nt": round(p.tackles90_nt, 3),
             "nt_weight":    "65% NT" if p.national_stats.matches >= 5 else "35% NT",
             "starter_rate": round(p.starter_rate, 2),
+            "proj_min":     int(round(p.projected_minutes)),
+            "predicted_starter": p.predicted_starter,
             # Raw stats for expander
             "intl_games": p.national_stats.matches,
             "intl_minutes": p.national_stats.minutes,
