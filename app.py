@@ -217,28 +217,46 @@ def _with_scout_bonus(view: pd.DataFrame) -> pd.DataFrame:
 
 
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
-def _greedy_squad(df, budget, sort_col, country_cap):
+def _greedy_squad(df, budget, sort_col, country_cap, max_gk_per_country=1):
     """
     Global greedy squad builder — sorts ALL players by sort_col together,
     picks across positions simultaneously. Budget reservation prevents
     running out of money for unfilled slots in any position.
+
+    GKs are capped at max_gk_per_country (default 1) so the two keepers come
+    from different nations — this lets you bench one and start the other based
+    on which nation has the kinder fixture each matchday.
     """
     pos_filled = {p: 0 for p in SQUAD_SLOTS}
     selected = []
     selected_ids: set = set()
     country_counts: dict = {}
+    gk_countries: set = set()
     rem = budget
 
-    def _min_reserve(excl_ids, filled):
+    def _min_reserve(excl_ids, filled, gk_used):
         total = 0.0
         for p, slots in SQUAD_SLOTS.items():
             still_need = slots - filled[p]
             if still_need <= 0:
                 continue
-            prices = df[(df["pos"] == p) & (~df["id"].isin(excl_ids))].sort_values("price")["price"].tolist()
+            pool = df[(df["pos"] == p) & (~df["id"].isin(excl_ids))].sort_values("price")
+            if p == "GK":
+                # cheapest GKs from distinct, not-yet-used nations
+                seen = set(gk_used)
+                prices = []
+                for _, row in pool.iterrows():
+                    if row["team_code"] in seen:
+                        continue
+                    seen.add(row["team_code"])
+                    prices.append(row["price"])
+                    if len(prices) == still_need:
+                        break
+            else:
+                prices = pool["price"].tolist()[:still_need]
             if len(prices) < still_need:
                 return float("inf")
-            total += sum(prices[:still_need])
+            total += sum(prices)
         return total
 
     for _, r in df.sort_values(sort_col, ascending=False).iterrows():
@@ -251,15 +269,20 @@ def _greedy_squad(df, budget, sort_col, country_cap):
             continue
         if country_counts.get(r["team_code"], 0) >= country_cap:
             continue
+        if pos == "GK" and r["team_code"] in gk_countries:
+            continue
         tentative_ids = selected_ids | {r["id"]}
         tentative_filled = {**pos_filled, pos: pos_filled[pos] + 1}
-        reserve = _min_reserve(tentative_ids, tentative_filled)
+        tentative_gk = gk_countries | ({r["team_code"]} if pos == "GK" else set())
+        reserve = _min_reserve(tentative_ids, tentative_filled, tentative_gk)
         if r["price"] + reserve > rem:
             continue
         selected.append(r)
         selected_ids.add(r["id"])
         rem -= r["price"]
         country_counts[r["team_code"]] = country_counts.get(r["team_code"], 0) + 1
+        if pos == "GK":
+            gk_countries.add(r["team_code"])
         pos_filled[pos] += 1
 
     if not selected:
@@ -295,7 +318,13 @@ def _dual_squad(df, budget, country_cap):
             (~df["id"].isin(used_ids)) &
             (df["price"] <= remaining - min_res) &
             (df["team_code"].apply(lambda tc: cur_cnt.get(tc, 0) < country_cap))
-        ].sort_values("md2_pts", ascending=False)
+        ]
+        if sold["pos"] == "GK":
+            # don't end up with both keepers from the same nation
+            gk_nat = set(keep13[keep13["pos"] == "GK"]["team_code"])
+            gk_nat |= {t["team_code"] for t in transfers if t["pos"] == "GK"}
+            pool = pool[~pool["team_code"].isin(gk_nat)]
+        pool = pool.sort_values("md2_pts", ascending=False)
 
         picked = pool.iloc[0] if not pool.empty else sold
         transfers.append(picked)
