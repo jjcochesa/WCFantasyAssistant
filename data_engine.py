@@ -899,8 +899,8 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
         team_fix    = FIXTURES.get(p.team_code, [])
         md1_opp_raw = team_fix[0] if len(team_fix) > 0 else ""
         md2_opp_raw = team_fix[1] if len(team_fix) > 1 else ""
-        md1_opp = TEAM_NAMES.get(md1_opp_raw, md1_opp_raw or "?")
-        md2_opp = TEAM_NAMES.get(md2_opp_raw, md2_opp_raw or "?")
+        md1_opp = md1_opp_raw or "?"
+        md2_opp = md2_opp_raw or "?"
 
         # Raw CS% floats (separate from the formatted cs_md1/cs_md2 strings)
         raw_cs = CS_PCT.get(p.team_code, [0.3, 0.3, 0.3])

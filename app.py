@@ -271,8 +271,8 @@ def _greedy_squad(df, budget, sort_col, country_cap):
 
 
 def _dual_squad(df, budget, country_cap):
-    """Build MD1 squad, then make 2 transfers to maximise MD2, return (md1, md2)."""
-    md1 = _greedy_squad(df, budget, "md1_pts", country_cap)
+    """Build best xPts_GS squad, then make 2 transfers to maximise MD2, return (md1, md2)."""
+    md1 = _greedy_squad(df, budget, "xPts_GS", country_cap)
     if md1 is None or md1.empty:
         return None, None
 
@@ -705,15 +705,15 @@ with tab6:
         fixtures  = FIXTURES.get(code, ["?", "?", "?"])
         fdr_rows.append({
             "Country": name,
-            "MD1 vs":  TEAM_NAMES.get(fixtures[0], "?") if fixtures else "?",
+            "MD1 vs":  fixtures[0] if fixtures else "?",
             "FDR1": fdr_vals[0],
             "CS%1": f"{int(cs_vals[0]*100)}%",
             "xG1":  g_vals[0],
-            "MD2 vs":  TEAM_NAMES.get(fixtures[1], "?") if len(fixtures) > 1 else "?",
+            "MD2 vs":  fixtures[1] if len(fixtures) > 1 else "?",
             "FDR2": fdr_vals[1],
             "CS%2": f"{int(cs_vals[1]*100)}%",
             "xG2":  g_vals[1],
-            "MD3 vs":  TEAM_NAMES.get(fixtures[2], "?") if len(fixtures) > 2 else "?",
+            "MD3 vs":  fixtures[2] if len(fixtures) > 2 else "?",
             "FDR3": fdr_vals[2],
             "CS%3": f"{int(cs_vals[2]*100)}%",
             "xG3":  g_vals[2],
