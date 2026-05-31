@@ -164,14 +164,7 @@ with live_status_placeholder:
     else:
         st.warning("Prices & ownership: using estimates (no API)")
 
-# ── KPI strip ─────────────────────────────────────────────────────────────────
-k1, k2, k3, k4, k5 = st.columns(5)
-k1.metric("Players", len(df))
-k2.metric("Countries", df["country"].nunique())
-k3.metric("Scout candidates", int(df["scout"].sum()))
-best = df.iloc[0]
-k4.metric("Top xPts/game", f"{best['xPts/game']:.2f}  —  {best['name']}")
-k5.metric("Best value", f"{df.sort_values('value', ascending=False).iloc[0]['name']}")
+# ── KPI strip (rendered after the rankings table — see tab1 below) ────────────
 
 st.divider()
 
@@ -399,7 +392,6 @@ with tab1:
         "pos":            "Pos",
         "price":          "Price",
         "own_%":          "Own%",
-        "set_pieces":     "Set Pcs",
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
         "md1_pts":        "MD1 Pts",
@@ -421,6 +413,7 @@ with tab1:
         "kp90_nt":        "NT KP/90",
         "tackles90_nt":   "NT Tkl/90",
         "proj_min":       "Proj Min",
+        "set_pieces":     "Set Pcs",
     }
 
     display_cols = [c for c in COL_MAP if c in view.columns]
@@ -457,6 +450,15 @@ with tab1:
         styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
 
     st.dataframe(styler, use_container_width=True, height=620, hide_index=True)
+
+    st.divider()
+    k1, k2, k3, k4, k5 = st.columns(5)
+    k1.metric("Players", len(df))
+    k2.metric("Countries", df["country"].nunique())
+    k3.metric("Scout candidates", int(df["scout"].sum()))
+    best = df.iloc[0]
+    k4.metric("Top xPts/game", f"{best['xPts/game']:.2f}  —  {best['name']}")
+    k5.metric("Best value", f"{df.sort_values('value', ascending=False).iloc[0]['name']}")
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
