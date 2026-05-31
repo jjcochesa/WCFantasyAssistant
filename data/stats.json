@@ -15531,5 +15531,127 @@
       "starter_rate": 0.67,
       "source": "Friendlies"
     }
+  },
+  "camilo vargas": {
+    "name": "Camilo Vargas",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.03,
+      "sot90": 0.0,
+      "kp90": 0.06,
+      "tackles90": 0.03,
+      "mp": 33,
+      "minutes": 2995,
+      "squad": "Atlas",
+      "starter_rate": 1.0,
+      "league": "Liga MX"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.0,
+      "tackles90": 0.0,
+      "mp": 10,
+      "minutes": 930,
+      "starter_rate": 1.0,
+      "source": "Copa America, Friendlies"
+    }
+  },
+  "wesley": {
+    "name": "wesley",
+    "club": {
+      "goals90": 0.183,
+      "xa90": 0.0,
+      "sot90": 0.476,
+      "kp90": 1.209,
+      "tackles90": 1.941,
+      "mp": 30,
+      "minutes": 2457,
+      "squad": "AS Roma",
+      "starter_rate": 0.93,
+      "league": "Serie A"
+    }
+  },
+  "douglas santos": {
+    "name": "douglas santos",
+    "club": {
+      "goals90": 0.047,
+      "xa90": 0.0,
+      "sot90": 0.328,
+      "kp90": 0.796,
+      "tackles90": 2.436,
+      "mp": 23,
+      "minutes": 1921,
+      "squad": "Zenit",
+      "starter_rate": 0.96,
+      "league": "Russian Premier League"
+    }
+  },
+  "reece james": {
+    "name": "reece james",
+    "club": {
+      "goals90": 0.091,
+      "xa90": 0.182,
+      "sot90": 0.319,
+      "kp90": 1.232,
+      "tackles90": 2.19,
+      "mp": 29,
+      "minutes": 1973,
+      "squad": "Chelsea",
+      "starter_rate": 0.69,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.221,
+      "xa90": 0.221,
+      "sot90": 0.221,
+      "kp90": 1.324,
+      "tackles90": 1.103,
+      "mp": 6,
+      "minutes": 408,
+      "starter_rate": 0.83,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "elliot anderson": {
+    "name": "elliot anderson",
+    "club": {
+      "goals90": 0.108,
+      "xa90": 0.108,
+      "sot90": 0.27,
+      "kp90": 1.485,
+      "tackles90": 2.807,
+      "mp": 38,
+      "minutes": 3334,
+      "squad": "Nottingham Forest",
+      "starter_rate": 0.97,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.243,
+      "kp90": 0.973,
+      "tackles90": 2.676,
+      "mp": 5,
+      "minutes": 370,
+      "starter_rate": 0.8,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "ben gannon doak": {
+    "name": "ben gannon doak",
+    "nt": {
+      "goals90": 0.092,
+      "xa90": 0.275,
+      "sot90": 0.55,
+      "kp90": 1.65,
+      "tackles90": 1.191,
+      "mp": 18,
+      "minutes": 982,
+      "starter_rate": 0.78,
+      "source": "Friendlies, UEFA Nations League, World Cup - Qualification Europe"
+    }
   }
 }
