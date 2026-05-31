@@ -71,6 +71,8 @@ CLUB_LEAGUES = {
     "Série A (Brazil)":      71,
     "Primera Div (ARG)":     128,
     "Colombia Primera A":    239,
+    # Other Europe
+    "Russian Premier League":  235,
     # Middle East / Africa
     "Saudi Pro League":      307,
     "Qatar Stars League":    305,
