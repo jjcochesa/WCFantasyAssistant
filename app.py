@@ -391,9 +391,9 @@ with tab1:
         "team_code":      "Nation",
         "pos":            "Pos",
         "price":          "Price",
-        "own_%":          "Own%",
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
+        "own_%":          "Own%",
         "md1_pts":        "MD1 Pts",
         "md2_pts":        "MD2 Pts",
         "xPts_GS":        "Total Pts",
@@ -437,17 +437,13 @@ with tab1:
     def _gradable(col):
         return col in disp.columns and disp[col].dropna().nunique() >= 2
 
-    grad_pts  = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if _gradable(c)]
-    grad_club = [c for c in per90_club if _gradable(c)]
-    grad_nt   = [c for c in per90_nt   if _gradable(c)]
+    # Gradient only on the 4 pts columns — styling 10+ columns on 800+ rows
+    # makes the HTML table huge and causes scroll lag in the browser.
+    grad_pts = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if _gradable(c)]
 
     styler = disp.style.format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
     if grad_pts:
-        styler = styler.background_gradient(subset=grad_pts,  cmap="Greens")
-    if grad_club:
-        styler = styler.background_gradient(subset=grad_club, cmap="YlGn")
-    if grad_nt:
-        styler = styler.background_gradient(subset=grad_nt,   cmap="Blues")
+        styler = styler.background_gradient(subset=grad_pts, cmap="Greens")
 
     st.dataframe(styler, use_container_width=True, height=620, hide_index=True)
 
