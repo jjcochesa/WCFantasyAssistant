@@ -14619,5 +14619,917 @@
       "starter_rate": 1.0,
       "league": "Swiss Super League"
     }
+  },
+  "julian ryerson": {
+    "name": "julian ryerson",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.594,
+      "sot90": 0.04,
+      "kp90": 2.218,
+      "tackles90": 1.347,
+      "mp": 31,
+      "minutes": 2272,
+      "squad": "Borussia Dortmund",
+      "starter_rate": 0.84,
+      "league": "Bundesliga"
+    },
+    "nt": {
+      "goals90": 0.054,
+      "xa90": 0.325,
+      "sot90": 0.054,
+      "kp90": 1.843,
+      "tackles90": 1.41,
+      "mp": 21,
+      "minutes": 1660,
+      "starter_rate": 0.9,
+      "source": "UEFA Nations League, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "torbjorn heggem": {
+    "name": "torbjorn heggem",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.085,
+      "kp90": 0.128,
+      "tackles90": 1.363,
+      "mp": 27,
+      "minutes": 2113,
+      "squad": "Bologna",
+      "starter_rate": 0.85,
+      "league": "Serie A"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.136,
+      "kp90": 0.0,
+      "tackles90": 1.22,
+      "mp": 8,
+      "minutes": 664,
+      "starter_rate": 0.88,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "david moller wolfe": {
+    "name": "david moller wolfe",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.17,
+      "sot90": 0.0,
+      "kp90": 0.679,
+      "tackles90": 0.848,
+      "mp": 22,
+      "minutes": 1061,
+      "squad": "Wolves",
+      "starter_rate": 0.5,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.087,
+      "xa90": 0.174,
+      "sot90": 0.087,
+      "kp90": 1.045,
+      "tackles90": 1.22,
+      "mp": 12,
+      "minutes": 1033,
+      "starter_rate": 1.0,
+      "source": "UEFA Nations League, World Cup - Qualification Europe"
+    }
+  },
+  "oscar bobb": {
+    "name": "oscar bobb",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.467,
+      "kp90": 1.869,
+      "tackles90": 2.024,
+      "mp": 14,
+      "minutes": 578,
+      "squad": "Fulham",
+      "starter_rate": 0.43,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.211,
+      "sot90": 0.211,
+      "kp90": 1.686,
+      "tackles90": 1.475,
+      "mp": 8,
+      "minutes": 427,
+      "starter_rate": 0.5,
+      "source": "Friendlies, World Cup - Qualification Europe"
+    }
+  },
+  "leandro paredes": {
+    "name": "leandro paredes",
+    "club": {
+      "goals90": 0.06,
+      "xa90": 0.242,
+      "sot90": 0.423,
+      "kp90": 2.962,
+      "tackles90": 2.236,
+      "mp": 17,
+      "minutes": 1489,
+      "squad": "Boca Juniors",
+      "starter_rate": 0.94,
+      "league": "Primera Div (ARG)"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.398,
+      "kp90": 0.398,
+      "tackles90": 1.991,
+      "mp": 4,
+      "minutes": 226,
+      "starter_rate": 0.5,
+      "source": "Friendlies"
+    }
+  },
+  "xaver schlager": {
+    "name": "xaver schlager",
+    "club": {
+      "goals90": 0.147,
+      "xa90": 0.049,
+      "sot90": 0.343,
+      "kp90": 1.029,
+      "tackles90": 1.813,
+      "mp": 26,
+      "minutes": 1837,
+      "squad": "RB Leipzig",
+      "starter_rate": 0.81,
+      "league": "Bundesliga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.117,
+      "sot90": 0.117,
+      "kp90": 1.519,
+      "tackles90": 3.39,
+      "mp": 11,
+      "minutes": 770,
+      "starter_rate": 0.91,
+      "source": "World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "thibaut courtois": {
+    "name": "thibaut courtois",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.0,
+      "tackles90": 0.031,
+      "mp": 32,
+      "minutes": 2880,
+      "squad": "Real Madrid",
+      "starter_rate": 1.0,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.0,
+      "tackles90": 0.0,
+      "mp": 6,
+      "minutes": 540,
+      "starter_rate": 1.0,
+      "source": "World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "thomas meunier": {
+    "name": "thomas meunier",
+    "club": {
+      "goals90": 0.094,
+      "xa90": 0.094,
+      "sot90": 0.235,
+      "kp90": 0.846,
+      "tackles90": 1.457,
+      "mp": 25,
+      "minutes": 1915,
+      "squad": "Lille",
+      "starter_rate": 0.84,
+      "league": "Ligue 1"
+    },
+    "nt": {
+      "goals90": 0.501,
+      "xa90": 0.501,
+      "sot90": 1.003,
+      "kp90": 2.256,
+      "tackles90": 1.504,
+      "mp": 7,
+      "minutes": 359,
+      "starter_rate": 0.71,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "brandon mechele": {
+    "name": "brandon mechele",
+    "club": {
+      "goals90": 0.131,
+      "xa90": 0.052,
+      "sot90": 0.366,
+      "kp90": 0.549,
+      "tackles90": 1.987,
+      "mp": 39,
+      "minutes": 3442,
+      "squad": "Club Brugge KV",
+      "starter_rate": 1.0,
+      "league": "Belgian Pro League"
+    }
+  },
+  "matheus cunha": {
+    "name": "matheus cunha",
+    "club": {
+      "goals90": 0.36,
+      "xa90": 0.072,
+      "sot90": 1.258,
+      "kp90": 1.258,
+      "tackles90": 1.402,
+      "mp": 33,
+      "minutes": 2503,
+      "squad": "Manchester United",
+      "starter_rate": 0.88,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.404,
+      "sot90": 0.404,
+      "kp90": 1.614,
+      "tackles90": 2.825,
+      "mp": 4,
+      "minutes": 223,
+      "starter_rate": 0.75,
+      "source": "Friendlies"
+    }
+  },
+  "jhon lucumi": {
+    "name": "jhon lucumi",
+    "club": {
+      "goals90": 0.039,
+      "xa90": 0.0,
+      "sot90": 0.078,
+      "kp90": 0.274,
+      "tackles90": 1.604,
+      "mp": 29,
+      "minutes": 2300,
+      "squad": "Bologna",
+      "starter_rate": 0.9,
+      "league": "Serie A"
+    },
+    "nt": {
+      "goals90": 0.274,
+      "xa90": 0.0,
+      "sot90": 0.274,
+      "kp90": 0.0,
+      "tackles90": 0.821,
+      "mp": 4,
+      "minutes": 329,
+      "starter_rate": 0.75,
+      "source": "Friendlies"
+    }
+  },
+  "james rodriguez": {
+    "name": "James Rodriguez",
+    "club": {
+      "goals90": 0.275,
+      "xa90": 0.183,
+      "sot90": 1.008,
+      "kp90": 2.658,
+      "tackles90": 0.733,
+      "mp": 14,
+      "minutes": 982,
+      "squad": "Rayo Vallecano",
+      "starter_rate": 0.71,
+      "league": "Liga MX"
+    },
+    "nt": {
+      "goals90": 0.242,
+      "xa90": 0.969,
+      "sot90": 0.969,
+      "kp90": 3.634,
+      "tackles90": 1.211,
+      "mp": 10,
+      "minutes": 743,
+      "starter_rate": 0.9,
+      "source": "Friendlies, Copa America"
+    }
+  },
+  "jhon arias": {
+    "name": "jhon arias",
+    "club": {
+      "goals90": 0.08,
+      "xa90": 0.0,
+      "sot90": 0.241,
+      "kp90": 0.883,
+      "tackles90": 3.452,
+      "mp": 23,
+      "minutes": 1121,
+      "squad": "Wolves",
+      "starter_rate": 0.61,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.36,
+      "xa90": 0.12,
+      "sot90": 0.0,
+      "kp90": 0.12,
+      "tackles90": 1.44,
+      "mp": 10,
+      "minutes": 750,
+      "starter_rate": 1.0,
+      "source": "Copa America, Friendlies"
+    }
+  },
+  "luis suarez": {
+    "name": "luis suarez",
+    "club": {
+      "goals90": 0.934,
+      "xa90": 0.2,
+      "sot90": 2.002,
+      "kp90": 1.535,
+      "tackles90": 0.501,
+      "mp": 32,
+      "minutes": 2697,
+      "squad": "Sporting CP",
+      "starter_rate": 0.97,
+      "league": "Primeira Liga"
+    }
+  },
+  "john yeboah": {
+    "name": "john yeboah",
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.324,
+      "sot90": 0.324,
+      "kp90": 1.295,
+      "tackles90": 0.647,
+      "mp": 4,
+      "minutes": 278,
+      "starter_rate": 1.0,
+      "source": "Friendlies"
+    }
+  },
+  "nilson angulo": {
+    "name": "nilson angulo",
+    "club": {
+      "goals90": 0.284,
+      "xa90": 0.237,
+      "sot90": 0.804,
+      "kp90": 2.177,
+      "tackles90": 2.934,
+      "mp": 22,
+      "minutes": 1902,
+      "squad": "Anderlecht",
+      "starter_rate": 1.0,
+      "league": "Belgian Pro League"
+    },
+    "nt": {
+      "goals90": 0.407,
+      "xa90": 0.0,
+      "sot90": 0.407,
+      "kp90": 0.0,
+      "tackles90": 3.258,
+      "mp": 4,
+      "minutes": 221,
+      "starter_rate": 0.5,
+      "source": "Friendlies"
+    }
+  },
+  "ezri konsa": {
+    "name": "ezri konsa",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.059,
+      "kp90": 0.148,
+      "tackles90": 0.652,
+      "mp": 34,
+      "minutes": 3036,
+      "squad": "Aston Villa",
+      "starter_rate": 1.0,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.106,
+      "xa90": 0.0,
+      "sot90": 0.425,
+      "kp90": 0.212,
+      "tackles90": 0.637,
+      "mp": 11,
+      "minutes": 848,
+      "starter_rate": 0.73,
+      "source": "Friendlies, World Cup - Qualification Europe"
+    }
+  },
+  "nico oreilly": {
+    "name": "nico oreilly",
+    "club": {
+      "goals90": 0.17,
+      "xa90": 0.102,
+      "sot90": 0.51,
+      "kp90": 0.782,
+      "tackles90": 2.311,
+      "mp": 34,
+      "minutes": 2648,
+      "squad": "Manchester City",
+      "starter_rate": 0.85,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.5,
+      "tackles90": 1.5,
+      "mp": 2,
+      "minutes": 180,
+      "starter_rate": 1.0,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "marcos llorente": {
+    "name": "marcos llorente",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.165,
+      "sot90": 0.247,
+      "kp90": 0.824,
+      "tackles90": 2.43,
+      "mp": 29,
+      "minutes": 2185,
+      "squad": "Atletico Madrid",
+      "starter_rate": 0.86,
+      "league": "La Liga"
+    }
+  },
+  "pau cubarsi": {
+    "name": "pau cubarsi",
+    "club": {
+      "goals90": 0.033,
+      "xa90": 0.0,
+      "sot90": 0.066,
+      "kp90": 0.166,
+      "tackles90": 1.363,
+      "mp": 31,
+      "minutes": 2708,
+      "squad": "Barcelona",
+      "starter_rate": 1.0,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.286,
+      "kp90": 0.0,
+      "tackles90": 1.143,
+      "mp": 4,
+      "minutes": 315,
+      "starter_rate": 0.75,
+      "source": "World Cup - Qualification Europe"
+    }
+  },
+  "ngolo kante": {
+    "name": "ngolo kante",
+    "club": {
+      "goals90": 0.114,
+      "xa90": 0.057,
+      "sot90": 0.172,
+      "kp90": 1.087,
+      "tackles90": 1.888,
+      "mp": 18,
+      "minutes": 1573,
+      "squad": "Al-Ittihad FC",
+      "starter_rate": 1.0,
+      "league": "Saudi Pro League"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.117,
+      "sot90": 0.351,
+      "kp90": 1.638,
+      "tackles90": 2.341,
+      "mp": 9,
+      "minutes": 769,
+      "starter_rate": 1.0,
+      "source": "Euro Championship, UEFA Nations League"
+    }
+  },
+  "aleksandar pavlovic": {
+    "name": "aleksandar pavlovic",
+    "club": {
+      "goals90": 0.185,
+      "xa90": 0.062,
+      "sot90": 0.308,
+      "kp90": 1.295,
+      "tackles90": 1.603,
+      "mp": 24,
+      "minutes": 1460,
+      "squad": "Bayern München",
+      "starter_rate": 0.67,
+      "league": "Bundesliga"
+    },
+    "nt": {
+      "goals90": 0.174,
+      "xa90": 0.0,
+      "sot90": 0.174,
+      "kp90": 1.567,
+      "tackles90": 2.437,
+      "mp": 8,
+      "minutes": 517,
+      "starter_rate": 0.75,
+      "source": "UEFA Nations League, World Cup - Qualification Europe"
+    }
+  },
+  "angelo stiller": {
+    "name": "angelo stiller",
+    "club": {
+      "goals90": 0.065,
+      "xa90": 0.164,
+      "sot90": 0.262,
+      "kp90": 1.833,
+      "tackles90": 1.604,
+      "mp": 34,
+      "minutes": 2750,
+      "squad": "VfB Stuttgart",
+      "starter_rate": 0.88,
+      "league": "Bundesliga"
+    }
+  },
+  "issa diop": {
+    "name": "issa diop",
+    "club": {
+      "goals90": 0.109,
+      "xa90": 0.0,
+      "sot90": 0.109,
+      "kp90": 0.0,
+      "tackles90": 0.762,
+      "mp": 13,
+      "minutes": 827,
+      "squad": "Fulham",
+      "starter_rate": 0.62,
+      "league": "Premier League"
+    }
+  },
+  "neil el aynaoui": {
+    "name": "neil el aynaoui",
+    "club": {
+      "goals90": 0.09,
+      "xa90": 0.179,
+      "sot90": 0.359,
+      "kp90": 1.077,
+      "tackles90": 1.795,
+      "mp": 25,
+      "minutes": 1003,
+      "squad": "AS Roma",
+      "starter_rate": 0.32,
+      "league": "Serie A"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.187,
+      "kp90": 0.374,
+      "tackles90": 1.682,
+      "mp": 10,
+      "minutes": 963,
+      "starter_rate": 1.0,
+      "source": "Africa Cup of Nations, World Cup - Qualification Africa"
+    }
+  },
+  "ismael saibari": {
+    "name": "ismael saibari",
+    "club": {
+      "goals90": 0.629,
+      "xa90": 0.336,
+      "sot90": 1.552,
+      "kp90": 2.224,
+      "tackles90": 1.427,
+      "mp": 27,
+      "minutes": 2145,
+      "squad": "PSV Eindhoven",
+      "starter_rate": 0.96,
+      "league": "Eredivisie"
+    },
+    "nt": {
+      "goals90": 0.38,
+      "xa90": 0.0,
+      "sot90": 0.988,
+      "kp90": 0.532,
+      "tackles90": 1.672,
+      "mp": 18,
+      "minutes": 1184,
+      "starter_rate": 0.78,
+      "source": "Friendlies, Africa Cup of Nations, World Cup - Qualification Africa"
+    }
+  },
+  "brahim diaz": {
+    "name": "brahim diaz",
+    "club": {
+      "goals90": 0.07,
+      "xa90": 0.421,
+      "sot90": 0.491,
+      "kp90": 2.103,
+      "tackles90": 1.051,
+      "mp": 30,
+      "minutes": 1284,
+      "squad": "Real Madrid",
+      "starter_rate": 0.43,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.582,
+      "xa90": 0.0,
+      "sot90": 1.067,
+      "kp90": 0.97,
+      "tackles90": 0.485,
+      "mp": 13,
+      "minutes": 928,
+      "starter_rate": 1.0,
+      "source": "Africa Cup of Nations, World Cup - Qualification Africa"
+    }
+  },
+  "ayoub el kaabi": {
+    "name": "ayoub el kaabi",
+    "club": {
+      "goals90": 0.769,
+      "xa90": 0.085,
+      "sot90": 1.921,
+      "kp90": 0.897,
+      "tackles90": 0.128,
+      "mp": 27,
+      "minutes": 2108,
+      "squad": "Olympiakos Piraeus",
+      "starter_rate": 0.89,
+      "league": "Greek Super League"
+    },
+    "nt": {
+      "goals90": 0.566,
+      "xa90": 0.189,
+      "sot90": 0.755,
+      "kp90": 0.566,
+      "tackles90": 1.321,
+      "mp": 7,
+      "minutes": 477,
+      "starter_rate": 0.86,
+      "source": "Africa Cup of Nations"
+    }
+  },
+  "micky van de ven": {
+    "name": "micky van de ven",
+    "club": {
+      "goals90": 0.118,
+      "xa90": 0.029,
+      "sot90": 0.177,
+      "kp90": 0.177,
+      "tackles90": 1.149,
+      "mp": 35,
+      "minutes": 3055,
+      "squad": "Tottenham",
+      "starter_rate": 1.0,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.134,
+      "xa90": 0.134,
+      "sot90": 0.134,
+      "kp90": 0.806,
+      "tackles90": 1.209,
+      "mp": 9,
+      "minutes": 670,
+      "starter_rate": 0.78,
+      "source": "UEFA Nations League, World Cup - Qualification Europe"
+    }
+  },
+  "nathan patterson": {
+    "name": "nathan patterson",
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 1.13,
+      "tackles90": 1.506,
+      "mp": 6,
+      "minutes": 239,
+      "starter_rate": 0.33,
+      "source": "Euro Championship - Qualification"
+    }
+  },
+  "scott mckenna": {
+    "name": "scott mckenna",
+    "club": {
+      "goals90": 0.068,
+      "xa90": 0.102,
+      "sot90": 0.273,
+      "kp90": 0.375,
+      "tackles90": 0.921,
+      "mp": 30,
+      "minutes": 2639,
+      "squad": "Dinamo Zagreb",
+      "starter_rate": 1.0,
+      "league": "Croatian HNL"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.0,
+      "sot90": 0.0,
+      "kp90": 0.23,
+      "tackles90": 0.691,
+      "mp": 11,
+      "minutes": 781,
+      "starter_rate": 0.73,
+      "source": "UEFA Nations League, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "andy robertson": {
+    "name": "andy robertson",
+    "club": {
+      "goals90": 0.076,
+      "xa90": 0.0,
+      "sot90": 0.227,
+      "kp90": 1.515,
+      "tackles90": 0.909,
+      "mp": 24,
+      "minutes": 1188,
+      "squad": "Liverpool",
+      "starter_rate": 0.46,
+      "league": "Premier League"
+    },
+    "nt": {
+      "goals90": 0.04,
+      "xa90": 0.159,
+      "sot90": 0.04,
+      "kp90": 1.672,
+      "tackles90": 0.955,
+      "mp": 27,
+      "minutes": 2261,
+      "starter_rate": 1.0,
+      "source": "Friendlies, Euro Championship, UEFA Nations League, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "ben doak": {
+    "name": "ben doak",
+    "nt": {
+      "goals90": 0.092,
+      "xa90": 0.275,
+      "sot90": 0.55,
+      "kp90": 1.65,
+      "tackles90": 1.191,
+      "mp": 18,
+      "minutes": 982,
+      "starter_rate": 0.78,
+      "source": "Friendlies, UEFA Nations League, World Cup - Qualification Europe"
+    }
+  },
+  "che adams": {
+    "name": "Che Adams",
+    "club": {
+      "goals90": 0.284,
+      "xa90": 0.095,
+      "sot90": 0.852,
+      "kp90": 1.23,
+      "tackles90": 0.662,
+      "mp": 33,
+      "minutes": 1902,
+      "squad": "Torino",
+      "starter_rate": 0.58,
+      "league": "Serie A"
+    },
+    "nt": {
+      "goals90": 0.204,
+      "xa90": 0.0,
+      "sot90": 0.816,
+      "kp90": 0.612,
+      "tackles90": 0.51,
+      "mp": 13,
+      "minutes": 882,
+      "starter_rate": 0.85,
+      "source": "Euro Championship, UEFA Nations League, World Cup - Qualification Europe"
+    }
+  },
+  "ricardo rodriguez": {
+    "name": "Ricardo Rodriguez",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.058,
+      "sot90": 0.0,
+      "kp90": 0.404,
+      "tackles90": 1.384,
+      "mp": 23,
+      "minutes": 1561,
+      "squad": "Torino",
+      "starter_rate": 0.78,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.115,
+      "sot90": 0.076,
+      "kp90": 1.07,
+      "tackles90": 1.07,
+      "mp": 29,
+      "minutes": 2356,
+      "starter_rate": 1.0,
+      "source": "Friendlies, Euro Championship, UEFA Nations League, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "ismail yuksek": {
+    "name": "ismail yuksek",
+    "club": {
+      "goals90": 0.051,
+      "xa90": 0.102,
+      "sot90": 0.407,
+      "kp90": 0.865,
+      "tackles90": 3.767,
+      "mp": 30,
+      "minutes": 1768,
+      "squad": "Fenerbahçe",
+      "starter_rate": 0.63,
+      "league": "Süper Lig"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 0.076,
+      "sot90": 0.152,
+      "kp90": 0.99,
+      "tackles90": 3.426,
+      "mp": 18,
+      "minutes": 1182,
+      "starter_rate": 0.78,
+      "source": "UEFA Nations League, World Cup - Qualification Europe, Euro Championship - Qualification"
+    }
+  },
+  "guillermo varela": {
+    "name": "guillermo varela",
+    "club": {
+      "goals90": 0.0,
+      "xa90": 0.262,
+      "sot90": 0.131,
+      "kp90": 0.459,
+      "tackles90": 1.771,
+      "mp": 20,
+      "minutes": 1372,
+      "squad": "Flamengo",
+      "starter_rate": 0.7,
+      "league": "Série A (Brazil)"
+    }
+  },
+  "maxi araujo": {
+    "name": "maxi araujo",
+    "club": {
+      "goals90": 0.203,
+      "xa90": 0.163,
+      "sot90": 0.65,
+      "kp90": 1.26,
+      "tackles90": 2.154,
+      "mp": 29,
+      "minutes": 2214,
+      "squad": "Sporting CP",
+      "starter_rate": 0.86,
+      "league": "Primeira Liga"
+    },
+    "nt": {
+      "goals90": 0.402,
+      "xa90": 0.201,
+      "sot90": 1.406,
+      "kp90": 1.205,
+      "tackles90": 1.004,
+      "mp": 6,
+      "minutes": 448,
+      "starter_rate": 1.0,
+      "source": "Copa America"
+    }
+  },
+  "federico vinas": {
+    "name": "federico vinas",
+    "club": {
+      "goals90": 0.33,
+      "xa90": 0.037,
+      "sot90": 0.771,
+      "kp90": 0.991,
+      "tackles90": 1.836,
+      "mp": 33,
+      "minutes": 2451,
+      "squad": "Oviedo",
+      "starter_rate": 0.85,
+      "league": "La Liga"
+    },
+    "nt": {
+      "goals90": 0.0,
+      "xa90": 1.5,
+      "sot90": 0.0,
+      "kp90": 3.0,
+      "tackles90": 1.5,
+      "mp": 3,
+      "minutes": 180,
+      "starter_rate": 0.67,
+      "source": "Friendlies"
+    }
   }
 }
