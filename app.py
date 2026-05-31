@@ -399,6 +399,7 @@ with tab1:
         "pos":            "Pos",
         "price":          "Price",
         "own_%":          "Own%",
+        "set_pieces":     "Set Pcs",
         "md1_opp":        "MD1 Opp",
         "md2_opp":        "MD2 Opp",
         "md1_pts":        "MD1 Pts",
@@ -769,4 +770,4 @@ with tab6:
     st.dataframe(styler, use_container_width=True, height=640)
 
 st.divider()
-st.caption("Scoring: Official FIFA WC Fantasy 2026 | Model: xG ratio share × team projection | Weights: 65% NT / 35% club | CS% & xG: FPLJoe.com bookie markets (SBOBET/Betfair)")
+st.caption("Scoring: Official FIFA WC Fantasy 2026 | Model: xG ratio share (sample-size regressed) × team projection + set-piece duty bonuses (PK/FK/CK) | Weights: 65% NT / 35% club | CS% & xG: FPLJoe.com bookie markets (SBOBET/Betfair)")

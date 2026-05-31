@@ -28,6 +28,10 @@ from data.team_stats import (
     get_avg_cs_pct, get_avg_proj_goals, get_team_fdr_total, get_group_balance,
     get_team_proj, get_opponent_xg,
 )
+try:
+    from data.set_pieces import SET_PIECES
+except Exception:
+    SET_PIECES = {}
 
 API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY", "")
 API_FOOTBALL_BASE = "https://v3.football.api-sports.io"
@@ -275,6 +279,13 @@ class Player:
     starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
     projected_minutes: float = 90.0  # set from predicted XI or starter_rate
     predicted_starter: bool = False  # True if named in a predicted XI
+
+    # Set-piece role bonuses (per-90 xG/xA, added flat in projection)
+    sp_pk_xg: float = 0.0
+    sp_fk_xg: float = 0.0
+    sp_ck_xa: float = 0.0
+    sp_roles: str = ""   # display, e.g. "PK·CK"
+    _sample_minutes: float = 0.0  # effective minutes behind the blended per-90s
 
     @property
     def team_name(self) -> str:
@@ -736,6 +747,13 @@ def _compute_per90(p: Player) -> None:
     p.kp90      = nt_w * nt_kp  + cl_w * cl_kp
     p.tackles90 = nt_w * nt_tk  + cl_w * cl_tk
 
+    # Effective sample size behind the blend — used to regress the per-90 "share"
+    # multiplier toward the positional baseline for low-minute players (small
+    # NT samples otherwise produce spiky, over-confident projections).
+    eff_nt_min = p.national_stats.minutes if p.national_stats.minutes > 0 else nt_mins
+    eff_cl_min = p.club_stats.minutes     if p.club_stats.minutes > 0     else cl_mins
+    p._sample_minutes = nt_w * eff_nt_min + cl_w * eff_cl_min
+
     if p.position == "GK":
         shots_faced = nt.saves + nt.goals_conceded
         p.save_rate = (nt.saves / shots_faced) if shots_faced > 0 else 0.7
@@ -752,6 +770,22 @@ _N_STARTERS  = {"GK": 1,    "DEF": 4,    "MID": 4,    "FWD": 3}
 # Default xg90 / xa90 per position when no data
 _DEFAULT_XG90 = {"GK": 0.01, "DEF": 0.04, "MID": 0.10, "FWD": 0.35}
 _DEFAULT_XA90 = {"GK": 0.01, "DEF": 0.05, "MID": 0.15, "FWD": 0.12}
+
+# Share-multiplier guards: cap runaway ratios and shrink toward the positional
+# baseline (1.0) for small samples. w = mins / (mins + SHARE_K); at SHARE_K
+# minutes a player gets half-weight on their measured edge over the average.
+SHARE_CAP = 3.0
+SHARE_K   = 500.0
+
+
+def _shrunk_share(p90: float, avg: float, sample_min: float) -> float:
+    """Sample-size-regressed, capped ratio of a player's per-90 to the pos average."""
+    if avg <= 0 or p90 <= 0:
+        return 1.0
+    raw = p90 / avg
+    w = sample_min / (sample_min + SHARE_K)
+    share = 1.0 + w * (raw - 1.0)
+    return min(share, SHARE_CAP)
 
 
 def _pos_averages(players: list) -> tuple:
@@ -771,7 +805,7 @@ def _player_xg(p: Player, team_xg: float, avg_xg: dict) -> float:
     """Individual expected goals for one matchday."""
     pos = p.position
     base = team_xg * _POS_XG_FRAC[pos] / _N_STARTERS[pos]
-    share = (p.xg90 / avg_xg[pos]) if (avg_xg[pos] > 0 and p.xg90 > 0) else 1.0
+    share = _shrunk_share(p.xg90, avg_xg[pos], getattr(p, "_sample_minutes", 0.0))
     return base * share
 
 
@@ -779,7 +813,7 @@ def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
     """Individual expected assists for one matchday."""
     pos = p.position
     base = (team_xg * 0.75) * _POS_XA_FRAC[pos] / _N_STARTERS[pos]
-    share = (p.xa90 / avg_xa[pos]) if (avg_xa[pos] > 0 and p.xa90 > 0) else 1.0
+    share = _shrunk_share(p.xa90, avg_xa[pos], getattr(p, "_sample_minutes", 0.0))
     return base * share
 
 
@@ -797,6 +831,11 @@ def _project_md(p: Player, md: int, avg_xg: dict, avg_xa: dict) -> tuple:
 
     pxg = _player_xg(p, team_xg, avg_xg) * mf
     pxa = _player_xa(p, team_xg, avg_xa) * mf
+
+    # Set-piece duty bonuses — penalties/direct free kicks add xG, corners add xA.
+    # Flat per-game expectations, minutes-scaled like everything else.
+    pxg += (p.sp_pk_xg + p.sp_fk_xg) * mf
+    pxa += p.sp_ck_xa * mf
 
     pts = 2.0 if mins >= 60 else 1.0       # appearance points
     pts += pxg * SCORING["goal"][pos]
@@ -846,6 +885,72 @@ def _assign_minutes(players: list) -> None:
             p.predicted_starter = sr >= 0.6
 
 
+# ── Set-piece duty assignment ─────────────────────────────────────────────────
+
+# Per-game expected value of each duty (before pos-weighting / minutes scaling).
+#   PK: ~0.18 pens awarded per team-game × ~0.78 conversion ≈ 0.14 xG
+#   FK: direct free-kick goals are rare ≈ 0.04 xG
+#   CK: a designated corner taker sources extra set-piece assists ≈ 0.06 xA
+_PK_XG = 0.14
+_FK_XG = 0.04
+_CK_XA = 0.06
+# Primary/secondary split when a duty is shared between two listed names.
+_DUTY_WEIGHTS = {1: [1.0], 2: [0.65, 0.35]}
+
+
+def _name_tokens(name: str) -> list:
+    """Tokenise a name for set-piece matching: accent-strip, drop dots/hyphens."""
+    s = _norm_name(name).replace(".", " ").replace("-", " ").replace("'", " ")
+    return [t for t in s.split() if t]
+
+
+def _taker_matches(player_name: str, spec: str) -> bool:
+    """True if a squad player matches a set-piece taker fragment.
+
+    Surname tokens (len>=2) must all appear as whole tokens in the player's name;
+    single-letter initials must prefix some player token (disambiguates e.g.
+    'L. Bacuna' vs 'J. Bacuna')."""
+    p_toks = _name_tokens(player_name)
+    s_toks = _name_tokens(spec)
+    surnames = [t for t in s_toks if len(t) >= 2]
+    initials = [t for t in s_toks if len(t) == 1]
+    if not surnames or not all(t in p_toks for t in surnames):
+        return False
+    return all(any(tok.startswith(ini) for tok in p_toks) for ini in initials)
+
+
+def _assign_set_pieces(players: list) -> None:
+    """Flag set-piece takers and store their per-90 xG/xA duty bonuses."""
+    by_team: dict[str, list] = {}
+    for p in players:
+        by_team.setdefault(p.team_code, []).append(p)
+
+    for code, roster in by_team.items():
+        spec = SET_PIECES.get(code)
+        if not spec:
+            continue
+        for role, takers in spec.items():
+            weights = _DUTY_WEIGHTS.get(len(takers), [1.0] * len(takers))
+            for taker, w in zip(takers, weights):
+                for p in roster:
+                    if not _taker_matches(p.name, taker):
+                        continue
+                    if role == "PK":
+                        p.sp_pk_xg = max(p.sp_pk_xg, w * _PK_XG)
+                    elif role == "FK":
+                        p.sp_fk_xg = max(p.sp_fk_xg, w * _FK_XG)
+                    elif role == "CK":
+                        p.sp_ck_xa = max(p.sp_ck_xa, w * _CK_XA)
+                    break  # first matching player per taker fragment
+
+    for p in players:
+        roles = []
+        if p.sp_pk_xg > 0: roles.append("PK")
+        if p.sp_fk_xg > 0: roles.append("FK")
+        if p.sp_ck_xa > 0: roles.append("CK")
+        p.sp_roles = "·".join(roles)
+
+
 def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     """
     Compute per-90 blended stats, then project points for given matchdays.
@@ -857,7 +962,8 @@ def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     for p in players:
         _compute_per90(p)
 
-    _assign_minutes(players)  # needs starter_rate set by _compute_per90
+    _assign_minutes(players)     # needs starter_rate set by _compute_per90
+    _assign_set_pieces(players)  # flag PK/FK/CK takers from data/set_pieces.py
 
     avg_xg, avg_xa = _pos_averages(players)
 
@@ -916,6 +1022,7 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "club": p.club,
             "price": p.price,
             "own_%": round(p.ownership_pct, 1),
+            "set_pieces": p.sp_roles,
             "xPts/game": p.xpts_per_match,
             "xPts_GS": p.xpts_group_stage,
             "value": p.value,
