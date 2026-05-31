@@ -1630,22 +1630,8 @@
       "source": "UEFA Nations League, World Cup - Qualification Europe"
     }
   },
-  "romelu lukaku": {
-    "name": "Romelu Lukaku",
-    "nt": {
-      "goals90": 1.248,
-      "xa90": 0.147,
-      "sot90": 1.982,
-      "kp90": 0.954,
-      "tackles90": 0.22,
-      "mp": 15,
-      "minutes": 1226,
-      "starter_rate": 1.0,
-      "source": "Euro Championship, UEFA Nations League, Euro Championship - Qualification"
-    }
-  },
   "lois openda": {
-    "name": "Loïs Openda",
+    "name": "Lo\u00efs Openda",
     "club": {
       "goals90": 0.133,
       "xa90": 0.0,
@@ -1779,7 +1765,7 @@
     }
   },
   "anel ahmedhodzic": {
-    "name": "Anel Ahmedhodžić",
+    "name": "Anel Ahmedhod\u017ei\u0107",
     "club": {
       "goals90": 0.0,
       "xa90": 0.041,
@@ -1856,7 +1842,7 @@
       "minutes": 1404,
       "squad": "Mallorca",
       "starter_rate": 0.67,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "edin dzeko": {
@@ -2006,7 +1992,7 @@
       "minutes": 2132,
       "squad": "Man City",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "eder militao": {
@@ -2103,7 +2089,7 @@
       "minutes": 1565,
       "squad": "Flamengo",
       "starter_rate": 0.95,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "casemiro": {
@@ -2274,7 +2260,7 @@
       "minutes": 2750,
       "squad": "Arsenal",
       "starter_rate": 0.97,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "richarlison": {
@@ -2319,7 +2305,7 @@
       "minutes": 1535,
       "squad": "Al-Hilal",
       "starter_rate": 0.85,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "andreas pereira": {
@@ -2334,7 +2320,7 @@
       "minutes": 1013,
       "squad": "Fulham",
       "starter_rate": 0.73,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "gerson": {
@@ -2349,7 +2335,7 @@
       "minutes": 718,
       "squad": "Flamengo",
       "starter_rate": 1.0,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "savio": {
@@ -2498,7 +2484,7 @@
     }
   },
   "ismael kone": {
-    "name": "Ismaël Koné",
+    "name": "Isma\u00ebl Kon\u00e9",
     "club": {
       "goals90": 0.196,
       "xa90": 0.0,
@@ -2775,7 +2761,7 @@
       "minutes": 955,
       "squad": "Monaco",
       "starter_rate": 0.58,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.0,
@@ -3212,7 +3198,7 @@
     }
   },
   "cedric bakambu": {
-    "name": "Cédric Bakambu",
+    "name": "C\u00e9dric Bakambu",
     "club": {
       "goals90": 0.455,
       "xa90": 0.152,
@@ -3264,7 +3250,7 @@
       "minutes": 2424,
       "squad": "Galatasaray",
       "starter_rate": 0.97,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.12,
@@ -3372,7 +3358,7 @@
       "minutes": 1002,
       "squad": "Genk",
       "starter_rate": 0.92,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.0,
@@ -3502,7 +3488,7 @@
       "minutes": 543,
       "squad": "Aston Villa",
       "starter_rate": 0.6,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "rafael santos borre": {
@@ -3517,7 +3503,7 @@
       "minutes": 1836,
       "squad": "Eintracht Frankfurt",
       "starter_rate": 0.67,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.306,
@@ -3573,7 +3559,7 @@
       "minutes": 1450,
       "squad": "Bahia",
       "starter_rate": 0.71,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.0,
@@ -3602,7 +3588,7 @@
     }
   },
   "julio tavares": {
-    "name": "Júlio Tavares",
+    "name": "J\u00falio Tavares",
     "club": {
       "goals90": 0.0,
       "xa90": 0.093,
@@ -3695,7 +3681,7 @@
       "minutes": 2880,
       "squad": "Atletico Madrid",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "josko gvardiol": {
@@ -4028,7 +4014,7 @@
       "minutes": 1337,
       "squad": "Dinamo Zagreb",
       "starter_rate": 0.83,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "ante budimir": {
@@ -4176,7 +4162,7 @@
       "minutes": 935,
       "squad": "Konyaspor",
       "starter_rate": 0.67,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "juninho bacuna": {
@@ -4565,7 +4551,7 @@
     }
   },
   "vaclav cerny": {
-    "name": "Václav Cerny",
+    "name": "V\u00e1clav Cerny",
     "club": {
       "goals90": 0.224,
       "xa90": 0.359,
@@ -4576,7 +4562,7 @@
       "minutes": 2007,
       "squad": "Stuttgart",
       "starter_rate": 0.83,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.426,
@@ -4758,7 +4744,7 @@
       "minutes": 1360,
       "squad": "Real Valladolid",
       "starter_rate": 0.5,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "enner valencia": {
@@ -6977,7 +6963,7 @@
       "minutes": 1399,
       "squad": "Barcelona",
       "starter_rate": 0.62,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.159,
@@ -7107,7 +7093,7 @@
       "minutes": 2291,
       "squad": "Bayern Munich",
       "starter_rate": 0.96,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.113,
@@ -7241,7 +7227,7 @@
     }
   },
   "maximilian mittelstadt": {
-    "name": "Maximilian Mittelstädt",
+    "name": "Maximilian Mittelst\u00e4dt",
     "club": {
       "goals90": 0.246,
       "xa90": 0.164,
@@ -7267,7 +7253,7 @@
     }
   },
   "chris fuhrich": {
-    "name": "Chris Führich",
+    "name": "Chris F\u00fchrich",
     "club": {
       "goals90": 0.366,
       "xa90": 0.366,
@@ -7537,7 +7523,7 @@
     }
   },
   "florian aye": {
-    "name": "Florian Ayé",
+    "name": "Florian Ay\u00e9",
     "club": {
       "goals90": 0.504,
       "xa90": 0.092,
@@ -8352,7 +8338,7 @@
       "minutes": 2472,
       "squad": "Alanyaspor",
       "starter_rate": 0.91,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "cho gue sung": {
@@ -9148,7 +9134,7 @@
       "minutes": 768,
       "squad": "West Ham",
       "starter_rate": 0.83,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.2,
@@ -9713,7 +9699,7 @@
       "minutes": 1571,
       "squad": "Atletico Madrid",
       "starter_rate": 0.74,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.667,
@@ -10528,7 +10514,7 @@
       "tackles90": 1.582,
       "mp": 30,
       "minutes": 2276,
-      "squad": "Mazatlán",
+      "squad": "Mazatl\u00e1n",
       "starter_rate": 0.83,
       "league": "Liga MX"
     },
@@ -10622,7 +10608,7 @@
       "minutes": 2684,
       "squad": "Atletico Mineiro",
       "starter_rate": 1.0,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.0,
@@ -10648,7 +10634,7 @@
       "minutes": 1160,
       "squad": "Cerro Porteno",
       "starter_rate": 0.88,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.0,
@@ -11009,7 +10995,7 @@
       "minutes": 1942,
       "squad": "Wolves",
       "starter_rate": 0.96,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.0,
@@ -11310,7 +11296,7 @@
       "minutes": 666,
       "squad": "Vitoria",
       "starter_rate": 0.43,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "meshaal barsham": {
@@ -13256,7 +13242,7 @@
       "minutes": 2250,
       "squad": "Trabzonspor",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.0,
@@ -13349,7 +13335,7 @@
       "minutes": 2571,
       "squad": "Rizespor",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.084,
@@ -13401,7 +13387,7 @@
       "minutes": 1222,
       "squad": "Sassuolo",
       "starter_rate": 0.46,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.144,
@@ -13453,7 +13439,7 @@
       "minutes": 898,
       "squad": "Middlesbrough",
       "starter_rate": 0.45,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "abdulkerim bardakci": {
@@ -13468,7 +13454,7 @@
       "minutes": 2546,
       "squad": "Galatasaray",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.103,
@@ -13509,7 +13495,7 @@
       "minutes": 1959,
       "squad": "Galatasaray",
       "starter_rate": 0.83,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.514,
@@ -13561,7 +13547,7 @@
       "minutes": 1175,
       "squad": "Marseille",
       "starter_rate": 0.54,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.204,
@@ -13587,7 +13573,7 @@
       "minutes": 2318,
       "squad": "Galatasaray",
       "starter_rate": 0.9,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.069,
@@ -13643,7 +13629,7 @@
     }
   },
   "baris alper yilmaz": {
-    "name": "Barış Alper Yılmaz",
+    "name": "Bar\u0131\u015f Alper Y\u0131lmaz",
     "club": {
       "goals90": 0.311,
       "xa90": 0.427,
@@ -13654,7 +13640,7 @@
       "minutes": 2318,
       "squad": "Galatasaray",
       "starter_rate": 0.9,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.069,
@@ -13680,7 +13666,7 @@
       "minutes": 1215,
       "squad": "Nacional",
       "starter_rate": 1.0,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     },
     "nt": {
       "goals90": 0.0,
@@ -13799,7 +13785,7 @@
       "minutes": 2224,
       "squad": "Galatasaray",
       "starter_rate": 0.93,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "rodrigo bentancur": {
@@ -13895,7 +13881,7 @@
       "minutes": 2383,
       "squad": "Flamengo",
       "starter_rate": 0.91,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "darwin nunez": {
@@ -13992,7 +13978,7 @@
       "minutes": 2130,
       "squad": "Atletico Mineiro",
       "starter_rate": 0.9,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "matt turner": {
@@ -14427,7 +14413,7 @@
       "minutes": 1117,
       "squad": "Anderlecht",
       "starter_rate": 0.7,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "abbosbek fayzullaev": {
@@ -14440,9 +14426,9 @@
       "tackles90": 2.175,
       "mp": 20,
       "minutes": 1117,
-      "squad": "Başakşehir",
+      "squad": "Ba\u015fak\u015fehir",
       "starter_rate": 0.7,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "eldor shomurodov": {
@@ -14457,7 +14443,7 @@
       "minutes": 2928,
       "squad": "Roma",
       "starter_rate": 1.0,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     }
   },
   "c. romero": {
@@ -15131,7 +15117,7 @@
       "tackles90": 1.603,
       "mp": 24,
       "minutes": 1460,
-      "squad": "Bayern München",
+      "squad": "Bayern M\u00fcnchen",
       "starter_rate": 0.67,
       "league": "Bundesliga"
     },
@@ -15449,9 +15435,9 @@
       "tackles90": 3.767,
       "mp": 30,
       "minutes": 1768,
-      "squad": "Fenerbahçe",
+      "squad": "Fenerbah\u00e7e",
       "starter_rate": 0.63,
-      "league": "Süper Lig"
+      "league": "S\u00fcper Lig"
     },
     "nt": {
       "goals90": 0.0,
@@ -15477,7 +15463,7 @@
       "minutes": 1372,
       "squad": "Flamengo",
       "starter_rate": 0.7,
-      "league": "Série A (Brazil)"
+      "league": "S\u00e9rie A (Brazil)"
     }
   },
   "maxi araujo": {

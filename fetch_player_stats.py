@@ -437,7 +437,7 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
             games = block.get("games") or {}
             mins  = games.get("minutes") or 0
 
-            if lid in CLUB_LEAGUE_IDS and season == CLUB_SEASON:
+            if lid in CLUB_LEAGUE_IDS and (season == CLUB_SEASON or (club_stats is None and season in (2024, 2023))):
                 parsed = _parse_block(block, MIN_MINUTES_CLUB)
                 if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
                     parsed["league"] = next(
