@@ -437,13 +437,28 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
             games = block.get("games") or {}
             mins  = games.get("minutes") or 0
 
-            if lid in CLUB_LEAGUE_IDS and (season == CLUB_SEASON or (club_stats is None and season in (2024, 2023))):
-                parsed = _parse_block(block, MIN_MINUTES_CLUB)
-                if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
-                    parsed["league"] = next(
-                        (k for k, v in CLUB_LEAGUES.items() if v == lid), str(lid)
-                    )
-                    club_stats = parsed
+            if lid in CLUB_LEAGUE_IDS:
+                if season == CLUB_SEASON:
+                    # Always accept current-season data regardless of minutes — a
+                    # transferred player with 200 min at their new club is still more
+                    # relevant than a full season at their old club. Use min_minutes=0
+                    # so _parse_block never rejects it.
+                    parsed = _parse_block(block, min_minutes=0)
+                    if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
+                        parsed["league"] = next(
+                            (k for k, v in CLUB_LEAGUES.items() if v == lid), str(lid)
+                        )
+                        club_stats = parsed
+                elif club_stats is None and season in (2024, 2023):
+                    # Fall back to previous season ONLY when the player has literally
+                    # zero 25/26 club data (e.g. long-term injury). Apply the minutes
+                    # threshold here so a garbage 1-game appearance doesn't qualify.
+                    parsed = _parse_block(block, MIN_MINUTES_CLUB)
+                    if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
+                        parsed["league"] = next(
+                            (k for k, v in CLUB_LEAGUES.items() if v == lid), str(lid)
+                        )
+                        club_stats = parsed
 
             elif lid in NT_LEAGUE_IDS and mins >= MIN_MINUTES_NT:
                 comp_name = (block.get("league") or {}).get("name", str(lid))
