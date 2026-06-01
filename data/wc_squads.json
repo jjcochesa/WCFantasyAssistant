@@ -746,7 +746,7 @@
         },
         {
           "id": "BEL_17",
-          "name": "Loïs Openda",
+          "name": "Lo\u00efs Openda",
           "position": "FWD",
           "price": 8.5,
           "ownership_pct": 12.0,
@@ -807,7 +807,7 @@
         },
         {
           "id": "BIH_4",
-          "name": "Anel Ahmedhodžić",
+          "name": "Anel Ahmedhod\u017ei\u0107",
           "position": "DEF",
           "price": 6.0,
           "ownership_pct": 5.0,
@@ -903,7 +903,7 @@
         },
         {
           "id": "BIH_16",
-          "name": "Armin Hodžić",
+          "name": "Armin Hod\u017ei\u0107",
           "position": "FWD",
           "price": 5.5,
           "ownership_pct": 2.0,
@@ -1145,7 +1145,7 @@
         },
         {
           "id": "CAN_7",
-          "name": "Ismaël Koné",
+          "name": "Isma\u00ebl Kon\u00e9",
           "position": "MID",
           "price": 7.0,
           "ownership_pct": 8.0,
@@ -1443,7 +1443,7 @@
         },
         {
           "id": "COD_7",
-          "name": "Cédric Bakambu",
+          "name": "C\u00e9dric Bakambu",
           "position": "FWD",
           "price": 6.5,
           "ownership_pct": 4.0,
@@ -1459,7 +1459,7 @@
         },
         {
           "id": "COD_9",
-          "name": "Théo Bongonda",
+          "name": "Th\u00e9o Bongonda",
           "position": "MID",
           "price": 6.0,
           "ownership_pct": 3.0,
@@ -1467,7 +1467,7 @@
         },
         {
           "id": "COD_10",
-          "name": "Paul-José Mpoku",
+          "name": "Paul-Jos\u00e9 Mpoku",
           "position": "MID",
           "price": 5.5,
           "ownership_pct": 2.0,
@@ -1475,7 +1475,7 @@
         },
         {
           "id": "COD_11",
-          "name": "Trésor Mputu",
+          "name": "Tr\u00e9sor Mputu",
           "position": "MID",
           "price": 5.0,
           "ownership_pct": 1.5,
@@ -1717,7 +1717,7 @@
         },
         {
           "id": "CPV_4",
-          "name": "Zé Lopes",
+          "name": "Z\u00e9 Lopes",
           "position": "DEF",
           "price": 5.0,
           "ownership_pct": 1.5,
@@ -1757,7 +1757,7 @@
         },
         {
           "id": "CPV_9",
-          "name": "Júlio Tavares",
+          "name": "J\u00falio Tavares",
           "position": "MID",
           "price": 5.5,
           "ownership_pct": 2.5,
@@ -2236,7 +2236,7 @@
         },
         {
           "id": "CZE_17",
-          "name": "Václav Cerny",
+          "name": "V\u00e1clav Cerny",
           "position": "MID",
           "price": 6.5,
           "ownership_pct": 4.0,
@@ -2265,7 +2265,7 @@
         },
         {
           "id": "ECU_2",
-          "name": "Wellington Ramírez",
+          "name": "Wellington Ram\u00edrez",
           "position": "GK",
           "price": 4.0,
           "ownership_pct": 1.0,
@@ -2277,7 +2277,7 @@
           "position": "DEF",
           "price": 6.5,
           "ownership_pct": 8.0,
-          "club": "Bayer Leverkusen"
+          "club": "Arsenal"
         },
         {
           "id": "ECU_4",
@@ -2398,6 +2398,14 @@
           "price": 5.5,
           "ownership_pct": 2.0,
           "club": ""
+        },
+        {
+          "id": "ECU_19",
+          "name": "Willian Pacho",
+          "position": "DEF",
+          "price": 6.5,
+          "ownership_pct": 5.0,
+          "club": "Paris Saint Germain"
         }
       ]
     },
@@ -3290,7 +3298,7 @@
         },
         {
           "id": "GER_22",
-          "name": "Maximilian Mittelstädt",
+          "name": "Maximilian Mittelst\u00e4dt",
           "position": "DEF",
           "price": 6.0,
           "ownership_pct": 4.0,
@@ -3298,7 +3306,7 @@
         },
         {
           "id": "GER_23",
-          "name": "Chris Führich",
+          "name": "Chris F\u00fchrich",
           "position": "MID",
           "price": 6.5,
           "ownership_pct": 3.0,
@@ -3484,7 +3492,7 @@
         },
         {
           "id": "HAI_4",
-          "name": "Florian Ayé",
+          "name": "Florian Ay\u00e9",
           "position": "DEF",
           "price": 5.0,
           "ownership_pct": 1.5,
@@ -6906,7 +6914,7 @@
         },
         {
           "id": "TUR_20",
-          "name": "Barış Alper Yılmaz",
+          "name": "Bar\u0131\u015f Alper Y\u0131lmaz",
           "position": "MID",
           "price": 7.0,
           "ownership_pct": 6.0,
