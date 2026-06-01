@@ -552,14 +552,16 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
 with tab4:
     st.subheader("Build Your Best Squad")
 
-    b1, b2, b3 = st.columns(3)
+    b1, b2, b3, b4 = st.columns(4)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
     build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
     use_transfers = b3.toggle("2 transfers MD1→MD2", value=False, key="build_transfers")
+    exclude_mex   = b4.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):
+        build_df = df[df["team_code"] != "MEX"].copy() if exclude_mex else df.copy()
         if use_transfers:
-            md1_squad, md2_squad = _dual_squad(df, build_budget, build_cap)
+            md1_squad, md2_squad = _dual_squad(build_df, build_budget, build_cap)
             if md1_squad is None:
                 st.error("Could not build squad within budget. Try increasing budget or country cap.")
             else:
@@ -607,7 +609,7 @@ with tab4:
                     use_container_width=True,
                 )
         else:
-            squad = _greedy_squad(df, build_budget, "xPts_GS", build_cap)
+            squad = _greedy_squad(build_df, build_budget, "xPts_GS", build_cap)
             if squad is None or squad.empty:
                 st.error("Could not fill squad within budget. Try increasing budget or country cap.")
             else:
