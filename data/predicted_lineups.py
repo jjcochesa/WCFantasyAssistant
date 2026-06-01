@@ -103,8 +103,7 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Maxi Araújo", "Giorgian de Arrascaeta", "Federico Viñas",
     ],
     "ECU": [
-        # 9-man: Pacho + Hincapié not yet in FIFA feed — add when squad confirmed
-        "Hernán Galíndez", "Ángelo Preciado", "Pervis Estupiñán",
+        "Hernán Galíndez", "Ángelo Preciado", "Piero Hincapié", "Willian Pacho", "Pervis Estupiñán",
         "Moisés Caicedo", "John Yeboah", "Kendry Páez",
         "Gonzalo Plata", "Nilson Angulo", "Enner Valencia",
     ],
