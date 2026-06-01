@@ -525,7 +525,7 @@ def _parse_block(block: dict, min_minutes: int = MIN_MINUTES_CLUB) -> dict | Non
     apps    = games.get("appearences") or 0
     team    = (block.get("team") or {}).get("name", "")
 
-    if mins < min_minutes:
+    if mins < min_minutes or mins == 0:
         return None
 
     goals   = (block.get("goals")   or {}).get("total")   or 0
