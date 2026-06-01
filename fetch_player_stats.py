@@ -415,9 +415,16 @@ def _fuzzy_match(wc_norm: str, api_index: dict) -> int | None:
 #     so per-90s reflect combined recent international minutes, not just one cup
 # ---------------------------------------------------------------------------
 
+# When a player has few 25/26 club minutes, blend in previous-season per-90s
+# proportionally. At BLEND_K minutes the weight is 50/50; a full season (~2700 min)
+# is ~85% current. Keeps the current club label/squad correct while damping noise.
+BLEND_K = 450
+
+
 def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
     """Returns (club_stats, nt_stats) for a player. None if no data."""
-    club_stats = None
+    club_cur  = None   # best 25/26 club block (always accepted, any minutes)
+    club_prev = None   # best 24/25 or 23/24 block (threshold-gated, for blending)
 
     # NT accumulators — sum raw counts, compute per-90 at the end
     nt_acc = {"goals": 0, "assists": 0, "sot": 0, "kp": 0, "tackles": 0,
@@ -439,26 +446,22 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
 
             if lid in CLUB_LEAGUE_IDS:
                 if season == CLUB_SEASON:
-                    # Always accept current-season data regardless of minutes — a
-                    # transferred player with 200 min at their new club is still more
-                    # relevant than a full season at their old club. Use min_minutes=0
-                    # so _parse_block never rejects it.
+                    # Always accept current-season data (correct club); no minutes gate.
                     parsed = _parse_block(block, min_minutes=0)
-                    if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
+                    if parsed and (not club_cur or parsed["minutes"] > club_cur["minutes"]):
                         parsed["league"] = next(
                             (k for k, v in CLUB_LEAGUES.items() if v == lid), str(lid)
                         )
-                        club_stats = parsed
-                elif club_stats is None and season in (2024, 2023):
-                    # Fall back to previous season ONLY when the player has literally
-                    # zero 25/26 club data (e.g. long-term injury). Apply the minutes
-                    # threshold here so a garbage 1-game appearance doesn't qualify.
+                        club_cur = parsed
+                elif season in (2024, 2023) and club_prev is None:
+                    # Previous-season data for blending — threshold-gated so a
+                    # 1-game cameo doesn't pollute the blend.
                     parsed = _parse_block(block, MIN_MINUTES_CLUB)
-                    if parsed and (not club_stats or parsed["minutes"] > club_stats["minutes"]):
+                    if parsed and (not club_prev or parsed["minutes"] > club_prev["minutes"]):
                         parsed["league"] = next(
                             (k for k, v in CLUB_LEAGUES.items() if v == lid), str(lid)
                         )
-                        club_stats = parsed
+                        club_prev = parsed
 
             elif lid in NT_LEAGUE_IDS and mins >= MIN_MINUTES_NT:
                 comp_name = (block.get("league") or {}).get("name", str(lid))
@@ -474,6 +477,23 @@ def fetch_and_parse(player_id: int) -> tuple[dict | None, dict | None]:
                     nt_acc["comps"].append(comp_name)
 
         time.sleep(0.35)
+
+    # Blend current + previous season club per-90s when 25/26 minutes are sparse.
+    # Always keep 25/26 squad/league (current club). If zero 25/26 data, fall back
+    # entirely to previous season.
+    PER90_KEYS = ("goals90", "xa90", "sot90", "kp90", "tackles90")
+    if club_cur is not None and club_prev is not None:
+        cur_min = club_cur["minutes"]
+        w_cur   = cur_min / (cur_min + BLEND_K)
+        w_prev  = 1.0 - w_cur
+        if w_prev > 0.05:   # only bother blending when previous adds meaningful weight
+            for k in PER90_KEYS:
+                club_cur[k] = round(w_cur * club_cur.get(k, 0.0) + w_prev * club_prev.get(k, 0.0), 3)
+        club_stats = club_cur
+    elif club_cur is not None:
+        club_stats = club_cur
+    else:
+        club_stats = club_prev  # zero 25/26 data — use previous season entirely
 
     nt_stats = None
     if nt_acc["minutes"] >= MIN_MINUTES_NT:
