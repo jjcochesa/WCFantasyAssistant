@@ -763,7 +763,7 @@ def _compute_per90(p: Player) -> None:
 
 # Fraction of team xG/xA credited to each position type (sums to ~1.0)
 _POS_XG_FRAC = {"GK": 0.02, "DEF": 0.12, "MID": 0.28, "FWD": 0.58}
-_POS_XA_FRAC = {"GK": 0.01, "DEF": 0.15, "MID": 0.55, "FWD": 0.29}
+_POS_XA_FRAC = {"GK": 0.01, "DEF": 0.20, "MID": 0.50, "FWD": 0.29}
 # Typical starters per position in a XI
 _N_STARTERS  = {"GK": 1,    "DEF": 4,    "MID": 4,    "FWD": 3}
 
