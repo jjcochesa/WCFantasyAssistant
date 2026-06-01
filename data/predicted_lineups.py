@@ -107,4 +107,28 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Moisés Caicedo", "John Yeboah", "Kendry Páez",
         "Gonzalo Plata", "Nilson Angulo", "Enner Valencia",
     ],
+    "CZE": [
+        "Tomas Kovar",
+        "Vladimir Coufal", "Ladislav Krejci", "Tomas Holes", "Robin Hranac", "Jan Zeleny",
+        "Tomas Soucek", "Lukas Provod",
+        "Tomas Sulc", "Tomas Chory", "Patrik Schick",
+    ],
+    "RSA": [
+        "Ronwen Williams",
+        "Sifiso Modiba", "Granwald Scott", "Nkosinathi Sibisi", "Khuliso Mudau",
+        "Bathusi Sithole", "Teboho Mokoena",
+        "Lyle Foster", "Elias Mokwana", "Iqraam Rayners", "Themba Zwane",
+    ],
+    "KOR": [
+        "Jo Hyeon-woo",
+        "Lee Han-beom", "Kim Min-jae", "Cho Yu-min",
+        "Jens Castrop", "Hwang In-beom", "Lee Jae-sung", "Seol Young-woo",
+        "Son Heung-min", "Oh Hyeon-gyu", "Lee Kang-in",
+    ],
+    "MEX": [
+        "Luis Malagon",
+        "Jesus Gallardo", "Johan Vasquez", "Cesar Montes", "Jorge Sanchez",
+        "Edson Alvarez", "Luis Romo", "Roberto Alvarado",
+        "Uriel Antuna", "Raul Jimenez", "Chucky Lozano",
+    ],
 }
