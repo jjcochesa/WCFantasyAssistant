@@ -776,7 +776,7 @@ with tab5:
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
 with tab6:
     st.subheader("Group Stage Fixtures — CS% & Projected Goals")
-    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (27.05.26). CS% directly drives DEF/GK clean sheet points in model.")
+    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (02.06.26). CS% directly drives DEF/GK clean sheet points in model.")
 
     fdr_rows = []
     for code, name in sorted(TEAM_NAMES.items(), key=lambda x: get_team_fdr_total(x[0])):
