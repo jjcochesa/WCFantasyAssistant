@@ -434,16 +434,13 @@ with tab1:
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    # Threshold-based bonus highlighting — flags players whose underlying stats
-    # are likely to earn bonus scoring points beyond goals/assists/CS.
-    #   MID  KP/90 ≥ 3.0  → amber  (chances created bonus)
-    #   MID  Tkl/90 ≥ 3.0 → blue   (tackles bonus)
-    #   FWD  SOT/90 ≥ 2.0 → orange (shots on target bonus)
-    #   GK   save_rate based: flagged if sot90_nt ≥ 3.0 (proxy for high save volume)
-    BONUS_AMBER  = "background-color: #92400e; color: #fde68a"  # MID KP
-    BONUS_BLUE   = "background-color: #1e3a5f; color: #93c5fd"  # MID Tkl
-    BONUS_ORANGE = "background-color: #7c2d12; color: #fed7aa"  # FWD SOT
-    BONUS_PURPLE = "background-color: #3b0764; color: #e9d5ff"  # GK saves
+    # Threshold-based bonus highlighting — blue palette, three distinct shades.
+    #   MID  KP/90 ≥ 3.0  → blue-700   (chances created bonus)
+    #   MID  Tkl/90 ≥ 3.0 → sky-700    (tackles bonus)
+    #   FWD  SOT/90 ≥ 2.0 → indigo-700 (shots on target bonus)
+    BONUS_KP  = "background-color: #1d4ed8; color: #dbeafe"   # MID KP  (blue)
+    BONUS_TKL = "background-color: #0369a1; color: #bae6fd"   # MID Tkl (sky)
+    BONUS_SOT = "background-color: #4338ca; color: #e0e7ff"   # FWD SOT (indigo)
 
     def _bonus_style(row):
         styles = [""] * len(row)
@@ -457,26 +454,28 @@ with tab1:
         if pos == "MID":
             for c in ["Cl KP/90", "NT KP/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
-                    _hi(c, BONUS_AMBER)
+                    _hi(c, BONUS_KP)
             for c in ["Cl Tkl/90", "NT Tkl/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
-                    _hi(c, BONUS_BLUE)
+                    _hi(c, BONUS_TKL)
         elif pos == "FWD":
             for c in ["Cl SOT/90", "NT SOT/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 2.0:
-                    _hi(c, BONUS_ORANGE)
+                    _hi(c, BONUS_SOT)
         elif pos == "GK":
             pass  # save_rate not exposed as per-90 in rankings table
 
         return styles
 
+    # Name as index → Streamlit pins the index column, making Name sticky.
+    disp_idx = disp.set_index("Name")
     styler = (
-        disp.style
-        .format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
+        disp_idx.style
+        .format({k: v for k, v in fmt_map.items() if k in disp_idx.columns}, na_rep="—")
         .apply(_bonus_style, axis=1)
     )
 
-    st.dataframe(styler, use_container_width=True, height=620, hide_index=True)
+    st.dataframe(styler, use_container_width=True, height=620)
 
     st.divider()
     k1, k2, k3, k4, k5 = st.columns(5)
@@ -499,7 +498,7 @@ with tab2:
                  "club_goals", "club_assists", "club_sot", "club_chances", "club_tackles",
                  "starter_rate"]
     st.dataframe(
-        view2[club_cols].style
+        view2[club_cols].set_index("name").style
             .background_gradient(subset=["xg90_club", "xa90_club"], cmap="Greens")
             .format({
                 "price": "${:.1f}m", "starter_rate": "{:.0%}",
@@ -535,7 +534,7 @@ with tab3:
                "intl_goals", "intl_assists", "intl_sot", "intl_chances", "intl_tackles",
                "nt_weight"]
     st.dataframe(
-        view3[nt_cols].style
+        view3[nt_cols].set_index("name").style
             .background_gradient(subset=["xg90_nt", "xa90_nt"], cmap="Blues")
             .format({
                 "price": "${:.1f}m",
@@ -570,11 +569,12 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
         if cp.empty:
             st.info("No players loaded for this country.")
         else:
+            _cp_cols = ["name", "pos", "club", "price", "own_%",
+                        "GD1 xG", "GD2 xG", "xPts_GS",
+                        "xg90_nt", "xa90_nt", "xg90_club", "xa90_club",
+                        "intl_games", "club_games", "nt_weight", "value"]
             st.dataframe(
-                fmt(cp[["name", "pos", "club", "price", "own_%",
-                         "GD1 xG", "GD2 xG", "xPts_GS",
-                         "xg90_nt", "xa90_nt", "xg90_club", "xa90_club",
-                         "intl_games", "club_games", "nt_weight", "value"]]),
+                fmt(cp[_cp_cols].set_index("name")),
                 use_container_width=True,
             )
 
@@ -624,7 +624,7 @@ with tab4:
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "md1_pts": "MD1 Pts",
                         "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }).style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                    }).set_index("Name").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
                                      "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
                     use_container_width=True,
                 )
@@ -635,7 +635,7 @@ with tab4:
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "md1_pts": "MD1 Pts",
                         "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }).style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                    }).set_index("Name").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
                                      "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
                     use_container_width=True,
                 )
@@ -666,7 +666,7 @@ with tab4:
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "own_%": "Own%",
                         "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts",
-                    }).style.format({
+                    }).set_index("Name").style.format({
                         "Price": "${:.1f}m", "Own%": "{:.1f}%",
                         "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}",
                     }, na_rep="—"),
@@ -718,10 +718,11 @@ with tab5:
                  "Total Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
                  "Value": "{:.3f}"}
         s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
-        s_styler = s_disp.style.format({k: v for k, v in s_fmt.items() if k in s_disp.columns}, na_rep="—")
+        s_disp_idx = s_disp.set_index("Name")
+        s_styler = s_disp_idx.style.format({k: v for k, v in s_fmt.items() if k in s_disp_idx.columns}, na_rep="—")
         if s_grad:
             s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
-        st.dataframe(s_styler, use_container_width=True, height=480, hide_index=True)
+        st.dataframe(s_styler, use_container_width=True, height=480)
 
     with c2:
         st.subheader("💰 Best Value (Adj Pts / $m)")
@@ -747,10 +748,11 @@ with tab5:
         v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
                  "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
         v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
-        v_styler = v_disp.style.format({k: v for k, v in v_fmt.items() if k in v_disp.columns}, na_rep="—")
+        v_disp_idx = v_disp.set_index("Name")
+        v_styler = v_disp_idx.style.format({k: v for k, v in v_fmt.items() if k in v_disp_idx.columns}, na_rep="—")
         if v_grad:
             v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
-        st.dataframe(v_styler, use_container_width=True, height=480, hide_index=True)
+        st.dataframe(v_styler, use_container_width=True, height=480)
 
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
@@ -782,7 +784,7 @@ with tab6:
             "Avg CS%": f"{int(sum(cs_vals)/3*100)}%",
         })
 
-    fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR")
+    fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR").set_index("Country")
 
     def color_fdr(val):
         return {
