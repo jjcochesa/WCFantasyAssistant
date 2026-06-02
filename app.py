@@ -434,16 +434,47 @@ with tab1:
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
 
-    def _gradable(col):
-        return col in disp.columns and disp[col].dropna().nunique() >= 2
+    # Threshold-based bonus highlighting — flags players whose underlying stats
+    # are likely to earn bonus scoring points beyond goals/assists/CS.
+    #   MID  KP/90 ≥ 3.0  → amber  (chances created bonus)
+    #   MID  Tkl/90 ≥ 3.0 → blue   (tackles bonus)
+    #   FWD  SOT/90 ≥ 2.0 → orange (shots on target bonus)
+    #   GK   save_rate based: flagged if sot90_nt ≥ 3.0 (proxy for high save volume)
+    BONUS_AMBER  = "background-color: #92400e; color: #fde68a"  # MID KP
+    BONUS_BLUE   = "background-color: #1e3a5f; color: #93c5fd"  # MID Tkl
+    BONUS_ORANGE = "background-color: #7c2d12; color: #fed7aa"  # FWD SOT
+    BONUS_PURPLE = "background-color: #3b0764; color: #e9d5ff"  # GK saves
 
-    # Gradient only on the 4 pts columns — styling 10+ columns on 800+ rows
-    # makes the HTML table huge and causes scroll lag in the browser.
-    grad_pts = [c for c in ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"] if _gradable(c)]
+    def _bonus_style(row):
+        styles = [""] * len(row)
+        idx = list(row.index)
+        pos = row.get("Pos", "")
 
-    styler = disp.style.format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
-    if grad_pts:
-        styler = styler.background_gradient(subset=grad_pts, cmap="Greens")
+        def _hi(col, style):
+            if col in idx:
+                styles[idx.index(col)] = style
+
+        if pos == "MID":
+            for c in ["Cl KP/90", "NT KP/90"]:
+                if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
+                    _hi(c, BONUS_AMBER)
+            for c in ["Cl Tkl/90", "NT Tkl/90"]:
+                if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
+                    _hi(c, BONUS_BLUE)
+        elif pos == "FWD":
+            for c in ["Cl SOT/90", "NT SOT/90"]:
+                if c in idx and isinstance(row[c], (int, float)) and row[c] >= 2.0:
+                    _hi(c, BONUS_ORANGE)
+        elif pos == "GK":
+            pass  # save_rate not exposed as per-90 in rankings table
+
+        return styles
+
+    styler = (
+        disp.style
+        .format({k: v for k, v in fmt_map.items() if k in disp.columns}, na_rep="—")
+        .apply(_bonus_style, axis=1)
+    )
 
     st.dataframe(styler, use_container_width=True, height=620, hide_index=True)
 
