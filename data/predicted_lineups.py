@@ -131,4 +131,44 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Edson Alvarez", "Luis Romo", "Roberto Alvarado",
         "Uriel Antuna", "Raul Jimenez", "Chucky Lozano",
     ],
+    "EGY": [
+        "Shobeir",
+        "Karim Hafez", "Rami Abdelmonem", "Omar Ibrahim", "Ahmed Hany",
+        "Fathy", "Amr Attia",
+        "Trezeguet", "Zizo",
+        "Mohamed Salah", "Omar Marmoush",
+    ],
+    "SWE": [
+        "Nordfeldt",
+        "Gudmundsson", "Victor Lindelöf", "Isak Hien", "Lagerbielke",
+        "Bernhardsson", "Jesper Karlström", "Williot Ayari",
+        "Nygren",
+        "Alexander Isak", "Viktor Gyökeres",
+    ],
+    "USA": [
+        "Freese",
+        "Antonee Robinson", "Tim Ream", "Chris Richards", "Freeman", "Sergiño Dest",
+        "Weston McKennie", "Tyler Adams",
+        "Christian Pulisic",
+        "Folarin Balogun", "Timothy Weah",
+    ],
+    "SEN": [
+        "Édouard Mendy",
+        "Diouf", "Kalidou Koulibaly", "Niakhité", "Krepin Diatta",
+        "Lamine Diarra", "Pape Gueye", "Idrissa Gueye",
+        "Sadio Mané", "Nicolas Jackson", "Iliman Ndiaye",
+    ],
+    "CAN": [
+        "Maxime Crépeau",
+        "Lareya", "De Fougerolles", "Derek Cornelius", "Alistair Johnston",
+        "Liam Millar", "Manu Estaquio", "Koné", "Tajon Buchanan",
+        "Jonathan David", "Cyle Larin",
+    ],
+    "CRO": [
+        # 12-man: Musa and Budimir compete for the striker slot
+        "Dominik Livaković",
+        "Stanicic", "Josip Šutalo", "Joško Gvardiol", "Mario Vušković",
+        "Luka Modrić", "Mateo Kovačić", "Petar Sučić", "Martin Baturina", "Luka Sučić",
+        "Petar Musa", "Ante Budimir",
+    ],
 }
