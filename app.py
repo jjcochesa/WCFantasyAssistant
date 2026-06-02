@@ -331,6 +331,23 @@ def _dual_squad(df, budget, country_cap):
     return md1, md2
 
 
+def _pin_name(df: pd.DataFrame, name_col: str, team_col: str = None) -> pd.DataFrame:
+    """Set name_col as the index (pinned in Streamlit), deduplicating with (TEAM) suffix."""
+    out = df.copy()
+    if out[name_col].duplicated().any():
+        seen: set = set()
+        names = []
+        for _, r in out.iterrows():
+            n = r[name_col]
+            if n in seen and team_col and team_col in out.columns:
+                names.append(f"{n} ({r[team_col]})")
+            else:
+                names.append(n)
+                seen.add(n)
+        out[name_col] = names
+    return out.set_index(name_col)
+
+
 # ── Tabs ──────────────────────────────────────────────────────────────────────
 tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🏅 Rankings",
@@ -468,7 +485,8 @@ with tab1:
         return styles
 
     # Name as index → Streamlit pins the index column, making Name sticky.
-    disp_idx = disp.set_index("Name")
+    # _pin_name deduplicates (required: pandas Styler.apply needs unique index).
+    disp_idx = _pin_name(disp, "Name", "Nation")
     styler = (
         disp_idx.style
         .format({k: v for k, v in fmt_map.items() if k in disp_idx.columns}, na_rep="—")
@@ -498,7 +516,7 @@ with tab2:
                  "club_goals", "club_assists", "club_sot", "club_chances", "club_tackles",
                  "starter_rate"]
     st.dataframe(
-        view2[club_cols].set_index("name").style
+        _pin_name(view2[club_cols], "name", "country").style
             .background_gradient(subset=["xg90_club", "xa90_club"], cmap="Greens")
             .format({
                 "price": "${:.1f}m", "starter_rate": "{:.0%}",
@@ -534,7 +552,7 @@ with tab3:
                "intl_goals", "intl_assists", "intl_sot", "intl_chances", "intl_tackles",
                "nt_weight"]
     st.dataframe(
-        view3[nt_cols].set_index("name").style
+        _pin_name(view3[nt_cols], "name", "country").style
             .background_gradient(subset=["xg90_nt", "xa90_nt"], cmap="Blues")
             .format({
                 "price": "${:.1f}m",
@@ -574,7 +592,7 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
                         "xg90_nt", "xa90_nt", "xg90_club", "xa90_club",
                         "intl_games", "club_games", "nt_weight", "value"]
             st.dataframe(
-                fmt(cp[_cp_cols].set_index("name")),
+                fmt(_pin_name(cp[_cp_cols], "name")),
                 use_container_width=True,
             )
 
@@ -620,22 +638,22 @@ with tab4:
 
                 st.markdown("**MD1 Squad (15 players)**")
                 st.dataframe(
-                    md1_squad[sq_cols].rename(columns={
+                    _pin_name(md1_squad[sq_cols].rename(columns={
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "md1_pts": "MD1 Pts",
                         "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }).set_index("Name").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                    }), "Name", "Nation").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
                                      "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
                     use_container_width=True,
                 )
                 st.markdown("**MD2 Squad (after 2 transfers)**")
                 sq2_cols = [c for c in sq_cols if c in md2_squad.columns]
                 st.dataframe(
-                    md2_squad[sq2_cols].rename(columns={
+                    _pin_name(md2_squad[sq2_cols].rename(columns={
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "md1_pts": "MD1 Pts",
                         "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }).set_index("Name").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
+                    }), "Name", "Nation").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
                                      "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
                     use_container_width=True,
                 )
@@ -662,11 +680,11 @@ with tab4:
                 sq_cols = ["name", "team_code", "pos", "price", "own_%", "md1_pts", "md2_pts", "xPts_GS"]
                 sq_cols = [c for c in sq_cols if c in squad.columns]
                 st.dataframe(
-                    squad[sq_cols].rename(columns={
+                    _pin_name(squad[sq_cols].rename(columns={
                         "name": "Name", "team_code": "Nation", "pos": "Pos",
                         "price": "Price", "own_%": "Own%",
                         "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts",
-                    }).set_index("Name").style.format({
+                    }), "Name", "Nation").style.format({
                         "Price": "${:.1f}m", "Own%": "{:.1f}%",
                         "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}",
                     }, na_rep="—"),
@@ -718,7 +736,7 @@ with tab5:
                  "Total Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
                  "Value": "{:.3f}"}
         s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
-        s_disp_idx = s_disp.set_index("Name")
+        s_disp_idx = _pin_name(s_disp, "Name", "Nation")
         s_styler = s_disp_idx.style.format({k: v for k, v in s_fmt.items() if k in s_disp_idx.columns}, na_rep="—")
         if s_grad:
             s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
@@ -748,7 +766,7 @@ with tab5:
         v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
                  "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
         v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
-        v_disp_idx = v_disp.set_index("Name")
+        v_disp_idx = _pin_name(v_disp, "Name", "Nation")
         v_styler = v_disp_idx.style.format({k: v for k, v in v_fmt.items() if k in v_disp_idx.columns}, na_rep="—")
         if v_grad:
             v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
