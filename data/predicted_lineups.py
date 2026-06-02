@@ -171,4 +171,30 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Luka Modrić", "Mateo Kovačić", "Petar Sučić", "Martin Baturina", "Luka Sučić",
         "Petar Musa", "Ante Budimir",
     ],
+    "CIV": [
+        "Yahia Fofana",
+        "Ghislain Konan", "Evan Ndicka", "Ousmane Diomandé", "Wilfried Singo",
+        "Franck Kessié", "Ibrahim Sangaré", "Seko Fofana",
+        "Simon Adingra", "Yan Bonny", "Amad Diallo",
+    ],
+    "JPN": [
+        "Zion Suzuki",
+        "Takehiro Tomiyasu", "Ko Itakura", "Hiroki Ito", "Ritsu Doan",
+        "Daizen Maeda", "Daichi Kamada", "Kaishu Sano",
+        "Junya Ito", "Ayase Ueda", "Takefusa Kubo",
+    ],
+    "ALG": [
+        "Zidane",
+        "Rayan Aït-Nouri", "Ramy Bensebaini", "Aïssa Mandi", "Belghali",
+        "Ramiz Zerrouki", "Adam Boudaoui",
+        "Farès Chaïbi", "Maza", "Riyad Mahrez",
+        "Amine Gouiri",
+    ],
+    "GHA": [
+        "Lawrence Ati-Zigi",
+        "Gideon Mensah", "Alexander Djiku", "Peprah Oppong", "Alidu Seidu",
+        "Thomas Partey", "Sibo",
+        "Antoine Semenyo", "Abdul Fatawu",
+        "Jordan Ayew", "Iñaki Williams",
+    ],
 }
