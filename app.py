@@ -819,35 +819,30 @@ with tab6:
     st.subheader("Group Stage Fixtures — CS% & Projected Goals")
     st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (02.06.26). CS% directly drives DEF/GK clean sheet points in model.")
 
+    md_show = st.radio("Show matchdays", [1, 2, 3], index=2, horizontal=True, key="t6_mds",
+                       format_func=lambda x: f"MD1 only" if x == 1 else f"MD1–MD{x}")
+
     fdr_rows = []
     for code, name in sorted(TEAM_NAMES.items(), key=lambda x: get_team_fdr_total(x[0])):
         fdr_vals  = FDR.get(code, [3, 3, 3])
         cs_vals   = CS_PCT.get(code, [0.3, 0.3, 0.3])
         g_vals    = PROJ_GOALS.get(code, [1.0, 1.0, 1.0])
         fixtures  = FIXTURES.get(code, ["?", "?", "?"])
-        fdr_rows.append({
-            "Country": name,
-            "MD1 vs":  fixtures[0] if fixtures else "?",
-            "FDR1": fdr_vals[0],
-            "CS%1": cs_vals[0],
-            "xG1":  g_vals[0],
-            "MD2 vs":  fixtures[1] if len(fixtures) > 1 else "?",
-            "FDR2": fdr_vals[1],
-            "CS%2": cs_vals[1],
-            "xG2":  g_vals[1],
-            "MD3 vs":  fixtures[2] if len(fixtures) > 2 else "?",
-            "FDR3": fdr_vals[2],
-            "CS%3": cs_vals[2],
-            "xG3":  g_vals[2],
-            "Total FDR": sum(fdr_vals),
-            "Avg CS%": sum(cs_vals) / 3,
-        })
+        row = {"Country": name}
+        for i in range(md_show):
+            row[f"MD{i+1} vs"] = fixtures[i] if len(fixtures) > i else "?"
+            row[f"FDR{i+1}"]   = fdr_vals[i]
+            row[f"CS%{i+1}"]   = cs_vals[i]
+            row[f"xG{i+1}"]    = g_vals[i]
+        row["Total FDR"] = sum(fdr_vals[:md_show])
+        row["Avg CS%"]   = sum(cs_vals[:md_show]) / md_show
+        fdr_rows.append(row)
 
     fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR").set_index("Country")
 
-    cs_cols6  = [c for c in ["CS%1", "CS%2", "CS%3"] if c in fdr_df.columns]
-    xg_cols6  = [c for c in ["xG1", "xG2", "xG3"]   if c in fdr_df.columns]
-    fdr_cols6 = [c for c in ["FDR1", "FDR2", "FDR3"] if c in fdr_df.columns]
+    cs_cols6  = [c for c in [f"CS%{i}" for i in range(1, md_show+1)]  if c in fdr_df.columns]
+    xg_cols6  = [c for c in [f"xG{i}"  for i in range(1, md_show+1)]  if c in fdr_df.columns]
+    fdr_cols6 = [c for c in [f"FDR{i}" for i in range(1, md_show+1)]  if c in fdr_df.columns]
 
     styler = fdr_df.style
     try:
