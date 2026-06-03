@@ -527,6 +527,12 @@ with tab1:
         .apply(_bonus_style, axis=1)
         .apply(_opp_fdr_style, axis=1)
     )
+    if pct_cols:
+        for c in pct_cols:
+            styler = styler.background_gradient(subset=[c], cmap="Greens")
+    if xg_cols:
+        for c in xg_cols:
+            styler = styler.background_gradient(subset=[c], cmap="Oranges")
 
     st.dataframe(styler, use_container_width=True, height=620)
 
