@@ -177,6 +177,30 @@ SORT_LABELS = {
     "Price": "price",
 }
 
+def _fdr_color(val) -> str:
+    """Continuous FDR coloring: 1.0 (easiest, dark green) → 5.0 (hardest, dark red)."""
+    try:
+        v = float(val)
+    except (TypeError, ValueError):
+        return ""
+    v = max(1.0, min(5.0, v))
+    stops = [
+        (0x1a, 0x7a, 0x1a),  # 1: dark green
+        (0x5c, 0xb8, 0x5c),  # 2: lime green
+        (0xf0, 0xad, 0x4e),  # 3: orange
+        (0xd9, 0x53, 0x4f),  # 4: red
+        (0x8b, 0x00, 0x00),  # 5: dark red
+    ]
+    lo = min(int(v - 1), 3)
+    hi = lo + 1
+    t = v - 1.0 - lo
+    r = int(stops[lo][0] + t * (stops[hi][0] - stops[lo][0]))
+    g = int(stops[lo][1] + t * (stops[hi][1] - stops[lo][1]))
+    b = int(stops[lo][2] + t * (stops[hi][2] - stops[lo][2]))
+    fg = "white" if (0.299 * r + 0.587 * g + 0.114 * b) < 160 else "black"
+    return f"background-color: rgb({r},{g},{b}); color: {fg}"
+
+
 def fmt(sub: pd.DataFrame):
     grad_cols = [c for c in ["xPts_GS", "xPts/game"] if c in sub.columns]
     blue_cols = [c for c in ["value"] if c in sub.columns]
@@ -484,6 +508,16 @@ with tab1:
 
         return styles
 
+    def _opp_fdr_style(row):
+        styles = [""] * len(row)
+        idx = list(row.index)
+        nation = row.get("Nation", "")
+        fdr_vals = FDR.get(nation, [3, 3, 3])
+        for col, fdr_val in [("MD1 Opp", fdr_vals[0]), ("MD2 Opp", fdr_vals[1])]:
+            if col in idx:
+                styles[idx.index(col)] = _fdr_color(fdr_val)
+        return styles
+
     # Name as index → Streamlit pins the index column, making Name sticky.
     # _pin_name deduplicates (required: pandas Styler.apply needs unique index).
     disp_idx = _pin_name(disp, "Name", "Nation")
@@ -491,6 +525,7 @@ with tab1:
         disp_idx.style
         .format({k: v for k, v in fmt_map.items() if k in disp_idx.columns}, na_rep="—")
         .apply(_bonus_style, axis=1)
+        .apply(_opp_fdr_style, axis=1)
     )
 
     st.dataframe(styler, use_container_width=True, height=620)
@@ -788,36 +823,43 @@ with tab6:
             "Country": name,
             "MD1 vs":  fixtures[0] if fixtures else "?",
             "FDR1": fdr_vals[0],
-            "CS%1": f"{int(cs_vals[0]*100)}%",
+            "CS%1": cs_vals[0],
             "xG1":  g_vals[0],
             "MD2 vs":  fixtures[1] if len(fixtures) > 1 else "?",
             "FDR2": fdr_vals[1],
-            "CS%2": f"{int(cs_vals[1]*100)}%",
+            "CS%2": cs_vals[1],
             "xG2":  g_vals[1],
             "MD3 vs":  fixtures[2] if len(fixtures) > 2 else "?",
             "FDR3": fdr_vals[2],
-            "CS%3": f"{int(cs_vals[2]*100)}%",
+            "CS%3": cs_vals[2],
             "xG3":  g_vals[2],
             "Total FDR": sum(fdr_vals),
-            "Avg CS%": f"{int(sum(cs_vals)/3*100)}%",
+            "Avg CS%": sum(cs_vals) / 3,
         })
 
     fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR").set_index("Country")
 
-    def color_fdr(val):
-        return {
-            1: "background-color:#1a7a1a;color:white",
-            2: "background-color:#5cb85c;color:white",
-            3: "background-color:#f0ad4e;color:black",
-            4: "background-color:#d9534f;color:white",
-            5: "background-color:#8b0000;color:white",
-        }.get(val, "")
+    cs_cols6  = [c for c in ["CS%1", "CS%2", "CS%3"] if c in fdr_df.columns]
+    xg_cols6  = [c for c in ["xG1", "xG2", "xG3"]   if c in fdr_df.columns]
+    fdr_cols6 = [c for c in ["FDR1", "FDR2", "FDR3"] if c in fdr_df.columns]
 
     styler = fdr_df.style
     try:
-        styler = styler.map(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
+        styler = styler.map(_fdr_color, subset=fdr_cols6)
     except AttributeError:
-        styler = styler.applymap(color_fdr, subset=["FDR1", "FDR2", "FDR3"])
+        styler = styler.applymap(_fdr_color, subset=fdr_cols6)
+    for c in cs_cols6:
+        styler = styler.background_gradient(subset=[c], cmap="Greens")
+    for c in xg_cols6:
+        styler = styler.background_gradient(subset=[c], cmap="Oranges")
+
+    fmt6 = {}
+    fmt6.update({c: "{:.0%}" for c in cs_cols6})
+    fmt6.update({c: "{:.2f}" for c in xg_cols6})
+    if "Avg CS%" in fdr_df.columns:
+        fmt6["Avg CS%"] = "{:.0%}"
+    styler = styler.format(fmt6, na_rep="—")
+
     st.dataframe(styler, use_container_width=True, height=640)
 
 st.divider()
