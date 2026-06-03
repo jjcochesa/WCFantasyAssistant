@@ -836,6 +836,7 @@ with tab6:
             row[f"xG{i+1}"]    = g_vals[i]
         row["Total FDR"] = sum(fdr_vals[:md_show])
         row["Avg CS%"]   = sum(cs_vals[:md_show]) / md_show
+        row["Avg xG"]    = sum(g_vals[:md_show])  / md_show
         fdr_rows.append(row)
 
     fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR").set_index("Country")
@@ -859,6 +860,11 @@ with tab6:
     fmt6.update({c: "{:.2f}" for c in xg_cols6})
     if "Avg CS%" in fdr_df.columns:
         fmt6["Avg CS%"] = "{:.0%}"
+    if "Avg xG" in fdr_df.columns:
+        fmt6["Avg xG"] = "{:.2f}"
+        styler = styler.background_gradient(subset=["Avg xG"], cmap="Oranges")
+    if "Avg CS%" in fdr_df.columns:
+        styler = styler.background_gradient(subset=["Avg CS%"], cmap="Greens")
     styler = styler.format(fmt6, na_rep="—")
 
     st.dataframe(styler, use_container_width=True, height=640)
