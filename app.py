@@ -373,13 +373,14 @@ def _pin_name(df: pd.DataFrame, name_col: str, team_col: str = None) -> pd.DataF
 
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🏅 Rankings",
     "⚽ Club Form",
     "🌍 International Form",
     "🏗️ Squad Builder",
     "🔍 Scouts & Value",
     "📊 Fixtures & FDR",
+    "🎯 Draft",
 ])
 
 # ── Shared filter helper ──────────────────────────────────────────────────────
@@ -868,6 +869,78 @@ with tab6:
     styler = styler.format(fmt6, na_rep="—")
 
     st.dataframe(styler, use_container_width=True, height=640)
+
+
+# ── TAB 7: Draft ──────────────────────────────────────────────────────────────
+with tab7:
+    from data.predicted_lineups import PREDICTED_XI
+    st.subheader("Draft Mode — Top 200 Players")
+    st.caption("Only nations with a predicted XI are included — teams without one are unlikely to advance past the group stage.")
+
+    draft_nations = set(PREDICTED_XI.keys())
+
+    d_pos = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t7_pos")
+
+    draft_all = df[df["country"].isin(draft_nations)].copy()
+
+    # Derive MD3 pts and opponent from the total
+    draft_all["md3_pts"] = draft_all["xPts_GS"] - draft_all["md1_pts"] - draft_all["md2_pts"]
+    draft_all["md3_opp"] = draft_all["team_code"].map(
+        lambda c: FIXTURES.get(c, ["?", "?", "?"])[2] if len(FIXTURES.get(c, [])) > 2 else "?"
+    )
+
+    if d_pos != "All":
+        draft_view = draft_all[draft_all["pos"] == d_pos]
+    else:
+        draft_view = draft_all
+
+    draft_top = (
+        draft_view
+        .sort_values("xPts_GS", ascending=False)
+        .head(200)
+        .reset_index(drop=True)
+    )
+    draft_top.index += 1
+
+    DRAFT_COLS = {
+        "name":     "Name",
+        "team_code": "Nation",
+        "pos":      "Pos",
+        "md1_opp":  "MD1 vs",
+        "md2_opp":  "MD2 vs",
+        "md3_opp":  "MD3 vs",
+        "md1_pts":  "MD1 Pts",
+        "md2_pts":  "MD2 Pts",
+        "md3_pts":  "MD3 Pts",
+        "xPts_GS":  "Total Pts",
+    }
+    disp_cols = [c for c in DRAFT_COLS if c in draft_top.columns]
+    draft_disp = draft_top[disp_cols].rename(columns=DRAFT_COLS)
+
+    st.dataframe(
+        draft_disp.style.format(
+            {"MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "MD3 Pts": "{:.1f}", "Total Pts": "{:.1f}"},
+            na_rep="—"
+        ),
+        use_container_width=True,
+        height=680,
+    )
+
+    # Download: full list (all nations with XI, position-filtered, no 200 cap)
+    download_all = (
+        draft_view
+        .sort_values("xPts_GS", ascending=False)
+        .reset_index(drop=True)
+    )
+    download_all.index += 1
+    download_disp = download_all[[c for c in DRAFT_COLS if c in download_all.columns]].rename(columns=DRAFT_COLS)
+    st.download_button(
+        "⬇️ Download full list (CSV)",
+        download_disp.to_csv(index_label="Rank"),
+        file_name="wc2026_draft.csv",
+        mime="text/csv",
+    )
+
 
 st.divider()
 st.caption("Scoring: Official FIFA WC Fantasy 2026 | Model: xG ratio share (sample-size regressed) × team projection + set-piece duty bonuses (PK/FK/CK) | Weights: 65% NT / 35% club | CS% & xG: FPLJoe.com bookie markets (SBOBET/Betfair)")
