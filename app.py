@@ -91,6 +91,21 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     )
 
 
+@st.cache_data(ttl=21600, show_spinner=False)
+def _load_draft(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
+    """Same pipeline as _load but projects all 3 matchdays — Draft tab only."""
+    import config as cfg_mod
+    cfg_mod.NATIONAL_TEAM_WEIGHT = iw
+    cfg_mod.CLUB_FORM_WEIGHT = round(1.0 - iw, 2)
+    return load_data(
+        session_token=token or None,
+        players_file=pfile or None,
+        use_demo=(mode == "Demo data (40 players)"),
+        use_squads=(mode != "Demo data (40 players)" and mode != "Local JSON export"),
+        matchdays=[1, 2, 3],
+    )
+
+
 # Live prices + ownership: short TTL, runs on every page render.
 # Keyed on token hash so rotating the token immediately gets fresh data.
 @st.cache_data(ttl=600, show_spinner=False)
@@ -881,7 +896,8 @@ with tab7:
 
     d_pos = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t7_pos")
 
-    draft_all = df[df["team_code"].isin(draft_nations)].copy()
+    draft_df = _load_draft(data_mode, session_token or "", players_file or "", 0.65)
+    draft_all = draft_df[draft_df["team_code"].isin(draft_nations)].copy()
 
     if d_pos != "All":
         draft_view = draft_all[draft_all["pos"] == d_pos]

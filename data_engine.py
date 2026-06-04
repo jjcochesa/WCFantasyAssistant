@@ -1359,6 +1359,7 @@ def load_data(
     use_demo: bool = False,
     use_squads: bool = False,
     enrich_with_api: bool = True,
+    matchdays: list = None,
 ) -> pd.DataFrame:
     """Main entry point. Fetches players + stats, returns ranked DataFrame."""
     global PLAYER_SOURCE
@@ -1391,4 +1392,4 @@ def load_data(
             PLAYER_SOURCE = "demo"
             players = get_demo_players()
 
-    return build_projections(players, matchdays=[1, 2, 3])
+    return build_projections(players, matchdays=matchdays or [1, 2])
