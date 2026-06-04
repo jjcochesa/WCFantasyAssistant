@@ -881,13 +881,7 @@ with tab7:
 
     d_pos = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t7_pos")
 
-    draft_all = df[df["country"].isin(draft_nations)].copy()
-
-    # Derive MD3 pts and opponent from the total
-    draft_all["md3_pts"] = draft_all["xPts_GS"] - draft_all["md1_pts"] - draft_all["md2_pts"]
-    draft_all["md3_opp"] = draft_all["team_code"].map(
-        lambda c: FIXTURES.get(c, ["?", "?", "?"])[2] if len(FIXTURES.get(c, [])) > 2 else "?"
-    )
+    draft_all = df[df["team_code"].isin(draft_nations)].copy()
 
     if d_pos != "All":
         draft_view = draft_all[draft_all["pos"] == d_pos]

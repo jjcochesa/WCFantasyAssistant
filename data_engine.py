@@ -1000,13 +1000,16 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
         xg_gd2  = round(xg_by_md[1],  3) if len(xg_by_md)  > 1 else 0.0
         md1_pts = round(pts_by_md[0],  1) if len(pts_by_md) > 0 else 0.0
         md2_pts = round(pts_by_md[1],  1) if len(pts_by_md) > 1 else 0.0
+        md3_pts = round(pts_by_md[2],  1) if len(pts_by_md) > 2 else 0.0
 
         # Fixture opponents (for display)
         team_fix    = FIXTURES.get(p.team_code, [])
         md1_opp_raw = team_fix[0] if len(team_fix) > 0 else ""
         md2_opp_raw = team_fix[1] if len(team_fix) > 1 else ""
+        md3_opp_raw = team_fix[2] if len(team_fix) > 2 else ""
         md1_opp = md1_opp_raw or "?"
         md2_opp = md2_opp_raw or "?"
+        md3_opp = md3_opp_raw or "?"
 
         # Raw CS% floats (separate from the formatted cs_md1/cs_md2 strings)
         raw_cs = CS_PCT.get(p.team_code, [0.3, 0.3, 0.3])
@@ -1032,10 +1035,12 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "GD2 xG": xg_gd2,
             "md1_opp":    md1_opp,
             "md2_opp":    md2_opp,
+            "md3_opp":    md3_opp,
             "cs_md1_pct": cs_md1_pct,
             "cs_md2_pct": cs_md2_pct,
             "md1_pts":    md1_pts,
             "md2_pts":    md2_pts,
+            "md3_pts":    md3_pts,
             "goals/90": round(p.xg90, 3),
             "assists/90": round(p.xa90, 3),
             "xg90_club": round(p.xg90_club, 3),
