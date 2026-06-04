@@ -1391,4 +1391,4 @@ def load_data(
             PLAYER_SOURCE = "demo"
             players = get_demo_players()
 
-    return build_projections(players)
+    return build_projections(players, matchdays=[1, 2, 3])
