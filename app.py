@@ -833,7 +833,7 @@ with tab5:
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
 with tab6:
     st.subheader("Group Stage Fixtures — CS% & Projected Goals")
-    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (02.06.26). CS% directly drives DEF/GK clean sheet points in model.")
+    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (08.06.26). CS% directly drives DEF/GK clean sheet points in model.")
 
     md_show = st.radio("Show matchdays", [1, 2, 3], index=2, horizontal=True, key="t6_mds",
                        format_func=lambda x: f"MD1 only" if x == 1 else f"MD1–MD{x}")
