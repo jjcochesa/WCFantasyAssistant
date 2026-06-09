@@ -25,7 +25,7 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Lamine Yamal", "Nico Williams", "Mikel Oyarzabal",
     ],
     "BRA": [
-        "Alisson Becker", "Wesley", "Marquinhos", "Gabriel Magalhães",
+        "Alisson Becker", "Danilo", "Marquinhos", "Gabriel Magalhães",
         "Douglas Santos", "Casemiro", "Bruno Guimarães", "Matheus Cunha",
         "Raphinha", "Vinícius Júnior", "Endrick",
     ],
@@ -45,7 +45,7 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Michael Olise", "Ousmane Dembélé", "Kylian Mbappé",
     ],
     "NED": [
-        "Bart Verbruggen", "Denzel Dumfries", "Jurriën Timber", "Virgil van Dijk",
+        "Bart Verbruggen", "Denzel Dumfries", "Virgil van Dijk",
         "Micky van de Ven", "Frenkie de Jong", "Ryan Gravenberch",
         "Tijjani Reijnders", "Donyell Malen", "Cody Gakpo", "Memphis Depay",
     ],
@@ -83,7 +83,7 @@ PREDICTED_XI: dict[str, list[str]] = {
     "AUT": [
         "Alexander Schlager", "Konrad Laimer", "Kevin Danso", "David Alaba",
         "Phillipp Mwene", "Xaver Schlager", "Nicolas Seiwald", "Marcel Sabitzer",
-        "Marko Arnautovic", "Christoph Baumgartner", "Patrick Wimmer",
+        "Marko Arnautovic", "Patrick Wimmer",
     ],
     "SUI": [
         "Gregor Kobel", "Silvan Widmer", "Nico Elvedi", "Manuel Akanji",
@@ -93,7 +93,7 @@ PREDICTED_XI: dict[str, list[str]] = {
     "SCO": [
         # 14-man: high uncertainty in attack/midfield selection
         "Angus Gunn", "Nathan Patterson", "Grant Hanley", "Scott McKenna",
-        "Andy Robertson", "Lewis Ferguson", "Billy Gilmour", "Scott McTominay",
+        "Andy Robertson", "Lewis Ferguson", "Scott McTominay",
         "John McGinn", "Ben Gannon-Doak", "Ryan Christie",
         "Lyndon Dykes", "Ché Adams", "Lawrence Shankland",
     ],
@@ -121,7 +121,7 @@ PREDICTED_XI: dict[str, list[str]] = {
     ],
     "KOR": [
         "Jo Hyeon-woo",
-        "Lee Han-beom", "Kim Min-jae", "Cho Yu-min",
+        "Lee Han-beom", "Kim Min-jae",
         "Jens Castrop", "Hwang In-beom", "Lee Jae-sung", "Seol Young-woo",
         "Son Heung-min", "Oh Hyeon-gyu", "Lee Kang-in",
     ],
@@ -192,7 +192,7 @@ PREDICTED_XI: dict[str, list[str]] = {
     ],
     "GHA": [
         "Lawrence Ati-Zigi",
-        "Gideon Mensah", "Alexander Djiku", "Peprah Oppong", "Alidu Seidu",
+        "Gideon Mensah", "Peprah Oppong", "Alidu Seidu",
         "Thomas Partey", "Sibo",
         "Antoine Semenyo", "Abdul Fatawu",
         "Jordan Ayew", "Iñaki Williams",
