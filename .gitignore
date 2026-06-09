@@ -3,6 +3,8 @@ __pycache__/
 *.pyo
 .env
 data/cache/
+data/friendlies_cache.json
+data/wc_fetch_cache.json
 *.egg-info/
 .venv/
 venv/

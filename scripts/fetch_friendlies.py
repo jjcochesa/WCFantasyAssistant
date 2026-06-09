@@ -238,7 +238,7 @@ def main():
             continue
 
         print(f"  {code}: {len(fixtures)} fixture(s) — ", end="", flush=True)
-        team_players = 0
+        players_before = sum(1 for v in accumulated.values() if v["team_code"] == code)
         for fix in fixtures[:3]:  # cap at 3 to limit API usage
             stats_list = get_player_stats(fix["fixture_id"], tid, cache, headers)
             for s in stats_list:
@@ -263,8 +263,8 @@ def main():
                 acc["tackles"]    += s["tackles"]
                 acc["minutes"]    += s["minutes"]
                 acc["matches"]    += 1
-                team_players = len([k for k, v in accumulated.items() if v["team_code"] == code])
 
+        team_players = sum(1 for v in accumulated.values() if v["team_code"] == code)
         print(f"{team_players} players")
         teams_with_data += 1
 
