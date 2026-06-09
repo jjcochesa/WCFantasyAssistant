@@ -46,11 +46,13 @@ STATS_PATH        = "data/stats.json"           # primary — output of fetch_pl
 FBREF_MAP_PATH    = "data/fbref_player_map.json"
 MANUAL_STATS_PATH = "data/manual_stats.json"    # legacy fallback
 MANUAL_NT_PATH    = "data/manual_nt_stats.json" # legacy fallback
+FRIENDLIES_PATH   = "data/friendlies_stats.json"  # output of scripts/fetch_friendlies.py
 
 # FBref/manual stats keyed two ways for fast lookup
-_FBREF_BY_ID:   dict[str, dict] = {}  # fifa_player_id -> stats
-_FBREF_BY_NAME: dict[str, dict] = {}  # norm_name      -> club stats
-_NT_BY_NAME:    dict[str, dict] = {}  # norm_name      -> NT per-90 stats
+_FBREF_BY_ID:       dict[str, dict] = {}  # fifa_player_id -> stats
+_FBREF_BY_NAME:     dict[str, dict] = {}  # norm_name      -> club stats
+_NT_BY_NAME:        dict[str, dict] = {}  # norm_name      -> NT per-90 stats
+_FRIENDLIES_BY_NAME: dict[str, dict] = {} # norm_name      -> recent friendly raw stats
 
 
 def _load_fbref_map() -> None:
@@ -115,7 +117,21 @@ def _load_fbref_map() -> None:
         except Exception as e:
             print(f"[Stats] Could not load manual_nt_stats.json: {e}")
 
-    # 4. Load name_match output (may override manual with fresher data)
+    # 4. Load recent pre-WC friendlies (output of scripts/fetch_friendlies.py)
+    global _FRIENDLIES_BY_NAME
+    if os.path.exists(FRIENDLIES_PATH):
+        try:
+            with open(FRIENDLIES_PATH) as f:
+                fd = json.load(f)
+            players_dict = fd.get("players", {})
+            _FRIENDLIES_BY_NAME = players_dict
+            if players_dict:
+                print(f"[Friendlies] Loaded {len(players_dict)} players "
+                      f"(fetched {fd.get('fetched_at','?')[:10]})")
+        except Exception as e:
+            print(f"[Friendlies] Could not load {FRIENDLIES_PATH}: {e}")
+
+    # 5. Load name_match output (may override manual with fresher data)
     if os.path.exists(FBREF_MAP_PATH):
         try:
             with open(FBREF_MAP_PATH) as f:
@@ -746,6 +762,20 @@ def _compute_per90(p: Player) -> None:
     p.sot90     = nt_w * nt_sot + cl_w * cl_sot
     p.kp90      = nt_w * nt_kp  + cl_w * cl_kp
     p.tackles90 = nt_w * nt_tk  + cl_w * cl_tk
+
+    # Form overlay: recent pre-WC friendlies blended in at FRIENDLY_FORM_WEIGHT
+    import config as _cfg
+    _form = (_FRIENDLIES_BY_NAME.get(_norm_name(p.name))
+             or _FRIENDLIES_BY_NAME.get(_match_key(p.name)))
+    if _form and _form.get("minutes", 0) >= 30:
+        _fw   = _cfg.FRIENDLY_FORM_WEIGHT
+        _fmin = _form["minutes"]
+        _f90  = 90.0 / _fmin
+        p.xg90      = (1 - _fw) * p.xg90      + _fw * _form.get("goals",      0) * _f90
+        p.xa90      = (1 - _fw) * p.xa90      + _fw * _form.get("assists",     0) * _f90
+        p.sot90     = (1 - _fw) * p.sot90     + _fw * _form.get("shots_on",    0) * _f90
+        p.kp90      = (1 - _fw) * p.kp90      + _fw * _form.get("key_passes",  0) * _f90
+        p.tackles90 = (1 - _fw) * p.tackles90 + _fw * _form.get("tackles",     0) * _f90
 
     # Effective sample size behind the blend — used to regress the per-90 "share"
     # multiplier toward the positional baseline for low-minute players (small
