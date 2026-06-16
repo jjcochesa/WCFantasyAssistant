@@ -91,20 +91,6 @@ def _load(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
     )
 
 
-@st.cache_data(ttl=21600, show_spinner=False)
-def _load_draft(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
-    """Same pipeline as _load but projects all 3 matchdays — Draft tab only."""
-    import config as cfg_mod
-    cfg_mod.NATIONAL_TEAM_WEIGHT = iw
-    cfg_mod.CLUB_FORM_WEIGHT = round(1.0 - iw, 2)
-    return load_data(
-        session_token=token or None,
-        players_file=pfile or None,
-        use_demo=(mode == "Demo data (40 players)"),
-        use_squads=(mode != "Demo data (40 players)" and mode != "Local JSON export"),
-        matchdays=[1, 2],
-    )
-
 
 # Live prices + ownership: short TTL, runs on every page render.
 # Keyed on token hash so rotating the token immediately gets fresh data.
@@ -388,14 +374,13 @@ def _pin_name(df: pd.DataFrame, name_col: str, team_col: str = None) -> pd.DataF
 
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
     "🏅 Rankings",
     "⚽ Club Form",
     "🌍 International Form",
     "🏗️ Squad Builder",
     "🔍 Scouts & Value",
     "📊 Fixtures & FDR",
-    "🎯 Draft",
 ])
 
 # ── Shared filter helper ──────────────────────────────────────────────────────
@@ -885,69 +870,6 @@ with tab6:
 
     st.dataframe(styler, use_container_width=True, height=640)
 
-
-# ── TAB 7: Draft ──────────────────────────────────────────────────────────────
-with tab7:
-    from data.predicted_lineups import PREDICTED_XI
-    st.subheader("Draft Mode — Top 200 Players")
-    st.caption("Only nations with a predicted XI are included — teams without one are unlikely to advance past the group stage.")
-
-    draft_nations = set(PREDICTED_XI.keys())
-
-    d_pos = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t7_pos")
-
-    draft_df = _load_draft(data_mode, session_token or "", players_file or "", 0.65)
-    draft_all = draft_df[draft_df["team_code"].isin(draft_nations)].copy()
-
-    if d_pos != "All":
-        draft_view = draft_all[draft_all["pos"] == d_pos]
-    else:
-        draft_view = draft_all
-
-    draft_top = (
-        draft_view
-        .sort_values("xPts_GS", ascending=False)
-        .head(200)
-        .reset_index(drop=True)
-    )
-    draft_top.index += 1
-
-    DRAFT_COLS = {
-        "name":     "Name",
-        "team_code": "Nation",
-        "pos":      "Pos",
-        "md1_opp":  "MD2 vs",
-        "md2_opp":  "MD3 vs",
-        "md1_pts":  "MD2 Pts",
-        "md2_pts":  "MD3 Pts",
-        "xPts_GS":  "Total Pts",
-    }
-    disp_cols = [c for c in DRAFT_COLS if c in draft_top.columns]
-    draft_disp = draft_top[disp_cols].rename(columns=DRAFT_COLS)
-
-    st.dataframe(
-        draft_disp.style.format(
-            {"MD2 Pts": "{:.1f}", "MD3 Pts": "{:.1f}", "Total Pts": "{:.1f}"},
-            na_rep="—"
-        ),
-        use_container_width=True,
-        height=680,
-    )
-
-    # Download: full list (all nations with XI, position-filtered, no 200 cap)
-    download_all = (
-        draft_view
-        .sort_values("xPts_GS", ascending=False)
-        .reset_index(drop=True)
-    )
-    download_all.index += 1
-    download_disp = download_all[[c for c in DRAFT_COLS if c in download_all.columns]].rename(columns=DRAFT_COLS)
-    st.download_button(
-        "⬇️ Download full list (CSV)",
-        download_disp.to_csv(index_label="Rank"),
-        file_name="wc2026_draft.csv",
-        mime="text/csv",
-    )
 
 
 st.divider()
