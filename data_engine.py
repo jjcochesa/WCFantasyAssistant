@@ -25,8 +25,8 @@ except Exception:
     PREDICTED_XI, STARTER_MINUTES, BENCH_MINUTES = {}, 70, 20
 from data.team_stats import (
     CS_PCT, PROJ_GOALS, FDR, TEAM_NAMES, FIXTURES,
-    get_avg_cs_pct, get_avg_proj_goals, get_team_fdr_total, get_group_balance,
-    get_team_proj, get_opponent_xg,
+    get_team_fdr, get_group_balance, get_next_opponent,
+    get_team_proj, get_opponent_xg, get_team_xg, get_team_cs,
 )
 try:
     from data.set_pieces import SET_PIECES
@@ -47,12 +47,14 @@ FBREF_MAP_PATH    = "data/fbref_player_map.json"
 MANUAL_STATS_PATH = "data/manual_stats.json"    # legacy fallback
 MANUAL_NT_PATH    = "data/manual_nt_stats.json" # legacy fallback
 FRIENDLIES_PATH   = "data/friendlies_stats.json"  # output of scripts/fetch_friendlies.py
+WC_STATS_PATH     = "data/wc_stats.json"          # output of scripts/fetch_wc_stats.py
 
 # FBref/manual stats keyed two ways for fast lookup
 _FBREF_BY_ID:       dict[str, dict] = {}  # fifa_player_id -> stats
 _FBREF_BY_NAME:     dict[str, dict] = {}  # norm_name      -> club stats
 _NT_BY_NAME:        dict[str, dict] = {}  # norm_name      -> NT per-90 stats
 _FRIENDLIES_BY_NAME: dict[str, dict] = {} # norm_name      -> recent friendly raw stats
+_WC_BY_NAME:        dict[str, dict] = {}  # norm_name      -> accumulated real WC stats
 
 
 def _load_fbref_map() -> None:
@@ -130,6 +132,21 @@ def _load_fbref_map() -> None:
                       f"(fetched {fd.get('fetched_at','?')[:10]})")
         except Exception as e:
             print(f"[Friendlies] Could not load {FRIENDLIES_PATH}: {e}")
+
+    # 4b. Load accumulated real WC stats (output of scripts/fetch_wc_stats.py)
+    global _WC_BY_NAME
+    if os.path.exists(WC_STATS_PATH):
+        try:
+            with open(WC_STATS_PATH) as f:
+                wd = json.load(f)
+            wc_dict = wd.get("players", {})
+            _WC_BY_NAME = wc_dict
+            if wc_dict:
+                print(f"[WC] Loaded {len(wc_dict)} players "
+                      f"(through {wd.get('through_round','?')}, "
+                      f"fetched {wd.get('fetched_at','?')[:10]})")
+        except Exception as e:
+            print(f"[WC] Could not load {WC_STATS_PATH}: {e}")
 
     # 5. Load name_match output (may override manual with fresher data)
     if os.path.exists(FBREF_MAP_PATH):
@@ -777,6 +794,33 @@ def _compute_per90(p: Player) -> None:
         p.kp90      = (1 - _fw) * p.kp90      + _fw * _form.get("key_passes",  0) * _f90
         p.tackles90 = (1 - _fw) * p.tackles90 + _fw * _form.get("tackles",     0) * _f90
 
+    # Real WC form overlay — blended on TOP of the baseline at a weight that
+    # ramps with WC minutes played (config.WC_FORM_*). Friendlies stay underneath
+    # (they feed the NT-ish baseline); WC data is its own layer that grows each round.
+    p.xg90_wc = p.xa90_wc = p.sot90_wc = p.kp90_wc = p.tackles90_wc = 0.0
+    p.wc_minutes = 0
+    p.wc_games   = 0
+    _wc = (_WC_BY_NAME.get(_norm_name(p.name))
+           or _WC_BY_NAME.get(_match_key(p.name)))
+    if _wc:
+        _wmin = _wc.get("minutes", 0) or 0
+        p.wc_minutes = _wmin
+        p.wc_games   = _wc.get("matches", 0) or 0
+        if _wmin > 0:
+            _w90 = 90.0 / _wmin
+            p.xg90_wc      = _wc.get("goals",      0) * _w90
+            p.xa90_wc      = _wc.get("assists",     0) * _w90
+            p.sot90_wc     = _wc.get("shots_on",    0) * _w90
+            p.kp90_wc      = _wc.get("key_passes",  0) * _w90
+            p.tackles90_wc = _wc.get("tackles",     0) * _w90
+        if _wmin >= _cfg.WC_FORM_MIN_MINUTES:
+            _ww = min(_cfg.WC_FORM_MAX_WEIGHT, _wmin / _cfg.WC_FORM_FULL_TRUST_MIN)
+            p.xg90      = (1 - _ww) * p.xg90      + _ww * p.xg90_wc
+            p.xa90      = (1 - _ww) * p.xa90      + _ww * p.xa90_wc
+            p.sot90     = (1 - _ww) * p.sot90     + _ww * p.sot90_wc
+            p.kp90      = (1 - _ww) * p.kp90      + _ww * p.kp90_wc
+            p.tackles90 = (1 - _ww) * p.tackles90 + _ww * p.tackles90_wc
+
     # Effective sample size behind the blend — used to regress the per-90 "share"
     # multiplier toward the positional baseline for low-minute players (small
     # NT samples otherwise produce spiky, over-confident projections).
@@ -847,12 +891,12 @@ def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
     return base * share
 
 
-def _project_md(p: Player, md: int, avg_xg: dict, avg_xa: dict) -> tuple:
-    """Project points for one matchday, scaled by projected minutes.
+def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
+    """Project points for the upcoming match, scaled by projected minutes.
     Returns (pts, player_xg-for-the-minutes-played)."""
     pos = p.position
-    team_xg, cs_pct = get_team_proj(p.team_code, md)
-    opp_xg = get_opponent_xg(p.team_code, md)
+    team_xg, cs_pct = get_team_proj(p.team_code)
+    opp_xg = get_opponent_xg(p.team_code)
 
     # Minutes scaling: returns accrue per minute on the pitch; clean sheets need
     # 60+ minutes; appearance is 2 pts for 60+ min, else 1 pt.
@@ -983,12 +1027,10 @@ def _assign_set_pieces(players: list) -> None:
 
 def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     """
-    Compute per-90 blended stats, then project points for given matchdays.
-    Default: GD1 + GD2 cumulative.
+    Compute per-90 blended stats, then project points for the SINGLE upcoming
+    match (group MD2 onward; one round at a time through the final).
+    The `matchdays` argument is accepted for backward compatibility but ignored.
     """
-    if matchdays is None:
-        matchdays = [1, 2]
-
     for p in players:
         _compute_per90(p)
 
@@ -998,53 +1040,25 @@ def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     avg_xg, avg_xa = _pos_averages(players)
 
     for p in players:
-        results = [_project_md(p, md, avg_xg, avg_xa) for md in matchdays]
-        md_pts  = [r[0] for r in results]
-        md_pxg  = [r[1] for r in results]
-        p.xpts_per_match   = round(sum(md_pts) / len(md_pts), 3)
-        p.xpts_group_stage = round(sum(md_pts), 2)
-        p._xg_by_md  = md_pxg   # player-level xG per matchday
-        p._pts_by_md = md_pts   # projected points per matchday
+        pts, pxg = _project(p, avg_xg, avg_xa)
+        p.xpts_per_match   = round(pts, 3)
+        p.xpts_group_stage = round(pts, 2)   # headline projected points (next match)
+        p._proj_xg  = pxg                     # player-level xG for the match
         if p.price > 0:
             p.value = round(p.xpts_group_stage / p.price, 3)
         p.scout_flag = p.xpts_per_match > SCOUT_POINTS_THRESHOLD and p.is_differential
 
-    return _to_dataframe(players, matchdays)
+    return _to_dataframe(players)
 
 
 def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
-    if matchdays is None:
-        matchdays = [1, 2]
     rows = []
     for p in players:
-        fdr_total = get_team_fdr_total(p.team_code)
-        avg_cs = get_avg_cs_pct(p.team_code)
-        avg_goals = get_avg_proj_goals(p.team_code)
-        cs_vals = CS_PCT.get(p.team_code, ["-", "-", "-"])
-        g_vals = PROJ_GOALS.get(p.team_code, ["-", "-", "-"])
-        fdr_vals = FDR.get(p.team_code, ["-", "-", "-"])
-
-        xg_by_md  = getattr(p, "_xg_by_md",  [0.0] * len(matchdays))
-        pts_by_md = getattr(p, "_pts_by_md", [0.0] * len(matchdays))
-        xg_gd1  = round(xg_by_md[0],  3) if len(xg_by_md)  > 0 else 0.0
-        xg_gd2  = round(xg_by_md[1],  3) if len(xg_by_md)  > 1 else 0.0
-        md1_pts = round(pts_by_md[0],  1) if len(pts_by_md) > 0 else 0.0
-        md2_pts = round(pts_by_md[1],  1) if len(pts_by_md) > 1 else 0.0
-        md3_pts = round(pts_by_md[2],  1) if len(pts_by_md) > 2 else 0.0
-
-        # Fixture opponents (for display)
-        team_fix    = FIXTURES.get(p.team_code, [])
-        md1_opp_raw = team_fix[0] if len(team_fix) > 0 else ""
-        md2_opp_raw = team_fix[1] if len(team_fix) > 1 else ""
-        md3_opp_raw = team_fix[2] if len(team_fix) > 2 else ""
-        md1_opp = md1_opp_raw or "?"
-        md2_opp = md2_opp_raw or "?"
-        md3_opp = md3_opp_raw or "?"
-
-        # Raw CS% floats (separate from the formatted cs_md1/cs_md2 strings)
-        raw_cs = CS_PCT.get(p.team_code, [0.3, 0.3, 0.3])
-        cs_md1_pct = raw_cs[0] if len(raw_cs) > 0 else 0.3
-        cs_md2_pct = raw_cs[1] if len(raw_cs) > 1 else 0.3
+        fdr      = get_team_fdr(p.team_code)
+        team_cs  = get_team_cs(p.team_code)
+        team_xg  = get_team_xg(p.team_code)
+        opp      = get_next_opponent(p.team_code)
+        proj_xg  = round(getattr(p, "_proj_xg", 0.0), 3)
 
         rows.append({
             "id": p.id,
@@ -1060,17 +1074,11 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "xPts_GS": p.xpts_group_stage,
             "value": p.value,
             "scout": p.scout_flag,
-            # Spec display columns
-            "GD1 xG": xg_gd1,
-            "GD2 xG": xg_gd2,
-            "md1_opp":    md1_opp,
-            "md2_opp":    md2_opp,
-            "md3_opp":    md3_opp,
-            "cs_md1_pct": cs_md1_pct,
-            "cs_md2_pct": cs_md2_pct,
-            "md1_pts":    md1_pts,
-            "md2_pts":    md2_pts,
-            "md3_pts":    md3_pts,
+            # Upcoming-match display columns
+            "proj_xg":     proj_xg,
+            "opp":         opp,
+            "team_cs_pct": team_cs,
+            "team_xg":     team_xg,
             "goals/90": round(p.xg90, 3),
             "assists/90": round(p.xa90, 3),
             "xg90_club": round(p.xg90_club, 3),
@@ -1083,6 +1091,14 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "sot90_nt": round(p.sot90_nt, 3),
             "kp90_nt": round(p.kp90_nt, 3),
             "tackles90_nt": round(p.tackles90_nt, 3),
+            # Real WC per-90 (accumulated tournament stats)
+            "xg90_wc": round(getattr(p, "xg90_wc", 0.0), 3),
+            "xa90_wc": round(getattr(p, "xa90_wc", 0.0), 3),
+            "sot90_wc": round(getattr(p, "sot90_wc", 0.0), 3),
+            "kp90_wc": round(getattr(p, "kp90_wc", 0.0), 3),
+            "tackles90_wc": round(getattr(p, "tackles90_wc", 0.0), 3),
+            "wc_min": int(getattr(p, "wc_minutes", 0)),
+            "wc_games": int(getattr(p, "wc_games", 0)),
             "nt_weight":    "65% NT" if p.national_stats.matches >= 5 else "35% NT",
             "starter_rate": round(p.starter_rate, 2),
             "proj_min":     int(round(p.projected_minutes)),
@@ -1106,14 +1122,7 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "club_chances": round(p.club_stats.chances_created, 1),
             "club_tackles": round(p.club_stats.tackles, 1),
             "club_saves": round(p.club_stats.saves, 1),
-            "team_fdr": fdr_total,
-            "avg_cs%": round(avg_cs * 100, 1),
-            "avg_proj_goals": round(avg_goals, 2),
-            "fdr_md1": fdr_vals[0], "fdr_md2": fdr_vals[1], "fdr_md3": fdr_vals[2],
-            "cs_md1": f"{int(cs_vals[0]*100)}%" if isinstance(cs_vals[0], float) else cs_vals[0],
-            "cs_md2": f"{int(cs_vals[1]*100)}%" if isinstance(cs_vals[1], float) else cs_vals[1],
-            "cs_md3": f"{int(cs_vals[2]*100)}%" if isinstance(cs_vals[2], float) else cs_vals[2],
-            "goals_md1": g_vals[0], "goals_md2": g_vals[1], "goals_md3": g_vals[2],
+            "team_fdr": fdr,
             "group_balance": get_group_balance(p.team_code),
         })
 
@@ -1422,4 +1431,4 @@ def load_data(
             PLAYER_SOURCE = "demo"
             players = get_demo_players()
 
-    return build_projections(players, matchdays=matchdays or [1, 2])
+    return build_projections(players)

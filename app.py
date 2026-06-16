@@ -10,7 +10,10 @@ from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
     MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
 )
-from data.team_stats import TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, get_team_fdr_total
+from data.team_stats import (
+    TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
+    get_team_fdr, get_next_opponent, get_team_xg, get_team_cs,
+)
 
 st.set_page_config(
     page_title="WC Fantasy 2026",
@@ -213,25 +216,20 @@ def fmt(sub: pd.DataFrame):
     fmt_map = {
         "price": "${:.1f}m", "own_%": "{:.1f}%",
         "xPts/game": "{:.2f}", "xPts_GS": "{:.2f}", "value": "{:.3f}",
-        "avg_cs%": "{:.1f}%", "avg_proj_goals": "{:.2f}",
-        "GD1 xG": "{:.2f}", "GD2 xG": "{:.2f}",
+        "team_cs_pct": "{:.0%}", "team_xg": "{:.2f}", "proj_xg": "{:.2f}",
         "goals/90": "{:.3f}", "assists/90": "{:.3f}",
         "xg90_club": "{:.3f}", "xg90_nt": "{:.3f}",
     }
     return s.format({k: v for k, v in fmt_map.items() if k in sub.columns}, na_rep="—")
 
 
-# ── Scout bonus (display-only, +2 per MD where own%<4.5 AND md_pts≥4) ────────
+# ── Scout bonus (display-only, +2 if own%<4.5 AND projected pts≥4) ────────────
 def _with_scout_bonus(view: pd.DataFrame) -> pd.DataFrame:
     v = view.copy()
     low_own = v["own_%"] < 4.5
-    v["sb_md1"]      = ((low_own) & (v["md1_pts"] >= 4.0)).astype(int) * 2
-    v["sb_md2"]      = ((low_own) & (v["md2_pts"] >= 4.0)).astype(int) * 2
-    v["scout_bonus"] = v["sb_md1"] + v["sb_md2"]
-    v["adj_md1"]     = v["md1_pts"]  + v["sb_md1"]
-    v["adj_md2"]     = v["md2_pts"]  + v["sb_md2"]
+    v["scout_bonus"] = ((low_own) & (v["xPts_GS"] >= 4.0)).astype(int) * 2
     v["adj_total"]   = v["xPts_GS"] + v["scout_bonus"]
-    return v.drop(columns=["sb_md1", "sb_md2"])
+    return v
 
 
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
@@ -311,51 +309,6 @@ def _greedy_squad(df, budget, sort_col, country_cap, max_gk_per_country=1):
     return result.sort_values(["_o", sort_col], ascending=[True, False]).drop(columns=["_o"]).reset_index(drop=True)
 
 
-def _dual_squad(df, budget, country_cap):
-    """Build best xPts_GS squad, then make 2 transfers to maximise MD2, return (md1, md2)."""
-    md1 = _greedy_squad(df, budget, "xPts_GS", country_cap)
-    if md1 is None or md1.empty:
-        return None, None
-
-    worst2 = md1.nsmallest(2, "md2_pts")
-    keep13 = md1[~md1["id"].isin(worst2["id"])].copy()
-    freed  = worst2["price"].sum()
-    keep_country = keep13["team_code"].value_counts().to_dict()
-    used_ids = set(keep13["id"])
-
-    transfers, remaining = [], freed
-    for _, sold in worst2.sort_values("md2_pts").iterrows():
-        n_left  = 2 - len(transfers) - 1
-        min_res = n_left * 4.0
-        cur_cnt = {**keep_country}
-        for p in transfers:
-            cur_cnt[p["team_code"]] = cur_cnt.get(p["team_code"], 0) + 1
-
-        pool = df[
-            (df["pos"] == sold["pos"]) &
-            (~df["id"].isin(used_ids)) &
-            (df["price"] <= remaining - min_res) &
-            (df["team_code"].apply(lambda tc: cur_cnt.get(tc, 0) < country_cap))
-        ]
-        if sold["pos"] == "GK":
-            # don't end up with both keepers from the same nation
-            gk_nat = set(keep13[keep13["pos"] == "GK"]["team_code"])
-            gk_nat |= {t["team_code"] for t in transfers if t["pos"] == "GK"}
-            pool = pool[~pool["team_code"].isin(gk_nat)]
-        pool = pool.sort_values("md2_pts", ascending=False)
-
-        picked = pool.iloc[0] if not pool.empty else sold
-        transfers.append(picked)
-        used_ids.add(picked["id"])
-        remaining -= picked["price"]
-
-    md2 = pd.concat([keep13, pd.DataFrame(transfers)]).reset_index(drop=True)
-    pos_order = {"GK": 0, "DEF": 1, "MID": 2, "FWD": 3}
-    md2["_o"] = md2["pos"].map(pos_order)
-    md2 = md2.sort_values(["_o", "md2_pts"], ascending=[True, False]).drop(columns=["_o"]).reset_index(drop=True)
-    return md1, md2
-
-
 def _pin_name(df: pd.DataFrame, name_col: str, team_col: str = None) -> pd.DataFrame:
     """Set name_col as the index (pinned in Streamlit), deduplicating with (TEAM) suffix."""
     out = df.copy()
@@ -374,13 +327,14 @@ def _pin_name(df: pd.DataFrame, name_col: str, team_col: str = None) -> pd.DataF
 
 
 # ── Tabs ──────────────────────────────────────────────────────────────────────
-tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🏅 Rankings",
     "⚽ Club Form",
     "🌍 International Form",
     "🏗️ Squad Builder",
     "🔍 Scouts & Value",
     "📊 Fixtures & FDR",
+    "🌐 WC Stats",
 ])
 
 # ── Shared filter helper ──────────────────────────────────────────────────────
@@ -402,7 +356,7 @@ def _filter(key_prefix: str) -> pd.DataFrame:
 
 # ── TAB 1: Master Table ───────────────────────────────────────────────────────
 with tab1:
-    st.subheader("Player Rankings — Group Stage (MD2 + MD3)")
+    st.subheader(f"Player Rankings — Next Round ({CURRENT_ROUND})")
 
     f1, f2 = st.columns([3, 1])
     with f1:
@@ -433,17 +387,18 @@ with tab1:
         "team_code":      "Nation",
         "pos":            "Pos",
         "price":          "Price",
-        "md1_opp":        "MD1 Opp",
-        "md2_opp":        "MD2 Opp",
+        "opp":            "Opp",
         "own_%":          "Own%",
-        "md1_pts":        "MD1 Pts",
-        "md2_pts":        "MD2 Pts",
-        "xPts_GS":        "Total Pts",
+        "xPts_GS":        "Proj Pts",
         "adj_total":      "Adj Pts",
-        "cs_md1_pct":     "MD1 CS%",
-        "cs_md2_pct":     "MD2 CS%",
-        "goals_md1":      "MD1 xG",
-        "goals_md2":      "MD2 xG",
+        "team_cs_pct":    "CS%",
+        "team_xg":        "Team xG",
+        "wc_min":         "WC Min",
+        "xg90_wc":        "WC Gls/90",
+        "xa90_wc":        "WC Ast/90",
+        "sot90_wc":       "WC SOT/90",
+        "kp90_wc":        "WC KP/90",
+        "tackles90_wc":   "WC Tkl/90",
         "xg90_club":      "Cl Gls/90",
         "xa90_club":      "Cl Ast/90",
         "sot90_club":     "Cl SOT/90",
@@ -466,12 +421,13 @@ with tab1:
 
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
-    pts_cols   = ["MD1 Pts", "MD2 Pts", "Total Pts", "Adj Pts"]
-    pct_cols   = [c for c in ["MD1 CS%", "MD2 CS%"] if c in disp.columns]
-    xg_cols    = [c for c in ["MD1 xG", "MD2 xG"] if c in disp.columns]
+    per90_wc   = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
+    pts_cols   = ["Proj Pts", "Adj Pts"]
+    pct_cols   = [c for c in ["CS%"] if c in disp.columns]
+    xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'"}
-    fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt})
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'"}
+    fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt + per90_wc})
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
@@ -494,14 +450,14 @@ with tab1:
                 styles[idx.index(col)] = style
 
         if pos == "MID":
-            for c in ["Cl KP/90", "NT KP/90"]:
+            for c in ["Cl KP/90", "NT KP/90", "WC KP/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
                     _hi(c, BONUS_KP)
-            for c in ["Cl Tkl/90", "NT Tkl/90"]:
+            for c in ["Cl Tkl/90", "NT Tkl/90", "WC Tkl/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 3.0:
                     _hi(c, BONUS_TKL)
         elif pos == "FWD":
-            for c in ["Cl SOT/90", "NT SOT/90"]:
+            for c in ["Cl SOT/90", "NT SOT/90", "WC SOT/90"]:
                 if c in idx and isinstance(row[c], (int, float)) and row[c] >= 2.0:
                     _hi(c, BONUS_SOT)
         elif pos == "GK":
@@ -513,10 +469,9 @@ with tab1:
         styles = [""] * len(row)
         idx = list(row.index)
         nation = row.get("Nation", "")
-        fdr_vals = FDR.get(nation, [3, 3, 3])
-        for col, fdr_val in [("MD1 Opp", fdr_vals[0]), ("MD2 Opp", fdr_vals[1])]:
-            if col in idx:
-                styles[idx.index(col)] = _fdr_color(fdr_val)
+        fdr_val = get_team_fdr(nation)
+        if "Opp" in idx:
+            styles[idx.index("Opp")] = _fdr_color(fdr_val)
         return styles
 
     # Name as index → Streamlit pins the index column, making Name sticky.
@@ -630,7 +585,7 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
             st.info("No players loaded for this country.")
         else:
             _cp_cols = ["name", "pos", "club", "price", "own_%",
-                        "GD1 xG", "GD2 xG", "xPts_GS",
+                        "opp", "proj_xg", "xPts_GS",
                         "xg90_nt", "xa90_nt", "xg90_club", "xa90_club",
                         "intl_games", "club_games", "nt_weight", "value"]
             st.dataframe(
@@ -643,103 +598,51 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
 with tab4:
     st.subheader("Build Your Best Squad")
 
-    b1, b2, b3, b4 = st.columns(4)
+    st.caption(f"Optimised for the upcoming round ({CURRENT_ROUND}).")
+
+    b1, b2, b3 = st.columns(3)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
     build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
-    use_transfers = b3.toggle("2 transfers MD2→MD3", value=False, key="build_transfers")
-    exclude_mex   = b4.toggle("Exclude MEX", value=True, key="build_excl_mex")
+    exclude_mex   = b3.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):
         build_df = df[df["team_code"] != "MEX"].copy() if exclude_mex else df.copy()
-        if use_transfers:
-            md1_squad, md2_squad = _dual_squad(build_df, build_budget, build_cap)
-            if md1_squad is None:
-                st.error("Could not build squad within budget. Try increasing budget or country cap.")
-            else:
-                md1_pts_total = md1_squad["md1_pts"].sum()
-                md2_pts_total = md2_squad["md2_pts"].sum()
-                combined      = md1_pts_total + md2_pts_total
-                cost          = md1_squad["price"].sum()
-
-                sc1, sc2, sc3, sc4 = st.columns(4)
-                sc1.metric("Cost (MD1 squad)", f"${cost:.1f}m")
-                sc2.metric("MD1 xPts", f"{md1_pts_total:.1f}")
-                sc3.metric("MD2 xPts", f"{md2_pts_total:.1f}")
-                sc4.metric("Combined xPts", f"{combined:.1f}")
-
-                # Show transfers
-                sold_ids = set(md1_squad["id"]) - set(md2_squad["id"])
-                bought_ids = set(md2_squad["id"]) - set(md1_squad["id"])
-                if sold_ids:
-                    out_names = md1_squad[md1_squad["id"].isin(sold_ids)]["name"].tolist()
-                    in_names  = md2_squad[md2_squad["id"].isin(bought_ids)]["name"].tolist()
-                    st.info(f"**2 transfers:** OUT {', '.join(out_names)}  →  IN {', '.join(in_names)}")
-
-                sq_cols = ["name", "team_code", "pos", "price", "md1_pts", "md2_pts", "xPts_GS"]
-                sq_cols = [c for c in sq_cols if c in md1_squad.columns]
-
-                st.markdown("**MD1 Squad (15 players)**")
-                st.dataframe(
-                    _pin_name(md1_squad[sq_cols].rename(columns={
-                        "name": "Name", "team_code": "Nation", "pos": "Pos",
-                        "price": "Price", "md1_pts": "MD1 Pts",
-                        "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }), "Name", "Nation").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
-                                     "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
-                    use_container_width=True,
-                )
-                st.markdown("**MD2 Squad (after 2 transfers)**")
-                sq2_cols = [c for c in sq_cols if c in md2_squad.columns]
-                st.dataframe(
-                    _pin_name(md2_squad[sq2_cols].rename(columns={
-                        "name": "Name", "team_code": "Nation", "pos": "Pos",
-                        "price": "Price", "md1_pts": "MD1 Pts",
-                        "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts"
-                    }), "Name", "Nation").style.format({"Price": "${:.1f}m", "MD1 Pts": "{:.1f}",
-                                     "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}"}, na_rep="—"),
-                    use_container_width=True,
-                )
+        squad = _greedy_squad(build_df, build_budget, "xPts_GS", build_cap)
+        if squad is None or squad.empty:
+            st.error("Could not fill squad within budget. Try increasing budget or country cap.")
         else:
-            squad = _greedy_squad(build_df, build_budget, "xPts_GS", build_cap)
-            if squad is None or squad.empty:
-                st.error("Could not fill squad within budget. Try increasing budget or country cap.")
-            else:
-                cost          = squad["price"].sum()
-                md1_total     = squad["md1_pts"].sum()
-                md2_total     = squad["md2_pts"].sum()
-                total_xpts    = squad["xPts_GS"].sum()
+            cost       = squad["price"].sum()
+            total_xpts = squad["xPts_GS"].sum()
 
-                sc1, sc2, sc3, sc4 = st.columns(4)
-                sc1.metric("Total cost",   f"${cost:.1f}m")
-                sc2.metric("Remaining",    f"${build_budget - cost:.1f}m")
-                sc3.metric("MD1 xPts",     f"{md1_total:.1f}")
-                sc4.metric("MD2 xPts",     f"{md2_total:.1f}")
+            sc1, sc2, sc3 = st.columns(3)
+            sc1.metric("Total cost", f"${cost:.1f}m")
+            sc2.metric("Remaining",  f"${build_budget - cost:.1f}m")
+            sc3.metric(f"{CURRENT_ROUND} xPts", f"{total_xpts:.1f}")
 
-                captain = squad.sort_values("xPts/game", ascending=False).iloc[0]
-                vice    = squad.sort_values("xPts/game", ascending=False).iloc[1]
-                st.success(f"⭐ Captain: **{captain['name']}**  |  👑 Vice: **{vice['name']}**")
+            captain = squad.sort_values("xPts/game", ascending=False).iloc[0]
+            vice    = squad.sort_values("xPts/game", ascending=False).iloc[1]
+            st.success(f"⭐ Captain: **{captain['name']}**  |  👑 Vice: **{vice['name']}**")
 
-                sq_cols = ["name", "team_code", "pos", "price", "own_%", "md1_pts", "md2_pts", "xPts_GS"]
-                sq_cols = [c for c in sq_cols if c in squad.columns]
-                st.dataframe(
-                    _pin_name(squad[sq_cols].rename(columns={
-                        "name": "Name", "team_code": "Nation", "pos": "Pos",
-                        "price": "Price", "own_%": "Own%",
-                        "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts", "xPts_GS": "Total Pts",
-                    }), "Name", "Nation").style.format({
-                        "Price": "${:.1f}m", "Own%": "{:.1f}%",
-                        "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "Total Pts": "{:.1f}",
-                    }, na_rep="—"),
-                    use_container_width=True,
+            sq_cols = ["name", "team_code", "pos", "price", "own_%", "opp", "xPts_GS"]
+            sq_cols = [c for c in sq_cols if c in squad.columns]
+            st.dataframe(
+                _pin_name(squad[sq_cols].rename(columns={
+                    "name": "Name", "team_code": "Nation", "pos": "Pos",
+                    "price": "Price", "own_%": "Own%",
+                    "opp": "Opp", "xPts_GS": "Proj Pts",
+                }), "Name", "Nation").style.format({
+                    "Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Pts": "{:.1f}",
+                }, na_rep="—"),
+                use_container_width=True,
+            )
+
+            for pos in ["GK", "DEF", "MID", "FWD"]:
+                sub = squad[squad["pos"] == pos]
+                line = "  |  ".join(
+                    f"{r['name']} ${r['price']:.1f}m ({r['xPts_GS']:.1f})"
+                    for _, r in sub.iterrows()
                 )
-
-                for pos in ["GK", "DEF", "MID", "FWD"]:
-                    sub = squad[squad["pos"] == pos]
-                    line = "  |  ".join(
-                        f"{r['name']} ${r['price']:.1f}m (MD1 {r['md1_pts']:.1f} / MD2 {r['md2_pts']:.1f})"
-                        for _, r in sub.iterrows()
-                    )
-                    st.markdown(f"**{pos}:** {line}")
+                st.markdown(f"**{pos}:** {line}")
 
 
 # ── TAB 5: Scouts & Value ─────────────────────────────────────────────────────
@@ -756,28 +659,22 @@ with tab5:
         scouts.index = range(1, len(scouts) + 1)
 
         s_cols = ["name", "team_code", "pos", "price", "own_%",
-                  "md1_opp", "md2_opp",
-                  "cs_md1_pct", "cs_md2_pct", "goals_md1", "goals_md2",
-                  "md1_pts", "md2_pts", "xPts_GS", "scout_bonus", "adj_total", "value"]
+                  "opp", "team_cs_pct", "team_xg",
+                  "xPts_GS", "scout_bonus", "adj_total", "value"]
         s_cols = [c for c in s_cols if c in scouts.columns]
         s_disp = scouts[s_cols].rename(columns={
             "name": "Name", "team_code": "Nation", "pos": "Pos",
             "price": "Price", "own_%": "Own%",
-            "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
-            "cs_md1_pct": "MD1 CS%", "cs_md2_pct": "MD2 CS%",
-            "goals_md1": "MD1 xG", "goals_md2": "MD2 xG",
-            "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
-            "xPts_GS": "Total Pts", "scout_bonus": "Scout+", "adj_total": "Adj Pts",
+            "opp": "Opp", "team_cs_pct": "CS%", "team_xg": "Team xG",
+            "xPts_GS": "Proj Pts", "scout_bonus": "Scout+", "adj_total": "Adj Pts",
             "value": "Value",
         }).reset_index(drop=True)
 
         s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%",
-                 "MD1 CS%": "{:.0%}", "MD2 CS%": "{:.0%}",
-                 "MD1 xG": "{:.2f}", "MD2 xG": "{:.2f}",
-                 "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}",
-                 "Total Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
+                 "CS%": "{:.0%}", "Team xG": "{:.2f}",
+                 "Proj Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
                  "Value": "{:.3f}"}
-        s_grad = [c for c in ["MD1 Pts", "MD2 Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
+        s_grad = [c for c in ["Proj Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
         s_disp_idx = _pin_name(s_disp, "Name", "Nation")
         s_styler = s_disp_idx.style.format({k: v for k, v in s_fmt.items() if k in s_disp_idx.columns}, na_rep="—")
         if s_grad:
@@ -796,17 +693,16 @@ with tab5:
         val_view.index += 1
 
         v_cols = ["name", "team_code", "price", "adj_total", "adj_value",
-                  "md1_opp", "md2_opp", "md1_pts", "md2_pts"]
+                  "opp", "xPts_GS"]
         v_cols = [c for c in v_cols if c in val_view.columns]
         v_disp = val_view[v_cols].rename(columns={
             "name": "Name", "team_code": "Nation",
             "price": "Price", "adj_total": "Adj Pts", "adj_value": "Value",
-            "md1_opp": "MD1 Opp", "md2_opp": "MD2 Opp",
-            "md1_pts": "MD1 Pts", "md2_pts": "MD2 Pts",
+            "opp": "Opp", "xPts_GS": "Proj Pts",
         }).reset_index(drop=True)
 
         v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
-                 "MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}"}
+                 "Proj Pts": "{:.1f}"}
         v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
         v_disp_idx = _pin_name(v_disp, "Name", "Nation")
         v_styler = v_disp_idx.style.format({k: v for k, v in v_fmt.items() if k in v_disp_idx.columns}, na_rep="—")
@@ -817,59 +713,78 @@ with tab5:
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
 with tab6:
-    st.subheader("Group Stage Fixtures — CS% & Projected Goals")
-    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (16.06.26). CS% directly drives DEF/GK clean sheet points in model.")
-
-    md_show = st.radio("Show matchdays", [1, 2], index=1, horizontal=True, key="t6_mds",
-                       format_func=lambda x: f"MD1 only" if x == 1 else f"MD1–MD{x}")
+    st.subheader(f"Upcoming Round ({CURRENT_ROUND}) — Fixtures, CS% & Projected Goals")
+    st.caption(f"CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets ({CURRENT_ROUND_DATE}). CS% directly drives DEF/GK clean sheet points in model.")
 
     fdr_rows = []
-    for code, name in sorted(TEAM_NAMES.items(), key=lambda x: get_team_fdr_total(x[0])):
-        fdr_vals  = FDR.get(code, [3, 3, 3])
-        cs_vals   = CS_PCT.get(code, [0.3, 0.3, 0.3])
-        g_vals    = PROJ_GOALS.get(code, [1.0, 1.0, 1.0])
-        fixtures  = FIXTURES.get(code, ["?", "?", "?"])
-        row = {"Country": name}
-        for i in range(md_show):
-            row[f"MD{i+1} vs"] = fixtures[i] if len(fixtures) > i else "?"
-            row[f"FDR{i+1}"]   = fdr_vals[i]
-            row[f"CS%{i+1}"]   = cs_vals[i]
-            row[f"xG{i+1}"]    = g_vals[i]
-        row["Total FDR"] = sum(fdr_vals[:md_show])
-        row["Avg CS%"]   = sum(cs_vals[:md_show]) / md_show
-        row["Avg xG"]    = sum(g_vals[:md_show])  / md_show
-        fdr_rows.append(row)
+    for code, name in sorted(TEAM_NAMES.items(), key=lambda x: get_team_fdr(x[0])):
+        fdr_rows.append({
+            "Country": name,
+            "vs":   get_next_opponent(code),
+            "FDR":  get_team_fdr(code),
+            "CS%":  get_team_cs(code),
+            "xG":   get_team_xg(code),
+        })
 
-    fdr_df = pd.DataFrame(fdr_rows).sort_values("Total FDR").set_index("Country")
-
-    cs_cols6  = [c for c in [f"CS%{i}" for i in range(1, md_show+1)]  if c in fdr_df.columns]
-    xg_cols6  = [c for c in [f"xG{i}"  for i in range(1, md_show+1)]  if c in fdr_df.columns]
-    fdr_cols6 = [c for c in [f"FDR{i}" for i in range(1, md_show+1)]  if c in fdr_df.columns]
+    fdr_df = pd.DataFrame(fdr_rows).sort_values("FDR").set_index("Country")
 
     styler = fdr_df.style
     try:
-        styler = styler.map(_fdr_color, subset=fdr_cols6)
+        styler = styler.map(_fdr_color, subset=["FDR"])
     except AttributeError:
-        styler = styler.applymap(_fdr_color, subset=fdr_cols6)
-    for c in cs_cols6:
-        styler = styler.background_gradient(subset=[c], cmap="Greens")
-    for c in xg_cols6:
-        styler = styler.background_gradient(subset=[c], cmap="Oranges")
-
-    fmt6 = {}
-    fmt6.update({c: "{:.0%}" for c in cs_cols6})
-    fmt6.update({c: "{:.2f}" for c in xg_cols6})
-    if "Avg CS%" in fdr_df.columns:
-        fmt6["Avg CS%"] = "{:.0%}"
-    if "Avg xG" in fdr_df.columns:
-        fmt6["Avg xG"] = "{:.2f}"
-        styler = styler.background_gradient(subset=["Avg xG"], cmap="Oranges")
-    if "Avg CS%" in fdr_df.columns:
-        styler = styler.background_gradient(subset=["Avg CS%"], cmap="Greens")
-    styler = styler.format(fmt6, na_rep="—")
+        styler = styler.applymap(_fdr_color, subset=["FDR"])
+    styler = styler.background_gradient(subset=["CS%"], cmap="Greens")
+    styler = styler.background_gradient(subset=["xG"], cmap="Oranges")
+    styler = styler.format({"CS%": "{:.0%}", "xG": "{:.2f}"}, na_rep="—")
 
     st.dataframe(styler, use_container_width=True, height=640)
 
+
+# ── TAB 7: WC Stats ───────────────────────────────────────────────────────────
+with tab7:
+    st.subheader("🌐 Real World Cup Stats (accumulated)")
+    st.caption(
+        "Actual tournament per-90 stats from API-Football, refreshed each round "
+        "(run `scripts/fetch_wc_stats.py` locally). Blended into projections at a "
+        "weight that ramps with WC minutes played "
+        f"(cap {int(__import__('config').WC_FORM_MAX_WEIGHT*100)}% at "
+        f"{int(__import__('config').WC_FORM_FULL_TRUST_MIN)} mins)."
+    )
+
+    wc_df = df[df["wc_min"] > 0].copy()
+    if wc_df.empty:
+        st.info(
+            "No WC stats loaded yet. After a round completes, run "
+            "`python3 scripts/fetch_wc_stats.py --key YOUR_KEY` on your Mac, then "
+            "commit `data/wc_stats.json`."
+        )
+    else:
+        wpos = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"],
+                        horizontal=True, key="t7_pos")
+        wc_view = wc_df if wpos == "All" else wc_df[wc_df["pos"] == wpos]
+        wc_view = wc_view.sort_values("xPts_GS", ascending=False).reset_index(drop=True)
+        wc_view.index += 1
+
+        WC_COLS = {
+            "name": "Name", "team_code": "Nation", "pos": "Pos",
+            "wc_games": "WC GP", "wc_min": "WC Min",
+            "xg90_wc": "WC Gls/90", "xa90_wc": "WC Ast/90", "sot90_wc": "WC SOT/90",
+            "kp90_wc": "WC KP/90", "tackles90_wc": "WC Tkl/90",
+            "xPts_GS": "Proj Pts",
+        }
+        wc_disp_cols = [c for c in WC_COLS if c in wc_view.columns]
+        wc_disp = _pin_name(wc_view[wc_disp_cols].rename(columns=WC_COLS), "Name", "Nation")
+        wc_per90 = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
+        wc_fmt = {"WC Min": "{:.0f}'", "Proj Pts": "{:.1f}"}
+        wc_fmt.update({c: "{:.2f}" for c in wc_per90})
+        wc_styler = wc_disp.style.format(
+            {k: v for k, v in wc_fmt.items() if k in wc_disp.columns}, na_rep="—"
+        )
+        for c in ["WC Gls/90", "WC Ast/90"]:
+            if c in wc_disp.columns:
+                wc_styler = wc_styler.background_gradient(subset=[c], cmap="Purples")
+        st.dataframe(wc_styler, use_container_width=True, height=620)
+        st.caption(f"{len(wc_df)} players with WC minutes logged.")
 
 
 st.divider()

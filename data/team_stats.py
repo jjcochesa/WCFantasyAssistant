@@ -1,12 +1,20 @@
 """
-Hardcoded team-level data for WC 2026 group stage.
+Hardcoded team-level data for WC 2026 — SINGLE upcoming match at a time.
+
+From the group stage MD2 onward the model projects only the next round for each
+team, then we wipe and refresh for the following round (MD2 → MD3 → R32 → R16 →
+QF → SF → Final). Each round you send fresh CS% / xG and we swap the single
+value per team below.
+
 Sources:
-  - Projected goals & CS% from FPLJoe.com (from SBOBET/Betfair markets)
+  - Projected goals & CS% from FPLJoe.com (SBOBET/Betfair markets)
   - FDR (1=easiest, 5=hardest) from @FPL_Marcello
   - Fixtures from official WC 2026 schedule
-
-Updated 16.06.26: shifted to MD2+MD3 (MD1 played). Index 0 = MD2, 1 = MD3, 2 = placeholder.
 """
+
+# Label for the round currently being projected (display only)
+CURRENT_ROUND = "MD2"
+CURRENT_ROUND_DATE = "16.06.26"
 
 # Group assignments
 GROUPS = {
@@ -40,88 +48,54 @@ TEAM_NAMES = {
     "QAT": "Qatar", "JOR": "Jordan", "HAI": "Haiti", "IRQ": "Iraq", "CUW": "Curacao",
 }
 
-# Fixtures: [MD2_opponent, MD3_opponent, ""] — MD1 complete
+# Next opponent (3-letter code) for the upcoming round
 FIXTURES = {
-    "SUI": ["BIH", "CAN", ""],  "CAN": ["QAT", "SUI", ""],
-    "QAT": ["CAN", "BIH", ""],  "BIH": ["SUI", "QAT", ""],
-    "GER": ["CIV", "ECU", ""],  "ECU": ["CUW", "GER", ""],
-    "CIV": ["GER", "CUW", ""],  "CUW": ["ECU", "CIV", ""],
-    "BEL": ["IRN", "NZL", ""],  "IRN": ["BEL", "EGY", ""],
-    "EGY": ["NZL", "IRN", ""],  "NZL": ["EGY", "BEL", ""],
-    "ESP": ["KSA", "URU", ""],  "URU": ["CPV", "ESP", ""],
-    "KSA": ["ESP", "CPV", ""],  "CPV": ["URU", "KSA", ""],
-    "MEX": ["KOR", "CZE", ""],  "KOR": ["MEX", "RSA", ""],
-    "CZE": ["RSA", "MEX", ""],  "RSA": ["CZE", "KOR", ""],
-    "BRA": ["HAI", "SCO", ""],  "MAR": ["SCO", "HAI", ""],
-    "SCO": ["MAR", "BRA", ""],  "HAI": ["BRA", "MAR", ""],
-    "ARG": ["AUT", "JOR", ""],  "AUT": ["ARG", "ALG", ""],
-    "ALG": ["JOR", "AUT", ""],  "JOR": ["ALG", "ARG", ""],
-    "POR": ["UZB", "COL", ""],  "COL": ["COD", "POR", ""],
-    "COD": ["COL", "UZB", ""],  "UZB": ["POR", "COD", ""],
-    "NED": ["SWE", "TUN", ""],  "JPN": ["TUN", "SWE", ""],
-    "SWE": ["NED", "JPN", ""],  "TUN": ["JPN", "NED", ""],
-    "USA": ["AUS", "TUR", ""],  "TUR": ["PAR", "USA", ""],
-    "AUS": ["USA", "PAR", ""],  "PAR": ["TUR", "AUS", ""],
-    "FRA": ["IRQ", "NOR", ""],  "SEN": ["NOR", "IRQ", ""],
-    "NOR": ["SEN", "FRA", ""],  "IRQ": ["FRA", "SEN", ""],
-    "ENG": ["GHA", "PAN", ""],  "CRO": ["PAN", "GHA", ""],
-    "GHA": ["ENG", "CRO", ""],  "PAN": ["CRO", "ENG", ""],
+    "SUI": "BIH", "CAN": "QAT", "QAT": "CAN", "BIH": "SUI",
+    "GER": "CIV", "ECU": "CUW", "CIV": "GER", "CUW": "ECU",
+    "BEL": "IRN", "IRN": "BEL", "EGY": "NZL", "NZL": "EGY",
+    "ESP": "KSA", "URU": "CPV", "KSA": "ESP", "CPV": "URU",
+    "MEX": "KOR", "KOR": "MEX", "CZE": "RSA", "RSA": "CZE",
+    "BRA": "HAI", "MAR": "SCO", "SCO": "MAR", "HAI": "BRA",
+    "ARG": "AUT", "AUT": "ARG", "ALG": "JOR", "JOR": "ALG",
+    "POR": "UZB", "COL": "COD", "COD": "COL", "UZB": "POR",
+    "NED": "SWE", "JPN": "TUN", "SWE": "NED", "TUN": "JPN",
+    "USA": "AUS", "TUR": "PAR", "AUS": "USA", "PAR": "TUR",
+    "FRA": "IRQ", "SEN": "NOR", "NOR": "SEN", "IRQ": "FRA",
+    "ENG": "GHA", "CRO": "PAN", "GHA": "ENG", "PAN": "CRO",
 }
 
-# Projected goals scored per matchday [MD2, MD3, placeholder] — FPLJoe.com (16.06.26)
+# Projected goals for the upcoming match — FPLJoe.com (16.06.26 / MD2)
 PROJ_GOALS = {
-    "ESP": [2.98, 1.78, 0.0], "GER": [1.80, 1.77, 0.0], "BRA": [3.53, 2.00, 0.0],
-    "FRA": [2.79, 1.64, 0.0], "POR": [2.43, 1.47, 0.0], "ENG": [2.30, 2.26, 0.0],
-    "ARG": [1.55, 2.47, 0.0], "BEL": [1.88, 2.22, 0.0], "SUI": [1.71, 1.41, 0.0],
-    "NED": [1.83, 1.90, 0.0], "MEX": [1.50, 1.54, 0.0], "NOR": [1.51, 1.00, 0.0],
-    "URU": [1.90, 0.90, 0.0], "COL": [1.74, 1.04, 0.0], "AUT": [0.74, 1.35, 0.0],
-    "USA": [1.70, 1.37, 0.0], "CAN": [1.99, 1.04, 0.0], "ECU": [2.42, 0.95, 0.0],
-    "MAR": [1.38, 2.11, 0.0], "CRO": [1.68, 1.64, 0.0], "TUR": [1.27, 1.28, 0.0],
-    "CIV": [0.82, 2.41, 0.0], "JPN": [1.64, 1.45, 0.0], "EGY": [1.44, 1.22, 0.0],
-    "SEN": [1.06, 1.89, 0.0], "SCO": [0.82, 0.79, 0.0], "CZE": [1.43, 0.92, 0.0],
-    "KOR": [0.86, 1.47, 0.0], "SWE": [1.01, 1.05, 0.0], "ALG": [1.63, 1.10, 0.0],
-    "PAR": [0.88, 1.31, 0.0], "IRN": [0.69, 0.91, 0.0], "BIH": [0.83, 1.79, 0.0],
-    "GHA": [0.74, 0.79, 0.0], "AUS": [0.93, 1.00, 0.0], "RSA": [0.88, 0.94, 0.0],
-    "TUN": [0.70, 0.76, 0.0], "COD": [0.63, 1.23, 0.0], "UZB": [0.61, 1.02, 0.0],
-    "PAN": [0.67, 0.70, 0.0], "KSA": [0.42, 1.14, 0.0], "NZL": [0.76, 0.65, 0.0],
-    "CPV": [0.60, 1.22, 0.0], "QAT": [0.61, 0.76, 0.0], "JOR": [0.79, 0.61, 0.0],
-    "HAI": [0.45, 0.64, 0.0], "IRQ": [0.42, 0.77, 0.0], "CUW": [0.44, 0.57, 0.0],
+    "ESP": 2.98, "GER": 1.80, "BRA": 3.53, "FRA": 2.79, "POR": 2.43, "ENG": 2.30,
+    "ARG": 1.55, "BEL": 1.88, "SUI": 1.71, "NED": 1.83, "MEX": 1.50, "NOR": 1.51,
+    "URU": 1.90, "COL": 1.74, "AUT": 0.74, "USA": 1.70, "CAN": 1.99, "ECU": 2.42,
+    "MAR": 1.38, "CRO": 1.68, "TUR": 1.27, "CIV": 0.82, "JPN": 1.64, "EGY": 1.44,
+    "SEN": 1.06, "SCO": 0.82, "CZE": 1.43, "KOR": 0.86, "SWE": 1.01, "ALG": 1.63,
+    "PAR": 0.88, "IRN": 0.69, "BIH": 0.83, "GHA": 0.74, "AUS": 0.93, "RSA": 0.88,
+    "TUN": 0.70, "COD": 0.63, "UZB": 0.61, "PAN": 0.67, "KSA": 0.42, "NZL": 0.76,
+    "CPV": 0.60, "QAT": 0.61, "JOR": 0.79, "HAI": 0.45, "IRQ": 0.42, "CUW": 0.44,
 }
 
-# Clean sheet probability per matchday [MD2, MD3, placeholder] — FPLJoe.com (16.06.26)
+# Clean sheet probability for the upcoming match — FPLJoe.com (16.06.26 / MD2)
 CS_PCT = {
-    "ESP": [0.66, 0.41, 0.0], "ARG": [0.48, 0.46, 0.0], "FRA": [0.66, 0.37, 0.0],
-    "BRA": [0.64, 0.46, 0.0], "GER": [0.44, 0.39, 0.0], "ENG": [0.48, 0.50, 0.0],
-    "POR": [0.54, 0.35, 0.0], "BEL": [0.50, 0.52, 0.0], "SUI": [0.44, 0.35, 0.0],
-    "MEX": [0.43, 0.40, 0.0], "COL": [0.53, 0.23, 0.0], "NED": [0.37, 0.47, 0.0],
-    "CAN": [0.54, 0.24, 0.0], "ECU": [0.64, 0.17, 0.0], "URU": [0.55, 0.17, 0.0],
-    "CRO": [0.51, 0.45, 0.0], "USA": [0.40, 0.28, 0.0], "MAR": [0.44, 0.53, 0.0],
-    "NOR": [0.33, 0.19, 0.0], "TUR": [0.41, 0.25, 0.0], "AUT": [0.21, 0.33, 0.0],
-    "CIV": [0.18, 0.57, 0.0], "EGY": [0.47, 0.40, 0.0], "JPN": [0.50, 0.35, 0.0],
-    "CZE": [0.42, 0.21, 0.0], "KOR": [0.22, 0.39, 0.0], "SCO": [0.25, 0.14, 0.0],
-    "IRN": [0.15, 0.30, 0.0], "SEN": [0.22, 0.46, 0.0], "SWE": [0.16, 0.23, 0.0],
-    "ALG": [0.45, 0.26, 0.0], "BIH": [0.18, 0.47, 0.0], "GHA": [0.10, 0.19, 0.0],
-    "RSA": [0.24, 0.23, 0.0], "AUS": [0.18, 0.27, 0.0], "TUN": [0.19, 0.15, 0.0],
-    "PAR": [0.28, 0.37, 0.0], "COD": [0.18, 0.36, 0.0], "KSA": [0.04, 0.30, 0.0],
-    "UZB": [0.09, 0.29, 0.0], "NZL": [0.24, 0.11, 0.0], "CPV": [0.18, 0.32, 0.0],
-    "QAT": [0.14, 0.17, 0.0], "PAN": [0.19, 0.10, 0.0], "JOR": [0.20, 0.08, 0.0],
-    "HAI": [0.03, 0.12, 0.0], "IRQ": [0.06, 0.15, 0.0], "CUW": [0.09, 0.09, 0.0],
+    "ESP": 0.66, "ARG": 0.48, "FRA": 0.66, "BRA": 0.64, "GER": 0.44, "ENG": 0.48,
+    "POR": 0.54, "BEL": 0.50, "SUI": 0.44, "MEX": 0.43, "COL": 0.53, "NED": 0.37,
+    "CAN": 0.54, "ECU": 0.64, "URU": 0.55, "CRO": 0.51, "USA": 0.40, "MAR": 0.44,
+    "NOR": 0.33, "TUR": 0.41, "AUT": 0.21, "CIV": 0.18, "EGY": 0.47, "JPN": 0.50,
+    "CZE": 0.42, "KOR": 0.22, "SCO": 0.25, "IRN": 0.15, "SEN": 0.22, "SWE": 0.16,
+    "ALG": 0.45, "BIH": 0.18, "GHA": 0.10, "RSA": 0.24, "AUS": 0.18, "TUN": 0.19,
+    "PAR": 0.28, "COD": 0.18, "KSA": 0.04, "UZB": 0.09, "NZL": 0.24, "CPV": 0.18,
+    "QAT": 0.14, "PAN": 0.19, "JOR": 0.20, "HAI": 0.03, "IRQ": 0.06, "CUW": 0.09,
 }
 
-# FDR per matchday [MD2, MD3, placeholder] — @FPL_Marcello (1=easiest, 5=hardest)
+# FDR for the upcoming match — @FPL_Marcello (1=easiest, 5=hardest)
 FDR = {
-    "BEL": [1, 1, 3], "MEX": [2, 3, 3], "EGY": [1, 1, 3], "ESP": [2, 3, 3],
-    "ARG": [3, 1, 3], "POR": [1, 4, 3], "CZE": [1, 4, 3], "SUI": [3, 3, 3],
-    "BRA": [1, 2, 3], "GER": [2, 4, 3], "IRN": [4, 2, 3], "NZL": [2, 4, 3],
-    "URU": [1, 5, 3], "COL": [1, 5, 3], "ENG": [2, 1, 3], "CAN": [1, 4, 3],
-    "BIH": [4, 1, 3], "MAR": [2, 1, 3], "USA": [1, 4, 3], "TUR": [3, 4, 3],
-    "ECU": [1, 5, 3], "NED": [3, 1, 3], "JOR": [2, 5, 3], "AUT": [5, 2, 3],
-    "SCO": [2, 5, 3], "KOR": [4, 1, 3], "RSA": [2, 1, 3], "FRA": [1, 5, 3],
-    "NOR": [2, 5, 3], "ALG": [1, 2, 3], "SEN": [2, 1, 3], "PAR": [4, 1, 3],
-    "JPN": [3, 1, 3], "QAT": [3, 4, 3], "SWE": [4, 3, 3], "CIV": [5, 1, 3],
-    "TUN": [4, 3, 3], "HAI": [5, 2, 3], "AUS": [4, 3, 3], "GHA": [4, 3, 3],
-    "PAN": [3, 4, 3], "CRO": [1, 2, 3], "COD": [1, 1, 3], "UZB": [5, 1, 3],
-    "CPV": [1, 2, 3], "KSA": [5, 2, 3], "IRQ": [5, 3, 3], "CUW": [2, 1, 3],
+    "BEL": 1, "MEX": 2, "EGY": 1, "ESP": 2, "ARG": 3, "POR": 1, "CZE": 1, "SUI": 3,
+    "BRA": 1, "GER": 2, "IRN": 4, "NZL": 2, "URU": 1, "COL": 1, "ENG": 2, "CAN": 1,
+    "BIH": 4, "MAR": 2, "USA": 1, "TUR": 3, "ECU": 1, "NED": 3, "JOR": 2, "AUT": 5,
+    "SCO": 2, "KOR": 4, "RSA": 2, "FRA": 1, "NOR": 2, "ALG": 1, "SEN": 2, "PAR": 4,
+    "JPN": 3, "QAT": 3, "SWE": 4, "CIV": 5, "TUN": 4, "HAI": 5, "AUS": 4, "GHA": 4,
+    "PAN": 3, "CRO": 1, "COD": 1, "UZB": 5, "CPV": 1, "KSA": 5, "IRQ": 5, "CUW": 2,
 }
 
 # Group balance classification (from FIFA ranking analysis)
@@ -142,48 +116,41 @@ GROUP_BALANCE = {
 
 import math as _math
 
-# Combined projection lookup: {team: {md1: (xg, cs_pct), md2: ..., md3: ...}}
-TEAM_PROJECTIONS = {
-    code: {
-        "md1": (PROJ_GOALS[code][0], CS_PCT.get(code, [0.3, 0.3, 0.3])[0]),
-        "md2": (PROJ_GOALS[code][1], CS_PCT.get(code, [0.3, 0.3, 0.3])[1]),
-        "md3": (PROJ_GOALS[code][2], CS_PCT.get(code, [0.3, 0.3, 0.3])[2]),
-    }
-    for code in PROJ_GOALS
-}
+
+def get_team_proj(team_code: str) -> tuple:
+    """Returns (team_xg, cs_pct) for the upcoming match."""
+    return (PROJ_GOALS.get(team_code, 1.0), CS_PCT.get(team_code, 0.3))
 
 
-def get_team_proj(team_code: str, md: int) -> tuple:
-    """Returns (team_xg, cs_pct) for matchday 1/2/3."""
-    return TEAM_PROJECTIONS.get(team_code, {}).get(f"md{md}", (1.0, 0.3))
+def get_team_xg(team_code: str) -> float:
+    return PROJ_GOALS.get(team_code, 1.0)
 
 
-def get_opponent_xg(team_code: str, md: int) -> float:
+def get_team_cs(team_code: str) -> float:
+    return CS_PCT.get(team_code, 0.3)
+
+
+def get_opponent_xg(team_code: str) -> float:
     """Estimate opponent xG from cs_pct via Poisson: P(CS) = e^(-λ) → λ = -ln(cs_pct)."""
-    _, cs_pct = get_team_proj(team_code, md)
+    cs_pct = get_team_cs(team_code)
     return -_math.log(max(cs_pct, 0.01))
 
 
-def get_team_fdr_total(team_code: str) -> int:
-    """Total FDR for remaining group stage games (MD2+MD3). Lower = easier fixtures."""
-    fdr = FDR.get(team_code, [3, 3])
-    return sum(fdr[:2])
+def get_team_fdr(team_code: str) -> int:
+    """FDR for the upcoming match. Lower = easier."""
+    return FDR.get(team_code, 3)
 
-def get_avg_cs_pct(team_code: str) -> float:
-    """Average clean sheet probability across remaining 2 group stage games."""
-    cs = CS_PCT.get(team_code, [0.3, 0.3])
-    return sum(cs[:2]) / 2
 
-def get_avg_proj_goals(team_code: str) -> float:
-    """Average projected goals per game across remaining 2 group stage games."""
-    g = PROJ_GOALS.get(team_code, [1.0, 1.0])
-    return sum(g[:2]) / 2
+def get_next_opponent(team_code: str) -> str:
+    return FIXTURES.get(team_code, "?")
+
 
 def get_team_group(team_code: str) -> str:
     for grp, teams in GROUPS.items():
         if team_code in teams:
             return grp
     return "?"
+
 
 def get_group_balance(team_code: str) -> str:
     grp = get_team_group(team_code)
