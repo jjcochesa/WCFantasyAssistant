@@ -102,7 +102,7 @@ def _load_draft(mode: str, token: str, pfile: str, iw: float) -> pd.DataFrame:
         players_file=pfile or None,
         use_demo=(mode == "Demo data (40 players)"),
         use_squads=(mode != "Demo data (40 players)" and mode != "Local JSON export"),
-        matchdays=[1, 2, 3],
+        matchdays=[1, 2],
     )
 
 
@@ -417,7 +417,7 @@ def _filter(key_prefix: str) -> pd.DataFrame:
 
 # ── TAB 1: Master Table ───────────────────────────────────────────────────────
 with tab1:
-    st.subheader("Player Rankings — Group Stage (MD1 + MD2)")
+    st.subheader("Player Rankings — Group Stage (MD2 + MD3)")
 
     f1, f2 = st.columns([3, 1])
     with f1:
@@ -661,7 +661,7 @@ with tab4:
     b1, b2, b3, b4 = st.columns(4)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
     build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
-    use_transfers = b3.toggle("2 transfers MD1→MD2", value=False, key="build_transfers")
+    use_transfers = b3.toggle("2 transfers MD2→MD3", value=False, key="build_transfers")
     exclude_mex   = b4.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):
@@ -833,9 +833,9 @@ with tab5:
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
 with tab6:
     st.subheader("Group Stage Fixtures — CS% & Projected Goals")
-    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (08.06.26). CS% directly drives DEF/GK clean sheet points in model.")
+    st.caption("CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets (16.06.26). CS% directly drives DEF/GK clean sheet points in model.")
 
-    md_show = st.radio("Show matchdays", [1, 2, 3], index=2, horizontal=True, key="t6_mds",
+    md_show = st.radio("Show matchdays", [1, 2], index=1, horizontal=True, key="t6_mds",
                        format_func=lambda x: f"MD1 only" if x == 1 else f"MD1–MD{x}")
 
     fdr_rows = []
@@ -916,12 +916,10 @@ with tab7:
         "name":     "Name",
         "team_code": "Nation",
         "pos":      "Pos",
-        "md1_opp":  "MD1 vs",
-        "md2_opp":  "MD2 vs",
-        "md3_opp":  "MD3 vs",
-        "md1_pts":  "MD1 Pts",
-        "md2_pts":  "MD2 Pts",
-        "md3_pts":  "MD3 Pts",
+        "md1_opp":  "MD2 vs",
+        "md2_opp":  "MD3 vs",
+        "md1_pts":  "MD2 Pts",
+        "md2_pts":  "MD3 Pts",
         "xPts_GS":  "Total Pts",
     }
     disp_cols = [c for c in DRAFT_COLS if c in draft_top.columns]
@@ -929,7 +927,7 @@ with tab7:
 
     st.dataframe(
         draft_disp.style.format(
-            {"MD1 Pts": "{:.1f}", "MD2 Pts": "{:.1f}", "MD3 Pts": "{:.1f}", "Total Pts": "{:.1f}"},
+            {"MD2 Pts": "{:.1f}", "MD3 Pts": "{:.1f}", "Total Pts": "{:.1f}"},
             na_rep="—"
         ),
         use_container_width=True,
