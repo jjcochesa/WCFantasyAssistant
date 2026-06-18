@@ -751,10 +751,10 @@ with tab7:
     st.subheader("🌐 Real World Cup Stats (accumulated)")
     st.caption(
         "Actual tournament per-90 stats from API-Football, refreshed each round "
-        "(run `scripts/fetch_wc_stats.py` locally). Blended into projections at a "
-        "weight that ramps with WC minutes played "
-        f"(cap {int(__import__('config').WC_FORM_MAX_WEIGHT*100)}% at "
-        f"{int(__import__('config').WC_FORM_FULL_TRUST_MIN)} mins)."
+        "(run `scripts/fetch_wc_stats.py` locally). Blended into projections via "
+        "empirical-Bayes shrinkage toward each player's pre-tournament baseline "
+        f"(prior strength {int(__import__('config').WC_FORM_PRIOR_GAMES)} games) — "
+        "so one match nudges, while more WC minutes increasingly take over."
     )
 
     wc_df = df[df["wc_min"] > 0].copy()

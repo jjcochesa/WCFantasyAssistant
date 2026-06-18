@@ -794,9 +794,13 @@ def _compute_per90(p: Player) -> None:
         p.kp90      = (1 - _fw) * p.kp90      + _fw * _form.get("key_passes",  0) * _f90
         p.tackles90 = (1 - _fw) * p.tackles90 + _fw * _form.get("tackles",     0) * _f90
 
-    # Real WC form overlay — blended on TOP of the baseline at a weight that
-    # ramps with WC minutes played (config.WC_FORM_*). Friendlies stay underneath
-    # (they feed the NT-ish baseline); WC data is its own layer that grows each round.
+    # Real WC form overlay — empirical-Bayes (Gamma-Poisson) shrinkage. The player's
+    # accumulated WC counts are blended with their own pre-tournament per-90 baseline,
+    # which serves as the prior (strength WC_FORM_PRIOR_GAMES, in 90s):
+    #   posterior_per90 = (baseline * K + wc_count) / (K + wc_90s)
+    # One match barely moves the estimate; as WC minutes accumulate the observed rate
+    # takes over on its own — no weight cap. Friendlies stay underneath (they feed the
+    # baseline/prior); the raw observed per-90 is kept for display in the WC tab.
     p.xg90_wc = p.xa90_wc = p.sot90_wc = p.kp90_wc = p.tackles90_wc = 0.0
     p.wc_minutes = 0
     p.wc_games   = 0
@@ -814,12 +818,14 @@ def _compute_per90(p: Player) -> None:
             p.kp90_wc      = _wc.get("key_passes",  0) * _w90
             p.tackles90_wc = _wc.get("tackles",     0) * _w90
         if _wmin >= _cfg.WC_FORM_MIN_MINUTES:
-            _ww = min(_cfg.WC_FORM_MAX_WEIGHT, _wmin / _cfg.WC_FORM_FULL_TRUST_MIN)
-            p.xg90      = (1 - _ww) * p.xg90      + _ww * p.xg90_wc
-            p.xa90      = (1 - _ww) * p.xa90      + _ww * p.xa90_wc
-            p.sot90     = (1 - _ww) * p.sot90     + _ww * p.sot90_wc
-            p.kp90      = (1 - _ww) * p.kp90      + _ww * p.kp90_wc
-            p.tackles90 = (1 - _ww) * p.tackles90 + _ww * p.tackles90_wc
+            _n90 = _wmin / 90.0                  # WC 90s actually played (sample size)
+            _K   = _cfg.WC_FORM_PRIOR_GAMES      # prior strength on the baseline
+            _den = _K + _n90
+            p.xg90      = (p.xg90      * _K + _wc.get("goals",      0)) / _den
+            p.xa90      = (p.xa90      * _K + _wc.get("assists",     0)) / _den
+            p.sot90     = (p.sot90     * _K + _wc.get("shots_on",    0)) / _den
+            p.kp90      = (p.kp90      * _K + _wc.get("key_passes",  0)) / _den
+            p.tackles90 = (p.tackles90 * _K + _wc.get("tackles",     0)) / _den
 
     # Effective sample size behind the blend — used to regress the per-90 "share"
     # multiplier toward the positional baseline for low-minute players (small
@@ -935,28 +941,53 @@ def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
 def _assign_minutes(players: list) -> None:
     """
     Set projected_minutes for every player.
+
+    Pre-tournament baseline:
       - Team has a predicted XI (data/predicted_lineups.py):
           in XI  -> STARTER_MINUTES (70),  not in XI -> BENCH_MINUTES (20)
       - Team has no predicted XI: fall back to starter_rate from the stats
         pipeline, mapped onto [BENCH, STARTER]  (sr 0 -> 20, sr 1 -> ~70).
+
+    Once a team has played WC matches, recent minutes-per-game override that frozen
+    baseline — they predict the next lineup far better. The pre-tournament value is
+    used only as a light prior (strength WC_MINUTES_PRIOR_GAMES). A player whose team
+    has played but who logged 0 minutes is treated as out of the rotation (bench);
+    players whose team has not yet played keep their pre-tournament projection.
     """
+    import config as _cfg
     xi_keys: dict[str, set] = {
         code: {_match_key(n) for n in names} for code, names in PREDICTED_XI.items()
     }
+    # Teams that already have real WC minutes on record.
+    teams_with_wc = {p.team_code for p in players if (getattr(p, "wc_games", 0) or 0) > 0}
+
     for p in players:
+        # 1. Pre-tournament baseline (predicted XI, else starter_rate).
         keys = xi_keys.get(p.team_code)
         if keys is not None:
-            if _match_key(p.name) in keys:
-                p.projected_minutes = float(STARTER_MINUTES)
-                p.predicted_starter = True
-            else:
-                p.projected_minutes = float(BENCH_MINUTES)
-                p.predicted_starter = False
+            in_xi = _match_key(p.name) in keys
+            base_min = float(STARTER_MINUTES) if in_xi else float(BENCH_MINUTES)
         else:
-            # No XI for this team — use starter_rate as a soft minutes estimate
             sr = max(0.0, min(1.0, p.starter_rate if p.starter_rate is not None else 1.0))
-            p.projected_minutes = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
-            p.predicted_starter = sr >= 0.6
+            base_min = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
+
+        # 2. Overlay real WC minutes when the team has played.
+        wc_games = getattr(p, "wc_games", 0) or 0
+        wc_min   = getattr(p, "wc_minutes", 0) or 0
+        if wc_games > 0:
+            mpg = wc_min / wc_games                       # avg minutes per WC match
+            w   = wc_games / (wc_games + _cfg.WC_MINUTES_PRIOR_GAMES)
+            proj = (1 - w) * base_min + w * mpg
+            p.projected_minutes = round(min(float(STARTER_MINUTES),
+                                            max(float(BENCH_MINUTES), proj)))
+        elif p.team_code in teams_with_wc:
+            # Team played, this player did not feature -> out of the rotation.
+            p.projected_minutes = float(BENCH_MINUTES)
+        else:
+            # Team has not played yet -> keep the pre-tournament projection.
+            p.projected_minutes = base_min
+
+        p.predicted_starter = p.projected_minutes >= 60
 
 
 # ── Set-piece duty assignment ─────────────────────────────────────────────────
