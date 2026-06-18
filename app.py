@@ -422,6 +422,12 @@ with tab1:
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
     per90_wc   = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
+
+    # Hide WC per-90 for players with < 45 WC minutes — sample too small to be meaningful
+    if "WC Min" in disp.columns:
+        _low_wc = disp["WC Min"] < 45
+        for _c in [c for c in per90_wc if c in disp.columns]:
+            disp.loc[_low_wc, _c] = float("nan")
     pts_cols   = ["Proj Pts", "Adj Pts"]
     pct_cols   = [c for c in ["CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
@@ -775,6 +781,12 @@ with tab7:
         wc_disp_cols = [c for c in WC_COLS if c in wc_view.columns]
         wc_disp = _pin_name(wc_view[wc_disp_cols].rename(columns=WC_COLS), "Name", "Nation")
         wc_per90 = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
+
+        # Hide per-90 for players with < 45 WC minutes
+        if "WC Min" in wc_disp.columns:
+            _low_wc = wc_disp["WC Min"] < 45
+            for _c in [c for c in wc_per90 if c in wc_disp.columns]:
+                wc_disp.loc[_low_wc, _c] = float("nan")
         wc_fmt = {"WC Min": "{:.0f}'", "Proj Pts": "{:.1f}"}
         wc_fmt.update({c: "{:.2f}" for c in wc_per90})
         wc_styler = wc_disp.style.format(
