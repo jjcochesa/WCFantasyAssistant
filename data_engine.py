@@ -899,7 +899,12 @@ def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
 
 def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
     """Project points for the upcoming match, scaled by projected minutes.
-    Returns (pts, player_xg-for-the-minutes-played)."""
+    Returns (pts, player_xg, ceiling, haul_pct).
+
+    `xPts` is the *expected* value — for defenders it's dominated by appearance +
+    clean sheet, so even premium attacking full-backs top out around 6. `ceiling`
+    and `haul_pct` describe the *upside* a fantasy manager actually chases: how many
+    points a big "return game" is worth, and how likely that game is."""
     pos = p.position
     team_xg, cs_pct = get_team_proj(p.team_code)
     opp_xg = get_opponent_xg(p.team_code)
@@ -917,17 +922,18 @@ def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
     pxg += (p.sp_pk_xg + p.sp_fk_xg) * mf
     pxa += p.sp_ck_xa * mf
 
-    pts = 2.0 if mins >= 60 else 1.0       # appearance points
+    appearance = 2.0 if mins >= 60 else 1.0
+    pts = appearance
     pts += pxg * SCORING["goal"][pos]
-    pts += pxa * 3
+    pts += pxa * SCORING["assist"][pos]
     if mins >= 60:
         pts += cs_pct * SCORING["clean_sheet_60"][pos]
 
     if pos in ("GK", "DEF"):
         pts += max(0.0, opp_xg - 1.0) * SCORING["goals_conceded_add"][pos] * mf
 
-    if pos == "GK":
-        pts += (opp_xg * 3.5 * p.save_rate) / 3 * mf
+    gk_saves = (opp_xg * 3.5 * p.save_rate) / 3 * mf if pos == "GK" else 0.0
+    pts += gk_saves
 
     if pos == "MID":
         pts += (p.tackles90 / 3 + p.kp90 / 2) * mf
@@ -935,7 +941,44 @@ def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
     if pos == "FWD":
         pts += p.sot90 / 2 * mf
 
-    return max(0.0, pts), pxg
+    ceiling, haul_pct = _upside(pos, pxg, pxa, cs_pct, mins, gk_saves)
+    return max(0.0, pts), pxg, ceiling, haul_pct
+
+
+def _upside(pos: str, pxg: float, pxa: float, cs_pct: float,
+            mins: float, gk_saves: float) -> tuple:
+    """Ceiling (points in a realistic 'haul' game) and the probability of that game.
+
+    The haul scenario is position-specific:
+      GK  — keep a clean sheet (saves included).            haul_pct = P(CS)
+      DEF — clean sheet AND ≥1 attacking return.            haul_pct = P(CS) × P(return)
+      MID — score (clean sheet bonus added on top).         haul_pct = P(return)
+      FWD — score.                                          haul_pct = P(goal)
+    """
+    appearance = 2.0 if mins >= 60 else 1.0
+    full_cs    = SCORING["clean_sheet_60"][pos]
+    goal_pts   = SCORING["goal"][pos]
+    assist_pts = SCORING["assist"][pos]
+
+    ret_total = pxg + pxa
+    # Expected points from ONE attacking return (goal-heavy players gain more per return).
+    per_return = ((pxg * goal_pts + pxa * assist_pts) / ret_total) if ret_total > 0 else assist_pts
+    p_return = 1.0 - math.exp(-ret_total)           # P(≥1 goal or assist), Poisson
+    p_goal   = 1.0 - math.exp(-pxg)                 # P(≥1 goal)
+
+    if pos == "GK":
+        # haul = clean sheet + saves
+        ceiling, haul_pct = appearance + full_cs + gk_saves, cs_pct
+    elif pos == "DEF":
+        # haul = clean sheet + one attacking return
+        ceiling, haul_pct = appearance + full_cs + per_return, cs_pct * p_return
+    elif pos == "MID":
+        # haul = goal + assist game (clean-sheet bonus on top)
+        ceiling, haul_pct = appearance + full_cs + goal_pts + assist_pts, p_return
+    else:  # FWD — haul = a brace
+        ceiling, haul_pct = appearance + 2.0 * goal_pts, p_goal
+
+    return round(ceiling, 2), round(haul_pct, 3)
 
 
 def _assign_minutes(players: list) -> None:
@@ -1071,10 +1114,12 @@ def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     avg_xg, avg_xa = _pos_averages(players)
 
     for p in players:
-        pts, pxg = _project(p, avg_xg, avg_xa)
+        pts, pxg, ceiling, haul = _project(p, avg_xg, avg_xa)
         p.xpts_per_match   = round(pts, 3)
         p.xpts_group_stage = round(pts, 2)   # headline projected points (next match)
         p._proj_xg  = pxg                     # player-level xG for the match
+        p.ceiling   = ceiling                 # points in a realistic "haul" game
+        p.haul_pct  = haul                    # probability of that haul game
         if p.price > 0:
             p.value = round(p.xpts_group_stage / p.price, 3)
         p.scout_flag = p.xpts_per_match > SCOUT_POINTS_THRESHOLD and p.is_differential
@@ -1107,6 +1152,8 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "scout": p.scout_flag,
             # Upcoming-match display columns
             "proj_xg":     proj_xg,
+            "ceiling":     round(getattr(p, "ceiling", 0.0), 2),
+            "haul_pct":    round(getattr(p, "haul_pct", 0.0), 3),
             "opp":         opp,
             "team_cs_pct": team_cs,
             "team_xg":     team_xg,

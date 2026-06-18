@@ -391,6 +391,8 @@ with tab1:
         "own_%":          "Own%",
         "xPts_GS":        "Proj Pts",
         "adj_total":      "Adj Pts",
+        "ceiling":        "Ceiling",
+        "haul_pct":       "Haul%",
         "team_cs_pct":    "CS%",
         "team_xg":        "Team xG",
         "wc_min":         "WC Min",
@@ -437,6 +439,10 @@ with tab1:
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
+    if "Ceiling" in disp.columns:
+        fmt_map["Ceiling"] = "{:.1f}"
+    if "Haul%" in disp.columns:
+        fmt_map["Haul%"] = "{:.0%}"
 
     # Threshold-based bonus highlighting — blue palette, three distinct shades.
     #   MID  KP/90 ≥ 3.0  → blue-700   (chances created bonus)
@@ -495,6 +501,9 @@ with tab1:
     if xg_cols:
         for c in xg_cols:
             styler = styler.background_gradient(subset=[c], cmap="Oranges")
+    for c in ["Ceiling", "Haul%"]:
+        if c in disp_idx.columns:
+            styler = styler.background_gradient(subset=[c], cmap="Purples")
 
     st.dataframe(styler, use_container_width=True, height=620)
 
