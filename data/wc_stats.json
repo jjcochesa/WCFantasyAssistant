@@ -523,7 +523,7 @@
     },
     "matej kovar": {
       "display_name": "Matěj Kovář",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -534,7 +534,7 @@
     },
     "stepan chaloupek": {
       "display_name": "Štěpán Chaloupek",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -545,7 +545,7 @@
     },
     "robin hranac": {
       "display_name": "Robin Hranáč",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -556,7 +556,7 @@
     },
     "ladislav krejci": {
       "display_name": "Ladislav Krejčí",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
@@ -567,7 +567,7 @@
     },
     "vladimir coufal": {
       "display_name": "Vladimír Coufal",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
@@ -578,7 +578,7 @@
     },
     "tomas soucek": {
       "display_name": "Tomáš Souček",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -589,7 +589,7 @@
     },
     "alexandr sojka": {
       "display_name": "Alexandr Sojka",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -600,7 +600,7 @@
     },
     "jaroslav zeleny": {
       "display_name": "Jaroslav Zelený",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -611,7 +611,7 @@
     },
     "lukas provod": {
       "display_name": "Lukáš Provod",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -622,7 +622,7 @@
     },
     "pavel sulc": {
       "display_name": "Pavel Šulc",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -633,7 +633,7 @@
     },
     "patrik schick": {
       "display_name": "Patrik Schick",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -644,7 +644,7 @@
     },
     "michal sadilek": {
       "display_name": "Michal Sadílek",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 2,
@@ -655,7 +655,7 @@
     },
     "adam hlozek": {
       "display_name": "Adam Hložek",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -666,7 +666,7 @@
     },
     "tomas chory": {
       "display_name": "Tomáš Chorý",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -677,7 +677,7 @@
     },
     "mojmir chytil": {
       "display_name": "Mojmír Chytil",
-      "team": "Czechia",
+      "team": "Czech Republic",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -864,7 +864,7 @@
     },
     "nikola vasilj": {
       "display_name": "Nikola Vasilj",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -875,7 +875,7 @@
     },
     "amar dedic": {
       "display_name": "Amar Dedić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -886,7 +886,7 @@
     },
     "nikola katic": {
       "display_name": "Nikola Katić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -897,7 +897,7 @@
     },
     "tarik muharemovic": {
       "display_name": "Tarik Muharemović",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -908,7 +908,7 @@
     },
     "sead kolasinac": {
       "display_name": "Sead Kolašinac",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
@@ -919,7 +919,7 @@
     },
     "esmir bajraktarevic": {
       "display_name": "Esmir Bajraktarević",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -930,7 +930,7 @@
     },
     "benjamin tahirovic": {
       "display_name": "Benjamin Tahirović",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -941,7 +941,7 @@
     },
     "ivan basic": {
       "display_name": "Ivan Bašić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -952,7 +952,7 @@
     },
     "amar memic": {
       "display_name": "Amar Memić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -963,7 +963,7 @@
     },
     "ermedin demirovic": {
       "display_name": "Ermedin Demirović",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -974,7 +974,7 @@
     },
     "jovo lukic": {
       "display_name": "Jovo Lukić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
@@ -985,7 +985,7 @@
     },
     "armin gigovic": {
       "display_name": "Armin Gigović",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -996,7 +996,7 @@
     },
     "samed bazdar": {
       "display_name": "Samed Baždar",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -1007,7 +1007,7 @@
     },
     "ivan sunjic": {
       "display_name": "Ivan Šunjić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -1018,7 +1018,7 @@
     },
     "kerim alajbegovic": {
       "display_name": "Kerim Alajbegović",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -1029,7 +1029,7 @@
     },
     "dzenis burnic": {
       "display_name": "Dženis Burnić",
-      "team": "Bosnia & Herzegovina",
+      "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2591,7 +2591,7 @@
     },
     "ugurcan cakir": {
       "display_name": "Uğurcan Çakır",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2602,7 +2602,7 @@
     },
     "zeki celik": {
       "display_name": "Zeki Çelik",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -2613,7 +2613,7 @@
     },
     "merih demiral": {
       "display_name": "Merih Demiral",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2624,7 +2624,7 @@
     },
     "abdulkerim bardakci": {
       "display_name": "Abdülkerim Bardakcı",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -2635,7 +2635,7 @@
     },
     "ferdi kadioglu": {
       "display_name": "Ferdi Kadıoğlu",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2646,7 +2646,7 @@
     },
     "ismail yuksek": {
       "display_name": "İsmail Yüksek",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2657,7 +2657,7 @@
     },
     "hakan calhanoglu": {
       "display_name": "Hakan Çalhanoğlu",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 2,
@@ -2668,7 +2668,7 @@
     },
     "arda guler": {
       "display_name": "Arda Güler",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 3,
@@ -2679,7 +2679,7 @@
     },
     "orkun kokcu": {
       "display_name": "Orkun Kökçü",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2690,7 +2690,7 @@
     },
     "baris alper yilmaz": {
       "display_name": "Barış Alper Yılmaz",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2701,7 +2701,7 @@
     },
     "kerem akturkoglu": {
       "display_name": "Kerem Aktürkoğlu",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -2712,7 +2712,7 @@
     },
     "kenan yildiz": {
       "display_name": "Kenan Yıldız",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2723,7 +2723,7 @@
     },
     "yunus akgun": {
       "display_name": "Yunus Akgün",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2734,7 +2734,7 @@
     },
     "mert muldur": {
       "display_name": "Mert Müldür",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2745,7 +2745,7 @@
     },
     "salih ozcan": {
       "display_name": "Salih Özcan",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2756,7 +2756,7 @@
     },
     "deniz gul": {
       "display_name": "Deniz Gül",
-      "team": "Türkiye",
+      "team": "Turkey",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2943,7 +2943,7 @@
     },
     "eloy room": {
       "display_name": "Eloy Room",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2954,7 +2954,7 @@
     },
     "sherel constancio floranus": {
       "display_name": "Sherel Constancio Floranus",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2965,7 +2965,7 @@
     },
     "riechedly bazoer": {
       "display_name": "Riechedly Bazoer",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2976,7 +2976,7 @@
     },
     "armando obispo": {
       "display_name": "Armando Obispo",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2987,7 +2987,7 @@
     },
     "deveron fonville": {
       "display_name": "Deveron Fonville",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -2998,7 +2998,7 @@
     },
     "livano comenencia": {
       "display_name": "Livano Comenencia",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
@@ -3009,7 +3009,7 @@
     },
     "leandro bacuna": {
       "display_name": "Leandro Bacuna",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3020,7 +3020,7 @@
     },
     "juninho bacuna": {
       "display_name": "Juninho Bacuna",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3031,7 +3031,7 @@
     },
     "tahith chong": {
       "display_name": "Tahith Chong",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3042,7 +3042,7 @@
     },
     "jurgen locadia": {
       "display_name": "Jürgen Locadia",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3053,7 +3053,7 @@
     },
     "sontje hansen": {
       "display_name": "Sontje Hansen",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -3064,7 +3064,7 @@
     },
     "jeremy antonisse": {
       "display_name": "Jeremy Antonisse",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3075,7 +3075,7 @@
     },
     "jearl margaritha": {
       "display_name": "Jearl Margaritha",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -3086,7 +3086,7 @@
     },
     "gervane kastaneer": {
       "display_name": "Gervane Kastaneer",
-      "team": "Curaçao",
+      "team": "Curacao",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4307,7 +4307,7 @@
     },
     "vozinha": {
       "display_name": "Vozinha",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4318,7 +4318,7 @@
     },
     "steven moreira": {
       "display_name": "Steven Moreira",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4329,7 +4329,7 @@
     },
     "pico": {
       "display_name": "Pico",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4340,7 +4340,7 @@
     },
     "diney borges": {
       "display_name": "Diney Borges",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -4351,7 +4351,7 @@
     },
     "sidny lopes cabral": {
       "display_name": "Sidny Lopes Cabral",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4362,7 +4362,7 @@
     },
     "kevin lenini": {
       "display_name": "Kevin Lenini",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4373,7 +4373,7 @@
     },
     "ryan mendes": {
       "display_name": "Ryan Mendes",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4384,7 +4384,7 @@
     },
     "laros duarte": {
       "display_name": "Laros Duarte",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4395,7 +4395,7 @@
     },
     "jamiro monteiro": {
       "display_name": "Jamiro Monteiro",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4406,7 +4406,7 @@
     },
     "jovane cabral": {
       "display_name": "Jovane Cabral",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4417,7 +4417,7 @@
     },
     "dailon rocha livramento": {
       "display_name": "Dailon Rocha Livramento",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4428,7 +4428,7 @@
     },
     "deroy duarte": {
       "display_name": "Deroy Duarte",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4439,7 +4439,7 @@
     },
     "willy semedo": {
       "display_name": "Willy Semedo",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4450,7 +4450,7 @@
     },
     "nuno da costa": {
       "display_name": "Nuno Da Costa",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4461,7 +4461,7 @@
     },
     "joao paulo": {
       "display_name": "João Paulo",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -4472,7 +4472,7 @@
     },
     "telmo arcanjo": {
       "display_name": "Telmo Arcanjo",
-      "team": "Cape Verde Islands",
+      "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7068,7 +7068,7 @@
     },
     "lionel mpasi nzau": {
       "display_name": "Lionel Mpasi Nzau",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7079,7 +7079,7 @@
     },
     "aaron wan-bissaka": {
       "display_name": "Aaron Wan-Bissaka",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7090,7 +7090,7 @@
     },
     "chancel mbemba": {
       "display_name": "Chancel Mbemba",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7101,7 +7101,7 @@
     },
     "axel tuanzebe": {
       "display_name": "Axel Tuanzebe",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7112,7 +7112,7 @@
     },
     "steve kapuadi": {
       "display_name": "Steve Kapuadi",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7123,7 +7123,7 @@
     },
     "arthur masuaku": {
       "display_name": "Arthur Masuaku",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
@@ -7134,7 +7134,7 @@
     },
     "ngal'ayel mukau": {
       "display_name": "Ngal'ayel Mukau",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7145,7 +7145,7 @@
     },
     "samuel moutoussamy": {
       "display_name": "Samuel Moutoussamy",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7156,7 +7156,7 @@
     },
     "edo kayembe": {
       "display_name": "Edo Kayembe",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
@@ -7167,7 +7167,7 @@
     },
     "yoane wissa": {
       "display_name": "Yoane Wissa",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
@@ -7178,7 +7178,7 @@
     },
     "cedric bakambu": {
       "display_name": "Cédric Bakambu",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7189,7 +7189,7 @@
     },
     "noah sadiki": {
       "display_name": "Noah Sadiki",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7200,7 +7200,7 @@
     },
     "joris kayembe": {
       "display_name": "Joris Kayembe",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7211,7 +7211,7 @@
     },
     "charles pickel": {
       "display_name": "Charles Pickel",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7222,7 +7222,7 @@
     },
     "gedeon kalulu": {
       "display_name": "Gedeon Kalulu",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
@@ -7233,7 +7233,7 @@
     },
     "simon banza": {
       "display_name": "Simon Banza",
-      "team": "Congo DR",
+      "team": "DR Congo",
       "goals": 0,
       "assists": 0,
       "shots_on": 0,

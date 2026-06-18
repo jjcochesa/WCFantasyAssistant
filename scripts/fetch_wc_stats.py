@@ -35,6 +35,16 @@ DELAY = 2.2          # seconds between calls (free tier: 30 req/min)
 WC_LEAGUE_ID = 1     # FIFA World Cup 2026
 WC_SEASON    = 2026
 
+# API-Football team names → our canonical names (data/team_stats.py TEAM_NAMES)
+_TEAM_NAME_MAP = {
+    "Bosnia & Herzegovina": "Bosnia-Herzegovina",
+    "Cape Verde Islands":   "Cape Verde",
+    "Congo DR":             "DR Congo",
+    "Curaçao":              "Curacao",
+    "Czechia":              "Czech Republic",
+    "Türkiye":              "Turkey",
+}
+
 OUTPUT     = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data", "wc_stats.json"))
 CACHE_FILE = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data", "wc_fetch_cache.json"))
 
@@ -113,8 +123,10 @@ def get_finished_fixtures(cache: dict, headers: dict) -> list[dict]:
                 "fixture_id": fid,
                 "date": (fixture.get("date") or "")[:10],
                 "round": (fix.get("league", {}) or {}).get("round", ""),
-                "home_id": home.get("id"), "home": home.get("name"),
-                "away_id": away.get("id"), "away": away.get("name"),
+                "home_id": home.get("id"),
+                "home": _TEAM_NAME_MAP.get(home.get("name"), home.get("name")),
+                "away_id": away.get("id"),
+                "away": _TEAM_NAME_MAP.get(away.get("name"), away.get("name")),
             })
     print(f"  {len(finished)} finished fixture(s).")
     return finished
