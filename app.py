@@ -494,7 +494,8 @@ with tab1:
     if xg_cols:
         for c in xg_cols:
             styler = styler.background_gradient(subset=[c], cmap="Oranges")
-st.dataframe(styler, use_container_width=True, height=620)
+
+    st.dataframe(styler, use_container_width=True, height=620)
 
     st.divider()
     k1, k2, k3, k4, k5 = st.columns(5)
