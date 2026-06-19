@@ -50,82 +50,73 @@ TEAM_NAMES = {
 
 # Next opponent (3-letter code) for the upcoming round
 FIXTURES = {
-    # Group A: MEX-RSA, KOR-CZE
-    "MEX": "RSA", "RSA": "MEX", "KOR": "CZE", "CZE": "KOR",
+    # Group A: MEX-CZE, KOR-RSA
+    "MEX": "CZE", "CZE": "MEX", "KOR": "RSA", "RSA": "KOR",
     # Group B: SUI-CAN, QAT-BIH
     "SUI": "CAN", "CAN": "SUI", "QAT": "BIH", "BIH": "QAT",
     # Group C: BRA-SCO, MAR-HAI
     "BRA": "SCO", "SCO": "BRA", "MAR": "HAI", "HAI": "MAR",
-    # Group D: USA-PAR, TUR-AUS
-    "USA": "PAR", "PAR": "USA", "TUR": "AUS", "AUS": "TUR",
-    # Group E: ECU-CIV, GER-CUW
-    "ECU": "CIV", "CIV": "ECU", "GER": "CUW", "CUW": "GER",
+    # Group D: USA-TUR, PAR-AUS
+    "USA": "TUR", "TUR": "USA", "PAR": "AUS", "AUS": "PAR",
+    # Group E: GER-ECU, CIV-CUW
+    "GER": "ECU", "ECU": "GER", "CIV": "CUW", "CUW": "CIV",
     # Group F: NED-TUN, JPN-SWE
     "NED": "TUN", "TUN": "NED", "JPN": "SWE", "SWE": "JPN",
     # Group G: BEL-NZL, EGY-IRN
     "BEL": "NZL", "NZL": "BEL", "EGY": "IRN", "IRN": "EGY",
-    # Group H: ESP-CPV, URU-KSA
-    "ESP": "CPV", "CPV": "ESP", "URU": "KSA", "KSA": "URU",
+    # Group H: ESP-URU, KSA-CPV
+    "ESP": "URU", "URU": "ESP", "KSA": "CPV", "CPV": "KSA",
     # Group I: FRA-NOR, SEN-IRQ
     "FRA": "NOR", "NOR": "FRA", "SEN": "IRQ", "IRQ": "SEN",
     # Group J: ARG-JOR, ALG-AUT
     "ARG": "JOR", "JOR": "ARG", "ALG": "AUT", "AUT": "ALG",
-    # Group K: POR-COD, COL-UZB
-    "POR": "COD", "COD": "POR", "COL": "UZB", "UZB": "COL",
+    # Group K: POR-COL, COD-UZB
+    "POR": "COL", "COL": "POR", "COD": "UZB", "UZB": "COD",
     # Group L: ENG-PAN, CRO-GHA
     "ENG": "PAN", "PAN": "ENG", "CRO": "GHA", "GHA": "CRO",
 }
 
 # Projected goals for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
 PROJ_GOALS = {
-    "CIV": 2.88, "BEL": 2.49, "ARG": 2.47, "ENG": 2.42, "MAR": 2.34, "SEN": 2.13,
-    "NED": 2.12, "BRA": 2.01, "ESP": 1.92, "BIH": 1.78, "GER": 1.76, "CRO": 1.71,
-    "FRA": 1.72, "MEX": 1.57, "KOR": 1.54, "USA": 1.49, "POR": 1.47, "JPN": 1.46,
-    "SUI": 1.41, "PAR": 1.34, "KSA": 1.30, "AUT": 1.28, "COD": 1.27, "TUR": 1.27,
-    "CPV": 1.17, "ALG": 1.16, "SWE": 1.11, "CAN": 1.07, "UZB": 1.05, "RSA": 1.01,
-    "AUS": 0.98, "EGY": 1.32, "NOR": 1.18, "COL": 1.04, "CZE": 0.89, "TUN": 0.89,
-    "ECU": 0.89, "URU": 0.85, "IRN": 0.85, "GHA": 0.79, "QAT": 0.78, "SCO": 0.76,
-    "NZL": 0.72, "HAI": 0.69, "JOR": 0.63, "IRQ": 0.58, "CUW": 0.50, "PAN": 0.65,
+    "CIV": 2.84, "ARG": 2.50, "BEL": 2.49, "ENG": 2.43, "MAR": 2.37, "BIH": 2.24,
+    "SEN": 2.13, "NED": 2.12, "BRA": 2.03, "ESP": 1.88, "GER": 1.78, "CRO": 1.74,
+    "FRA": 1.72, "MEX": 1.58, "KOR": 1.54, "POR": 1.49, "USA": 1.49, "COD": 1.49,
+    "JPN": 1.46, "EGY": 1.34, "PAR": 1.32, "SUI": 1.32, "KSA": 1.30, "TUR": 1.27,
+    "AUT": 1.27, "CAN": 1.17, "ALG": 1.17, "CPV": 1.17, "SWE": 1.11, "NOR": 1.09,
+    "COL": 1.06, "RSA": 1.01, "UZB": 1.01, "AUS": 0.98, "TUN": 0.89, "CZE": 0.88,
+    "IRN": 0.87, "ECU": 0.86, "URU": 0.84, "QAT": 0.79, "GHA": 0.77, "SCO": 0.74,
+    "HAI": 0.67, "PAN": 0.64, "JOR": 0.60, "IRQ": 0.58, "NZL": 0.56, "CUW": 0.52,
 }
 
 # Clean sheet probability for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
 CS_PCT = {
-    "CIV": 0.61, "BEL": 0.57, "ENG": 0.52, "ARG": 0.54, "SEN": 0.56, "COL": 0.56,
-    "MAR": 0.50, "BRA": 0.47, "AUT": 0.46, "BIH": 0.46, "CRO": 0.45, "ESP": 0.43,
-    "EGY": 0.43, "NED": 0.41, "MEX": 0.41, "AUS": 0.41, "GER": 0.41, "SUI": 0.34,
-    "POR": 0.35, "COD": 0.35, "JPN": 0.33, "FRA": 0.33, "PAR": 0.38, "KOR": 0.36,
-    "TUN": 0.31, "KSA": 0.31, "CAN": 0.24, "SWE": 0.23, "TUR": 0.22, "RSA": 0.21,
-    "CZE": 0.21, "GHA": 0.18, "NOR": 0.18, "IRQ": 0.12, "URU": 0.15, "ALG": 0.28,
-    "USA": 0.28, "UZB": 0.28, "CPV": 0.27, "IRN": 0.27, "QAT": 0.17, "ECU": 0.17,
-    "SCO": 0.13, "HAI": 0.10, "PAN": 0.09, "JOR": 0.08, "NZL": 0.08, "CUW": 0.06,
+    "CIV": 0.59, "BEL": 0.57, "SEN": 0.56, "ARG": 0.55, "ENG": 0.53, "MAR": 0.51,
+    "BRA": 0.48, "CRO": 0.47, "BIH": 0.45, "ESP": 0.43, "GER": 0.43, "EGY": 0.42,
+    "MEX": 0.42, "NED": 0.41, "PAR": 0.38, "COD": 0.36, "KOR": 0.36, "POR": 0.35,
+    "FRA": 0.33, "JPN": 0.33, "AUT": 0.31, "KSA": 0.31, "SUI": 0.31, "ALG": 0.28,
+    "USA": 0.28, "CPV": 0.27, "AUS": 0.27, "CAN": 0.27, "IRN": 0.26, "SWE": 0.23,
+    "UZB": 0.23, "COL": 0.22, "TUR": 0.22, "RSA": 0.21, "CZE": 0.20, "NOR": 0.18,
+    "GHA": 0.18, "ECU": 0.17, "URU": 0.15, "SCO": 0.13, "TUN": 0.12, "IRQ": 0.12,
+    "QAT": 0.11, "HAI": 0.09, "PAN": 0.09, "NZL": 0.08, "JOR": 0.08, "CUW": 0.06,
 }
 
-# FDR for the upcoming match — estimated for MD3 (1=easiest, 5=hardest)
+# FDR for the upcoming match — FPLJoe.com (MD3, PELE ratings; 1=easiest, 5=hardest)
+# Read directly from the fixture-cell colour bands (dark green→crimson).
 FDR = {
-    # Group A: MEX-RSA, KOR-CZE
-    "MEX": 2, "RSA": 5, "KOR": 3, "CZE": 3,
-    # Group B: SUI-CAN, QAT-BIH
-    "SUI": 3, "CAN": 4, "QAT": 3, "BIH": 3,
-    # Group C: BRA-SCO, MAR-HAI
-    "BRA": 1, "SCO": 5, "MAR": 2, "HAI": 5,
-    # Group D: USA-PAR, TUR-AUS
-    "USA": 3, "PAR": 3, "TUR": 3, "AUS": 3,
-    # Group E: ECU-CIV, GER-CUW
-    "ECU": 4, "CIV": 3, "GER": 1, "CUW": 5,
-    # Group F: NED-TUN, JPN-SWE
-    "NED": 2, "TUN": 4, "JPN": 3, "SWE": 3,
-    # Group G: BEL-NZL, EGY-IRN
-    "BEL": 1, "NZL": 5, "EGY": 3, "IRN": 3,
-    # Group H: ESP-CPV, URU-KSA
-    "ESP": 1, "CPV": 5, "URU": 2, "KSA": 4,
-    # Group I: FRA-NOR, SEN-IRQ
-    "FRA": 2, "NOR": 5, "SEN": 2, "IRQ": 4,
-    # Group J: ARG-JOR, ALG-AUT
-    "ARG": 1, "JOR": 5, "ALG": 3, "AUT": 3,
-    # Group K: POR-COD, COL-UZB
-    "POR": 1, "COD": 5, "COL": 2, "UZB": 4,
-    # Group L: ENG-PAN, CRO-GHA
-    "ENG": 1, "PAN": 5, "CRO": 2, "GHA": 4,
+    # 1 — dark green (easiest)
+    "BIH": 1, "CIV": 1, "MAR": 1, "ARG": 1, "SEN": 1, "BEL": 1,
+    "KSA": 1, "CPV": 1, "NED": 1, "KOR": 1, "QAT": 1, "CRO": 1,
+    # 2 — bright green
+    "COD": 2, "ENG": 2, "EGY": 2, "UZB": 2, "MEX": 2, "IRN": 2,
+    # 3 — neutral grey
+    "RSA": 3, "AUT": 3, "JPN": 3, "PAR": 3, "CUW": 3, "BRA": 3,
+    "SUI": 3, "AUS": 3, "ALG": 3, "TUR": 3, "CZE": 3, "GHA": 3,
+    "HAI": 3, "SWE": 3,
+    # 4 — pink
+    "USA": 4, "IRQ": 4, "CAN": 4, "NZL": 4, "GER": 4, "ESP": 4,
+    "TUN": 4, "POR": 4, "FRA": 4, "COL": 4,
+    # 5 — crimson (hardest)
+    "SCO": 5, "ECU": 5, "NOR": 5, "PAN": 5, "URU": 5, "JOR": 5,
 }
 
 # Group balance classification (from FIFA ranking analysis)
