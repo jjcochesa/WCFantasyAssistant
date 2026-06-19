@@ -13,8 +13,8 @@ Sources:
 """
 
 # Label for the round currently being projected (display only)
-CURRENT_ROUND = "MD2"
-CURRENT_ROUND_DATE = "16.06.26"
+CURRENT_ROUND = "MD3"
+CURRENT_ROUND_DATE = "22.06.26"
 
 # Group assignments
 GROUPS = {
@@ -50,52 +50,82 @@ TEAM_NAMES = {
 
 # Next opponent (3-letter code) for the upcoming round
 FIXTURES = {
-    "SUI": "BIH", "CAN": "QAT", "QAT": "CAN", "BIH": "SUI",
-    "GER": "CIV", "ECU": "CUW", "CIV": "GER", "CUW": "ECU",
-    "BEL": "IRN", "IRN": "BEL", "EGY": "NZL", "NZL": "EGY",
-    "ESP": "KSA", "URU": "CPV", "KSA": "ESP", "CPV": "URU",
-    "MEX": "KOR", "KOR": "MEX", "CZE": "RSA", "RSA": "CZE",
-    "BRA": "HAI", "MAR": "SCO", "SCO": "MAR", "HAI": "BRA",
-    "ARG": "AUT", "AUT": "ARG", "ALG": "JOR", "JOR": "ALG",
-    "POR": "UZB", "COL": "COD", "COD": "COL", "UZB": "POR",
-    "NED": "SWE", "JPN": "TUN", "SWE": "NED", "TUN": "JPN",
-    "USA": "AUS", "TUR": "PAR", "AUS": "USA", "PAR": "TUR",
-    "FRA": "IRQ", "SEN": "NOR", "NOR": "SEN", "IRQ": "FRA",
-    "ENG": "GHA", "CRO": "PAN", "GHA": "ENG", "PAN": "CRO",
+    # Group A: MEX-RSA, KOR-CZE
+    "MEX": "RSA", "RSA": "MEX", "KOR": "CZE", "CZE": "KOR",
+    # Group B: SUI-CAN, QAT-BIH
+    "SUI": "CAN", "CAN": "SUI", "QAT": "BIH", "BIH": "QAT",
+    # Group C: BRA-SCO, MAR-HAI
+    "BRA": "SCO", "SCO": "BRA", "MAR": "HAI", "HAI": "MAR",
+    # Group D: USA-PAR, TUR-AUS
+    "USA": "PAR", "PAR": "USA", "TUR": "AUS", "AUS": "TUR",
+    # Group E: ECU-CIV, GER-CUW
+    "ECU": "CIV", "CIV": "ECU", "GER": "CUW", "CUW": "GER",
+    # Group F: NED-TUN, JPN-SWE
+    "NED": "TUN", "TUN": "NED", "JPN": "SWE", "SWE": "JPN",
+    # Group G: BEL-NZL, EGY-IRN
+    "BEL": "NZL", "NZL": "BEL", "EGY": "IRN", "IRN": "EGY",
+    # Group H: ESP-CPV, URU-KSA
+    "ESP": "CPV", "CPV": "ESP", "URU": "KSA", "KSA": "URU",
+    # Group I: FRA-NOR, SEN-IRQ
+    "FRA": "NOR", "NOR": "FRA", "SEN": "IRQ", "IRQ": "SEN",
+    # Group J: ARG-JOR, ALG-AUT
+    "ARG": "JOR", "JOR": "ARG", "ALG": "AUT", "AUT": "ALG",
+    # Group K: POR-COD, COL-UZB
+    "POR": "COD", "COD": "POR", "COL": "UZB", "UZB": "COL",
+    # Group L: ENG-PAN, CRO-GHA
+    "ENG": "PAN", "PAN": "ENG", "CRO": "GHA", "GHA": "CRO",
 }
 
-# Projected goals for the upcoming match — FPLJoe.com (final MD2 / SBOBET & Betfair)
+# Projected goals for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
 PROJ_GOALS = {
-    "FRA": 3.17, "BRA": 3.13, "ECU": 2.98, "ESP": 2.96, "POR": 2.50, "ENG": 2.40,
-    "CAN": 2.35, "GER": 2.03, "BEL": 1.98, "COL": 1.82, "CRO": 1.81, "USA": 1.80,
-    "ARG": 1.79, "JPN": 1.78, "ALG": 1.78, "SUI": 1.77, "NED": 1.75, "URU": 1.75,
-    "EGY": 1.67, "CZE": 1.56, "MAR": 1.55, "TUR": 1.46, "NOR": 1.40, "MEX": 1.36,
-    "SEN": 1.24, "PAR": 1.00, "CIV": 0.96, "SWE": 0.95, "KOR": 0.93, "RSA": 0.90,
-    "AUS": 0.84, "JOR": 0.84, "AUT": 0.81, "BIH": 0.79, "PAN": 0.77, "SCO": 0.77,
-    "TUN": 0.74, "NZL": 0.72, "IRN": 0.70, "QAT": 0.62, "COD": 0.58, "CPV": 0.58,
-    "UZB": 0.56, "GHA": 0.56, "HAI": 0.51, "KSA": 0.43, "CUW": 0.43, "IRQ": 0.41,
+    "CIV": 2.88, "BEL": 2.49, "ARG": 2.47, "ENG": 2.42, "MAR": 2.34, "SEN": 2.13,
+    "NED": 2.12, "BRA": 2.01, "ESP": 1.92, "BIH": 1.78, "GER": 1.76, "CRO": 1.71,
+    "FRA": 1.72, "MEX": 1.57, "KOR": 1.54, "USA": 1.49, "POR": 1.47, "JPN": 1.46,
+    "SUI": 1.41, "PAR": 1.34, "KSA": 1.30, "AUT": 1.28, "COD": 1.27, "TUR": 1.27,
+    "CPV": 1.17, "ALG": 1.16, "SWE": 1.11, "CAN": 1.07, "UZB": 1.05, "RSA": 1.01,
+    "AUS": 0.98, "EGY": 1.32, "NOR": 1.18, "COL": 1.04, "CZE": 0.89, "TUN": 0.89,
+    "ECU": 0.89, "URU": 0.85, "IRN": 0.85, "GHA": 0.79, "QAT": 0.78, "SCO": 0.76,
+    "NZL": 0.72, "HAI": 0.69, "JOR": 0.63, "IRQ": 0.58, "CUW": 0.50, "PAN": 0.65,
 }
 
-# Clean sheet probability for the upcoming match — FPLJoe.com (final MD2 / SBOBET & Betfair)
+# Clean sheet probability for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
 CS_PCT = {
-    "FRA": 0.66, "ECU": 0.65, "ESP": 0.65, "BRA": 0.60, "ENG": 0.57, "POR": 0.57,
-    "URU": 0.56, "COL": 0.56, "CAN": 0.54, "BEL": 0.50, "EGY": 0.49, "JPN": 0.48,
-    "MAR": 0.47, "CRO": 0.46, "SUI": 0.45, "ARG": 0.44, "ALG": 0.43, "USA": 0.43,
-    "CZE": 0.41, "MEX": 0.40, "NED": 0.39, "GER": 0.38, "TUR": 0.37, "NOR": 0.29,
-    "KOR": 0.26, "SEN": 0.25, "PAR": 0.23, "SCO": 0.21, "RSA": 0.21, "NZL": 0.19,
-    "CPV": 0.17, "SWE": 0.17, "BIH": 0.17, "JOR": 0.17, "TUN": 0.17, "AUT": 0.17,
-    "AUS": 0.16, "PAN": 0.16, "COD": 0.16, "IRN": 0.14, "CIV": 0.13, "QAT": 0.10,
-    "GHA": 0.09, "UZB": 0.08, "KSA": 0.05, "CUW": 0.05, "HAI": 0.04, "IRQ": 0.04,
+    "CIV": 0.61, "BEL": 0.57, "ENG": 0.52, "ARG": 0.54, "SEN": 0.56, "COL": 0.56,
+    "MAR": 0.50, "BRA": 0.47, "AUT": 0.46, "BIH": 0.46, "CRO": 0.45, "ESP": 0.43,
+    "EGY": 0.43, "NED": 0.41, "MEX": 0.41, "AUS": 0.41, "GER": 0.41, "SUI": 0.34,
+    "POR": 0.35, "COD": 0.35, "JPN": 0.33, "FRA": 0.33, "PAR": 0.38, "KOR": 0.36,
+    "TUN": 0.31, "KSA": 0.31, "CAN": 0.24, "SWE": 0.23, "TUR": 0.22, "RSA": 0.21,
+    "CZE": 0.21, "GHA": 0.18, "NOR": 0.18, "IRQ": 0.12, "URU": 0.15, "ALG": 0.28,
+    "USA": 0.28, "UZB": 0.28, "CPV": 0.27, "IRN": 0.27, "QAT": 0.17, "ECU": 0.17,
+    "SCO": 0.13, "HAI": 0.10, "PAN": 0.09, "JOR": 0.08, "NZL": 0.08, "CUW": 0.06,
 }
 
-# FDR for the upcoming match — @FPL_Marcello (1=easiest, 5=hardest)
+# FDR for the upcoming match — estimated for MD3 (1=easiest, 5=hardest)
 FDR = {
-    "BEL": 1, "MEX": 2, "EGY": 1, "ESP": 2, "ARG": 3, "POR": 1, "CZE": 1, "SUI": 3,
-    "BRA": 1, "GER": 2, "IRN": 4, "NZL": 2, "URU": 1, "COL": 1, "ENG": 2, "CAN": 1,
-    "BIH": 4, "MAR": 2, "USA": 1, "TUR": 3, "ECU": 1, "NED": 3, "JOR": 2, "AUT": 5,
-    "SCO": 2, "KOR": 4, "RSA": 2, "FRA": 1, "NOR": 2, "ALG": 1, "SEN": 2, "PAR": 4,
-    "JPN": 3, "QAT": 3, "SWE": 4, "CIV": 5, "TUN": 4, "HAI": 5, "AUS": 4, "GHA": 4,
-    "PAN": 3, "CRO": 1, "COD": 1, "UZB": 5, "CPV": 1, "KSA": 5, "IRQ": 5, "CUW": 2,
+    # Group A: MEX-RSA, KOR-CZE
+    "MEX": 2, "RSA": 5, "KOR": 3, "CZE": 3,
+    # Group B: SUI-CAN, QAT-BIH
+    "SUI": 3, "CAN": 4, "QAT": 3, "BIH": 3,
+    # Group C: BRA-SCO, MAR-HAI
+    "BRA": 1, "SCO": 5, "MAR": 2, "HAI": 5,
+    # Group D: USA-PAR, TUR-AUS
+    "USA": 3, "PAR": 3, "TUR": 3, "AUS": 3,
+    # Group E: ECU-CIV, GER-CUW
+    "ECU": 4, "CIV": 3, "GER": 1, "CUW": 5,
+    # Group F: NED-TUN, JPN-SWE
+    "NED": 2, "TUN": 4, "JPN": 3, "SWE": 3,
+    # Group G: BEL-NZL, EGY-IRN
+    "BEL": 1, "NZL": 5, "EGY": 3, "IRN": 3,
+    # Group H: ESP-CPV, URU-KSA
+    "ESP": 1, "CPV": 5, "URU": 2, "KSA": 4,
+    # Group I: FRA-NOR, SEN-IRQ
+    "FRA": 2, "NOR": 5, "SEN": 2, "IRQ": 4,
+    # Group J: ARG-JOR, ALG-AUT
+    "ARG": 1, "JOR": 5, "ALG": 3, "AUT": 3,
+    # Group K: POR-COD, COL-UZB
+    "POR": 1, "COD": 5, "COL": 2, "UZB": 4,
+    # Group L: ENG-PAN, CRO-GHA
+    "ENG": 1, "PAN": 5, "CRO": 2, "GHA": 4,
 }
 
 # Group balance classification (from FIFA ranking analysis)
