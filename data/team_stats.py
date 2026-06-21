@@ -7,8 +7,9 @@ QF → SF → Final). Each round you send fresh CS% / xG and we swap the single
 value per team below.
 
 Sources:
-  - Projected goals & CS% from FPLJoe.com (SBOBET/Betfair markets)
-  - FDR (1=easiest, 5=hardest) from @FPL_Marcello
+  - Projected goals & CS% (MD3): Spreadex markets via @FPL_Fran (top-20 direct;
+    opponent values Poisson-derived; SUI/CAN/KSA/CPV/ALG/AUT from FPLJoe)
+  - FDR (1=easiest, 5=hardest): PELE ratings from FPLJoe image
   - Fixtures from official WC 2026 schedule
 """
 
@@ -76,28 +77,37 @@ FIXTURES = {
     "ENG": "PAN", "PAN": "ENG", "CRO": "GHA", "GHA": "CRO",
 }
 
-# Projected goals for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
+# Projected goals for the upcoming match — Spreadex via @FPL_Fran (MD3)
+# Top-20 teams read directly from image; opponent teams derived via Poisson
+# (team CS% → opponent xG = -ln(CS%)). SUI/CAN/KSA/CPV/ALG/AUT kept from
+# FPLJoe (absent from both Spreadex rankings).
 PROJ_GOALS = {
-    "CIV": 2.84, "ARG": 2.50, "BEL": 2.49, "ENG": 2.43, "MAR": 2.37, "BIH": 2.24,
-    "SEN": 2.13, "NED": 2.12, "BRA": 2.03, "ESP": 1.88, "GER": 1.78, "CRO": 1.74,
-    "FRA": 1.72, "MEX": 1.58, "KOR": 1.54, "POR": 1.49, "USA": 1.49, "COD": 1.49,
-    "JPN": 1.46, "EGY": 1.34, "PAR": 1.32, "SUI": 1.32, "KSA": 1.30, "TUR": 1.27,
-    "AUT": 1.27, "CAN": 1.17, "ALG": 1.17, "CPV": 1.17, "SWE": 1.11, "NOR": 1.09,
-    "COL": 1.06, "RSA": 1.01, "UZB": 1.01, "AUS": 0.98, "TUN": 0.89, "CZE": 0.88,
-    "IRN": 0.87, "ECU": 0.86, "URU": 0.84, "QAT": 0.79, "GHA": 0.77, "SCO": 0.74,
-    "HAI": 0.67, "PAN": 0.64, "JOR": 0.60, "IRQ": 0.58, "NZL": 0.56, "CUW": 0.52,
+    "NED": 2.85, "CIV": 2.82, "MAR": 2.66, "ARG": 2.60, "ENG": 2.55,
+    "BEL": 2.48, "SEN": 2.23, "BIH": 2.20, "BRA": 2.06, "ESP": 1.95,
+    "FRA": 1.83, "KOR": 1.78, "CRO": 1.73, "JPN": 1.72, "USA": 1.69,
+    "GER": 1.69, "MEX": 1.54, "POR": 1.51, "COD": 1.45, "EGY": 1.35,
+    "SUI": 1.32, "CAN": 1.17, "KSA": 1.30, "ALG": 1.17, "AUT": 1.27,
+    "CPV": 1.17, "TUR": 1.27, "SWE": 1.11, "ECU": 1.08, "UZB": 1.08,
+    "NOR": 1.02, "PAR": 1.02, "COL": 0.99, "AUS": 0.97, "CZE": 0.92,
+    "IRN": 0.89, "QAT": 0.84, "URU": 0.82, "GHA": 0.82, "RSA": 0.78,
+    "SCO": 0.69, "PAN": 0.62, "NZL": 0.58, "IRQ": 0.58, "JOR": 0.56,
+    "HAI": 0.54, "TUN": 0.53, "CUW": 0.53,
 }
 
-# Clean sheet probability for the upcoming match — FPLJoe.com (MD3 / SBOBET & Betfair)
+# Clean sheet probability for the upcoming match — Spreadex via @FPL_Fran (MD3)
+# Top-20 teams direct; opponent teams Poisson-derived (opp CS% = e^(-team xG)).
+# JPN/USA/SUI/CAN/KSA/CPV/ALG/AUT kept from FPLJoe.
 CS_PCT = {
-    "CIV": 0.59, "BEL": 0.57, "SEN": 0.56, "ARG": 0.55, "ENG": 0.53, "MAR": 0.51,
-    "BRA": 0.48, "CRO": 0.47, "BIH": 0.45, "ESP": 0.43, "GER": 0.43, "EGY": 0.42,
-    "MEX": 0.42, "NED": 0.41, "PAR": 0.38, "COD": 0.36, "KOR": 0.36, "POR": 0.35,
-    "FRA": 0.33, "JPN": 0.33, "AUT": 0.31, "KSA": 0.31, "SUI": 0.31, "ALG": 0.28,
-    "USA": 0.28, "CPV": 0.27, "AUS": 0.27, "CAN": 0.27, "IRN": 0.26, "SWE": 0.23,
-    "UZB": 0.23, "COL": 0.22, "TUR": 0.22, "RSA": 0.21, "CZE": 0.20, "NOR": 0.18,
-    "GHA": 0.18, "ECU": 0.17, "URU": 0.15, "SCO": 0.13, "TUN": 0.12, "IRQ": 0.12,
-    "QAT": 0.11, "HAI": 0.09, "PAN": 0.09, "NZL": 0.08, "JOR": 0.08, "CUW": 0.06,
+    "NED": 0.59, "CIV": 0.59, "MAR": 0.58, "ARG": 0.57, "BEL": 0.56,
+    "SEN": 0.56, "ENG": 0.54, "BRA": 0.50, "KOR": 0.46, "ESP": 0.44,
+    "CRO": 0.44, "BIH": 0.43, "EGY": 0.41, "MEX": 0.40, "PAR": 0.38,
+    "POR": 0.37, "FRA": 0.36, "AUS": 0.36, "GER": 0.34, "COD": 0.34,
+    "JPN": 0.33, "SUI": 0.31, "KSA": 0.31, "AUT": 0.31, "USA": 0.28,
+    "ALG": 0.28, "CAN": 0.27, "CPV": 0.27, "IRN": 0.26, "UZB": 0.24,
+    "COL": 0.22, "CZE": 0.21, "ECU": 0.18, "TUR": 0.18, "SWE": 0.18,
+    "GHA": 0.18, "NOR": 0.16, "RSA": 0.17, "URU": 0.14, "SCO": 0.13,
+    "QAT": 0.11, "IRQ": 0.11, "PAN": 0.08, "NZL": 0.08, "JOR": 0.07,
+    "HAI": 0.07, "TUN": 0.06, "CUW": 0.06,
 }
 
 # FDR for the upcoming match — FPLJoe.com (MD3, PELE ratings; 1=easiest, 5=hardest)
