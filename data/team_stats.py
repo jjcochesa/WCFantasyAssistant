@@ -81,31 +81,31 @@ FIXTURES = {
 # Projected goals for the upcoming match — FPLJoe.com MD3 (SBOBET & Betfair)
 # All 48 teams direct.
 PROJ_GOALS = {
-    "NED": 2.91, "CIV": 2.78, "MAR": 2.62, "BEL": 2.52, "ARG": 2.50,
-    "ENG": 2.49, "BIH": 2.17, "SEN": 2.16, "BRA": 2.07, "ESP": 1.96,
-    "FRA": 1.76, "CRO": 1.74, "KOR": 1.73, "USA": 1.71, "JPN": 1.70,
-    "GER": 1.65, "MEX": 1.54, "COD": 1.46, "POR": 1.46, "CPV": 1.35,
-    "AUT": 1.30, "SUI": 1.30, "ALG": 1.21, "KSA": 1.19, "EGY": 1.16,
-    "TUR": 1.16, "CAN": 1.14, "SWE": 1.14, "ECU": 1.13, "NOR": 1.05,
-    "UZB": 1.03, "COL": 1.03, "PAR": 1.00, "CZE": 0.98, "AUS": 0.97,
-    "IRN": 0.96, "QAT": 0.86, "RSA": 0.80, "URU": 0.79, "GHA": 0.77,
-    "SCO": 0.67, "PAN": 0.59, "NZL": 0.56, "IRQ": 0.55, "HAI": 0.53,
-    "CUW": 0.52, "JOR": 0.52, "TUN": 0.46,
+    "NED": 2.89, "CIV": 2.77, "BEL": 2.69, "MAR": 2.67, "ENG": 2.61,
+    "SEN": 2.58, "ARG": 2.51, "BIH": 2.29, "BRA": 2.08, "ESP": 1.97,
+    "FRA": 1.94, "KOR": 1.72, "JPN": 1.70, "GER": 1.69, "USA": 1.69,
+    "CRO": 1.68, "MEX": 1.55, "COD": 1.49, "POR": 1.46, "SUI": 1.40,
+    "CPV": 1.33, "KSA": 1.22, "AUT": 1.05, "TUR": 1.17, "CAN": 1.16,
+    "ECU": 1.13, "EGY": 1.13, "SWE": 1.12, "NOR": 1.03, "COL": 1.03,
+    "UZB": 1.00, "ALG": 1.00, "CZE": 1.00, "PAR": 0.99, "AUS": 0.96,
+    "IRN": 0.92, "QAT": 0.83, "GHA": 0.83, "RSA": 0.80, "URU": 0.77,
+    "IRQ": 0.65, "SCO": 0.63, "PAN": 0.62, "NZL": 0.58, "HAI": 0.54,
+    "CUW": 0.52, "JOR": 0.52, "TUN": 0.47,
 }
 
 # Clean sheet probability for the upcoming match — FPLJoe.com MD3 (SBOBET & Betfair)
 # All 48 teams direct.
 CS_PCT = {
-    "NED": 0.63, "ARG": 0.60, "CIV": 0.60, "MAR": 0.59, "SEN": 0.58,
-    "BEL": 0.57, "ENG": 0.55, "BRA": 0.51, "CRO": 0.47, "ESP": 0.46,
-    "KOR": 0.45, "BIH": 0.42, "EGY": 0.38, "PAR": 0.38, "MEX": 0.38,
-    "AUS": 0.37, "POR": 0.36, "COD": 0.36, "FRA": 0.35, "GER": 0.32,
-    "JPN": 0.32, "SUI": 0.32, "USA": 0.31, "IRN": 0.31, "CPV": 0.30,
-    "AUT": 0.30, "ALG": 0.27, "CAN": 0.27, "KSA": 0.26, "COL": 0.23,
-    "UZB": 0.23, "CZE": 0.21, "ECU": 0.19, "SWE": 0.18, "TUR": 0.18,
-    "RSA": 0.18, "GHA": 0.18, "NOR": 0.17, "URU": 0.14, "SCO": 0.13,
-    "IRQ": 0.11, "QAT": 0.11, "PAN": 0.08, "JOR": 0.08, "NZL": 0.08,
-    "HAI": 0.07, "CUW": 0.06, "TUN": 0.05,
+    "NED": 0.63, "ARG": 0.60, "CIV": 0.59, "MAR": 0.58, "SEN": 0.58,
+    "BEL": 0.56, "ENG": 0.54, "BRA": 0.53, "ESP": 0.46, "CRO": 0.44,
+    "BIH": 0.44, "KOR": 0.43, "EGY": 0.40, "PAR": 0.38, "AUS": 0.37,
+    "MEX": 0.37, "AUT": 0.37, "COD": 0.37, "POR": 0.36, "FRA": 0.36,
+    "ALG": 0.35, "GER": 0.32, "JPN": 0.32, "IRN": 0.32, "SUI": 0.31,
+    "USA": 0.31, "CPV": 0.30, "KSA": 0.26, "CAN": 0.25, "COL": 0.23,
+    "UZB": 0.22, "CZE": 0.21, "GHA": 0.19, "TUR": 0.18, "ECU": 0.18,
+    "SWE": 0.18, "RSA": 0.18, "NOR": 0.14, "URU": 0.14, "SCO": 0.12,
+    "QAT": 0.10, "IRQ": 0.08, "JOR": 0.08, "PAN": 0.07, "HAI": 0.07,
+    "NZL": 0.07, "CUW": 0.06, "TUN": 0.06,
 }
 
 # FDR for the upcoming match — FPLJoe.com MD3 (1=easiest, 5=hardest)
