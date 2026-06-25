@@ -13,6 +13,7 @@ from scoring_rules import (
 from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
     get_team_fdr, get_next_opponent, get_team_xg, get_team_cs,
+    get_qual_probs,
 )
 
 st.set_page_config(
@@ -177,6 +178,8 @@ SORT_LABELS = {
     "xPts group stage total": "xPts_GS",
     "xPts per game": "xPts/game",
     "Value (xPts/$m)": "value",
+    "xPts × R32% (risk-adjusted)": "xPts_R32",
+    "Tournament xPts (all rounds)": "tournament_xpts",
     "Ownership %": "own_%",
     "Price": "price",
 }
@@ -383,34 +386,42 @@ with tab1:
     )
 
     COL_MAP = {
-        "name":           "Name",
-        "team_code":      "Nation",
-        "pos":            "Pos",
-        "price":          "Price",
-        "opp":            "Opp",
-        "own_%":          "Own%",
-        "xPts_GS":        "Proj Pts",
-        "adj_total":      "Adj Pts",
-        "team_cs_pct":    "CS%",
-        "team_xg":        "Team xG",
-        "wc_min":         "WC Min",
-        "xg90_wc":        "WC Gls/90",
-        "xa90_wc":        "WC Ast/90",
-        "sot90_wc":       "WC SOT/90",
-        "kp90_wc":        "WC KP/90",
-        "tackles90_wc":   "WC Tkl/90",
-        "xg90_club":      "Cl Gls/90",
-        "xa90_club":      "Cl Ast/90",
-        "sot90_club":     "Cl SOT/90",
-        "kp90_club":      "Cl KP/90",
-        "tackles90_club": "Cl Tkl/90",
-        "xg90_nt":        "NT Gls/90",
-        "xa90_nt":        "NT Ast/90",
-        "sot90_nt":       "NT SOT/90",
-        "kp90_nt":        "NT KP/90",
-        "tackles90_nt":   "NT Tkl/90",
-        "proj_min":       "Proj Min",
-        "set_pieces":     "Set Pcs",
+        "name":             "Name",
+        "team_code":        "Nation",
+        "pos":              "Pos",
+        "price":            "Price",
+        "opp":              "Opp",
+        "own_%":            "Own%",
+        "xPts_GS":          "Proj Pts",
+        "adj_total":        "Adj Pts",
+        "xPts_R32":         "R32 xPts",
+        "tournament_xpts":  "Tourn xPts",
+        "r32_pct":          "R32%",
+        "r16_pct":          "R16%",
+        "qf_pct":           "QF%",
+        "sf_pct":           "SF%",
+        "f_pct":            "Final%",
+        "exp_games":        "Exp Games",
+        "team_cs_pct":      "CS%",
+        "team_xg":          "Team xG",
+        "wc_min":           "WC Min",
+        "xg90_wc":          "WC Gls/90",
+        "xa90_wc":          "WC Ast/90",
+        "sot90_wc":         "WC SOT/90",
+        "kp90_wc":          "WC KP/90",
+        "tackles90_wc":     "WC Tkl/90",
+        "xg90_club":        "Cl Gls/90",
+        "xa90_club":        "Cl Ast/90",
+        "sot90_club":       "Cl SOT/90",
+        "kp90_club":        "Cl KP/90",
+        "tackles90_club":   "Cl Tkl/90",
+        "xg90_nt":          "NT Gls/90",
+        "xa90_nt":          "NT Ast/90",
+        "sot90_nt":         "NT SOT/90",
+        "kp90_nt":          "NT KP/90",
+        "tackles90_nt":     "NT Tkl/90",
+        "proj_min":         "Proj Min",
+        "set_pieces":       "Set Pcs",
     }
 
     display_cols = [c for c in COL_MAP if c in view.columns]
@@ -432,11 +443,17 @@ with tab1:
     pct_cols   = [c for c in ["CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'"}
+    qual_pct_cols = [c for c in ["R32%", "R16%", "QF%", "SF%", "Final%"] if c in disp.columns]
+    qual_xpts_cols = [c for c in ["R32 xPts", "Tourn xPts"] if c in disp.columns]
+
+    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'",
+               "Exp Games": "{:.2f}"}
     fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt + per90_wc})
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
+    fmt_map.update({c: "{:.0%}" for c in qual_pct_cols})
+    fmt_map.update({c: "{:.2f}" for c in qual_xpts_cols})
 # Threshold-based bonus highlighting — blue palette, three distinct shades.
     #   MID  KP/90 ≥ 3.0  → blue-700   (chances created bonus)
     #   MID  Tkl/90 ≥ 3.0 → sky-700    (tackles bonus)
@@ -494,6 +511,12 @@ with tab1:
     if xg_cols:
         for c in xg_cols:
             styler = styler.background_gradient(subset=[c], cmap="Oranges")
+    _active_qual = [c for c in qual_pct_cols if c in disp_idx.columns and disp_idx[c].sum() > 0]
+    if _active_qual:
+        styler = styler.background_gradient(subset=_active_qual, cmap="YlGn")
+    _active_qxpts = [c for c in qual_xpts_cols if c in disp_idx.columns and disp_idx[c].sum() > 0]
+    if _active_qxpts:
+        styler = styler.background_gradient(subset=_active_qxpts, cmap="Greens")
 
     st.dataframe(styler, use_container_width=True, height=620)
 

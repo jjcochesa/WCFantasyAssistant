@@ -27,6 +27,7 @@ from data.team_stats import (
     CS_PCT, PROJ_GOALS, FDR, TEAM_NAMES, FIXTURES,
     get_team_fdr, get_group_balance, get_next_opponent,
     get_team_proj, get_opponent_xg, get_team_xg, get_team_cs,
+    get_qual_probs, get_expected_games,
 )
 try:
     from data.set_pieces import SET_PIECES
@@ -1093,6 +1094,11 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
         opp      = get_next_opponent(p.team_code)
         proj_xg  = round(getattr(p, "_proj_xg", 0.0), 3)
 
+        qp = get_qual_probs(p.team_code)
+        xpts_r32 = round(p.xpts_group_stage * qp["r32"], 3)
+        exp_games = get_expected_games(p.team_code)
+        tournament_xpts = round(p.xpts_per_match * exp_games, 2)
+
         rows.append({
             "id": p.id,
             "name": p.name,
@@ -1107,6 +1113,15 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "xPts_GS": p.xpts_group_stage,
             "value": p.value,
             "scout": p.scout_flag,
+            # Qualification probabilities
+            "r32_pct": round(qp["r32"], 3),
+            "r16_pct": round(qp["r16"], 3),
+            "qf_pct":  round(qp["qf"],  3),
+            "sf_pct":  round(qp["sf"],  3),
+            "f_pct":   round(qp["f"],   3),
+            "exp_games":      exp_games,
+            "xPts_R32":       xpts_r32,
+            "tournament_xpts": tournament_xpts,
             # Upcoming-match display columns
             "proj_xg":     proj_xg,
             "opp":         opp,

@@ -144,6 +144,60 @@ GROUP_BALANCE = {
     "H": "Most unbalanced", # Spain, Uruguay, Saudi Arabia, Cape Verde
 }
 
+# Tournament qualification probabilities (0.0–1.0) per team.
+# r32 = qualifies from group stage, r16 = reaches last 16, qf = quarters,
+# sf = semis, f = final. Fill in after MD3 results.
+QUAL_PROBS: dict[str, dict] = {
+    "MEX": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "KOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CZE": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "RSA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "SUI": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CAN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "QAT": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "BIH": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "BRA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "MAR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "SCO": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "HAI": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "USA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "TUR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "AUS": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "PAR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "GER": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "ECU": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CIV": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CUW": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "NED": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "JPN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "SWE": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "TUN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "BEL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "IRN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "EGY": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "NZL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "ESP": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "URU": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "KSA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CPV": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "FRA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "SEN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "NOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "IRQ": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "ARG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "AUT": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "ALG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "JOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "POR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "COL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "COD": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "UZB": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "ENG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "CRO": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "GHA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "PAN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+}
+
 import math as _math
 
 
@@ -185,3 +239,14 @@ def get_team_group(team_code: str) -> str:
 def get_group_balance(team_code: str) -> str:
     grp = get_team_group(team_code)
     return GROUP_BALANCE.get(grp, "Unknown")
+
+
+def get_qual_probs(team_code: str) -> dict:
+    """Returns {r32, r16, qf, sf, f} qualification probabilities (0.0–1.0)."""
+    return QUAL_PROBS.get(team_code, {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0})
+
+
+def get_expected_games(team_code: str) -> float:
+    """Sum of all stage probabilities = expected additional games beyond MD3."""
+    p = get_qual_probs(team_code)
+    return round(p["r32"] + p["r16"] + p["qf"] + p["sf"] + p["f"], 3)
