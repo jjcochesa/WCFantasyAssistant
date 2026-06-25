@@ -134,9 +134,10 @@ def get_finished_fixtures(cache: dict, headers: dict) -> list[dict]:
 
 # ── Step 2: extract per-player stats from a fixture/team ──────────────────────
 
-def get_player_stats(fixture_id: int, team_id: int, cache: dict, headers: dict) -> list[dict]:
+def get_player_stats(fixture_id: int, team_id: int, cache: dict, headers: dict,
+                     allow_cache: bool = True) -> list[dict]:
     data = _get("fixtures/players", {"fixture": fixture_id, "team": team_id},
-                cache, f"wcplayers_{fixture_id}_{team_id}", headers)
+                cache, f"wcplayers_{fixture_id}_{team_id}", headers, allow_cache=allow_cache)
     players = []
     for team_block in data.get("response", []):
         if team_block.get("team", {}).get("id") != team_id:
@@ -166,6 +167,10 @@ def main():
     parser.add_argument("--key", required=True, help="API-Football key")
     parser.add_argument("--min-minutes", type=int, default=1,
                         help="Minimum total WC minutes to include a player (default 1)")
+    parser.add_argument("--refresh", action="store_true",
+                        help="Re-pull player stats for ALL finished fixtures, bypassing the "
+                             "per-fixture cache. Use once per round to correct any fixtures "
+                             "that were cached before the API finished updating minutes.")
     args = parser.parse_args()
 
     headers = {"x-apisports-key": args.key}
@@ -187,7 +192,8 @@ def main():
             tnam = fix[side]
             if not tid:
                 continue
-            stats_list = get_player_stats(fix["fixture_id"], tid, cache, headers)
+            stats_list = get_player_stats(fix["fixture_id"], tid, cache, headers,
+                                          allow_cache=not args.refresh)
             for s in stats_list:
                 key = _norm(s["name"])
                 if key not in accumulated:
