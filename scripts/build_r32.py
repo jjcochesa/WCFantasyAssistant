@@ -82,6 +82,43 @@ _NAME_TO_CODE = {
     "England": "ENG", "Croatia": "CRO", "Ghana": "GHA", "Panama": "PAN",
 }
 
+# Official Round-of-32 bracket, top-to-bottom of the tree (left half then right
+# half), taken from the locked bracket. Each entry is the unordered pair of team
+# codes in one R32 match. Pairs (0,1) meet in the R16, (2,3) meet in the R16, and
+# their two winners meet in the QF, etc. Used to put the API-returned fixtures
+# into true bracket order so the Monte-Carlo's R16+ rounds match reality.
+BRACKET_ORDER = [
+    {"GER", "PAR"}, {"FRA", "SWE"},     # left  — QF1
+    {"RSA", "CAN"}, {"NED", "MAR"},     # left  — QF2
+    {"POR", "CRO"}, {"ESP", "AUT"},     # left  — QF3
+    {"USA", "BIH"}, {"BEL", "SEN"},     # left  — QF4
+    {"BRA", "JPN"}, {"CIV", "NOR"},     # right — QF1
+    {"MEX", "ECU"}, {"ENG", "COD"},     # right — QF2
+    {"ARG", "URU"}, {"AUS", "EGY"},     # right — QF3
+    {"SUI", "ALG"}, {"COL", "GHA"},     # right — QF4
+]
+
+
+def order_by_bracket(r32_pairs: list) -> list:
+    """Reorder API fixtures into official BRACKET_ORDER, preserving each pair's
+    (home, away) orientation. Falls back to API order (with a warning) if the
+    fixtures don't line up with the known bracket — e.g. an unexpected matchup."""
+    by_set = {frozenset(p): p for p in r32_pairs}
+    if len(by_set) != len(BRACKET_ORDER):
+        print(f"  [WARN] Got {len(by_set)} fixtures, bracket expects {len(BRACKET_ORDER)} "
+              f"— using API order; verify bracket before trusting R16+.")
+        return r32_pairs
+    ordered = []
+    for want in BRACKET_ORDER:
+        p = by_set.get(frozenset(want))
+        if p is None:
+            print(f"  [WARN] Bracket match {sorted(want)} not in API fixtures "
+                  f"— using API order; verify bracket before trusting R16+.")
+            return r32_pairs
+        ordered.append(p)
+    print("  Bracket order matched official tree ✓")
+    return ordered
+
 # Our 3-letter code -> eloratings.net page slug (for the World.tsv fallback / datafc).
 _CODE_TO_ELO_SLUG = {
     "MEX": "Mexico", "KOR": "South_Korea", "CZE": "Czech_Republic", "RSA": "South_Africa",
@@ -471,6 +508,7 @@ def main():
         r32_adv[(h, a)] = round(ph + 0.5 * pdw, 4)
 
     print("Step 3/4 — Loading Elo + Monte-Carlo bracket...")
+    r32_pairs = order_by_bracket(r32_pairs)
     codes = [c for pair in r32_pairs for c in pair]
     elo = load_elo(codes, args.elo_file)
     qual = simulate_bracket(r32_pairs, r32_adv, elo, args.sims)
@@ -494,8 +532,8 @@ def main():
         "CS_PCT": cs_pct,
         "FDR": fdr,
         "QUAL_PROBS": qual_probs,
-        "_note": "r32_pairs are in API order; verify bracket order vs the official "
-                 "bracket before trusting R16+ probabilities.",
+        "_note": "r32_pairs are sorted into the official BRACKET_ORDER (see build_r32.py) "
+                 "when the API fixtures match it; check the log for a fallback warning.",
         "r32_pairs": r32_pairs,
     }
     json.dump(out, open(OUTPUT, "w"), indent=2, ensure_ascii=False)
