@@ -902,6 +902,11 @@ def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
     """Project points for the upcoming match, scaled by projected minutes.
     Returns (pts, player_xg)."""
     pos = p.position
+    # In knockouts only the teams with an upcoming fixture are still alive. A team
+    # absent from FIXTURES is eliminated — no projection (don't fall through to the
+    # generic 1.0-goal default and pollute the rankings).
+    if p.team_code not in FIXTURES:
+        return 0.0, 0.0
     team_xg, cs_pct = get_team_proj(p.team_code)
     opp_xg = get_opponent_xg(p.team_code)
 
@@ -1105,6 +1110,7 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "pos": p.position,
             "country": p.team_name,
             "team_code": p.team_code,
+            "in_round": p.team_code in FIXTURES,
             "club": p.club,
             "price": p.price,
             "own_%": round(p.ownership_pct, 1),

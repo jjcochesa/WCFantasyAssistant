@@ -361,13 +361,19 @@ def _filter(key_prefix: str) -> pd.DataFrame:
 with tab1:
     st.subheader(f"Player Rankings — Next Round ({CURRENT_ROUND})")
 
-    f1, f2 = st.columns([3, 1])
+    f1, f2, f3 = st.columns([3, 1, 1])
     with f1:
         pos_filter = st.radio("Position", ["All", "GK", "DEF", "MID", "FWD"], horizontal=True, key="t1_pos")
     with f2:
         nation_filter = st.selectbox("Nation", ["All"] + sorted(df["country"].unique().tolist()), key="t1_nation")
+    with f3:
+        alive_only = st.checkbox("Still in tournament", value=True, key="t1_alive",
+                                 help="Hide players whose team has been knocked out "
+                                      "(no upcoming fixture this round).")
 
     view = df.copy()
+    if alive_only and "in_round" in view.columns:
+        view = view[view["in_round"]]
     if pos_filter != "All":
         view = view[view["pos"] == pos_filter]
     if nation_filter != "All":

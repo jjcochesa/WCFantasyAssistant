@@ -7,16 +7,19 @@ QF → SF → Final). Each round you send fresh CS% / xG and we swap the single
 value per team below.
 
 Sources:
-  - Projected goals & CS% (MD3): FPLJoe.com via SBOBET & Betfair Exchange markets
-    (all 48 teams direct — no Poisson derivation)
+  - Projected goals & CS% (R32): FPLJoe.com via SBOBET & Betfair Exchange markets
+    (the 32 qualified teams direct — no Poisson derivation)
   - FDR (1=easiest, 5=hardest): derived from opponent threat = avg(opp_xGF, opp_CS%)
     banded into 5 tiers, consistent with FPLJoe PELE colour bands
-  - Fixtures from official WC 2026 schedule
+  - QUAL_PROBS: 200k Monte-Carlo of the locked bracket. R32 advance prob is exact
+    (Poisson on the two FPLJoe lambdas per match); R16+ use a bookmaker-derived
+    attack/defence proxy. INTERIM — replace with the Elo-based build_r32.py output.
+  - Fixtures from the official WC 2026 Round-of-32 bracket
 """
 
 # Label for the round currently being projected (display only)
-CURRENT_ROUND = "MD3"
-CURRENT_ROUND_DATE = "22.06.26"
+CURRENT_ROUND = "R32"
+CURRENT_ROUND_DATE = "28.06.26"
 
 # Group assignments
 GROUPS = {
@@ -50,82 +53,62 @@ TEAM_NAMES = {
     "QAT": "Qatar", "JOR": "Jordan", "HAI": "Haiti", "IRQ": "Iraq", "CUW": "Curacao",
 }
 
-# Next opponent (3-letter code) for the upcoming round
+# Next opponent (3-letter code) — Round of 32 (the 16 locked knockout matches)
 FIXTURES = {
-    # Group A: MEX-CZE, KOR-RSA
-    "MEX": "CZE", "CZE": "MEX", "KOR": "RSA", "RSA": "KOR",
-    # Group B: SUI-CAN, QAT-BIH
-    "SUI": "CAN", "CAN": "SUI", "QAT": "BIH", "BIH": "QAT",
-    # Group C: BRA-SCO, MAR-HAI
-    "BRA": "SCO", "SCO": "BRA", "MAR": "HAI", "HAI": "MAR",
-    # Group D: USA-TUR, PAR-AUS
-    "USA": "TUR", "TUR": "USA", "PAR": "AUS", "AUS": "PAR",
-    # Group E: GER-ECU, CIV-CUW
-    "GER": "ECU", "ECU": "GER", "CIV": "CUW", "CUW": "CIV",
-    # Group F: NED-TUN, JPN-SWE
-    "NED": "TUN", "TUN": "NED", "JPN": "SWE", "SWE": "JPN",
-    # Group G: BEL-NZL, EGY-IRN
-    "BEL": "NZL", "NZL": "BEL", "EGY": "IRN", "IRN": "EGY",
-    # Group H: ESP-URU, KSA-CPV
-    "ESP": "URU", "URU": "ESP", "KSA": "CPV", "CPV": "KSA",
-    # Group I: FRA-NOR, SEN-IRQ
-    "FRA": "NOR", "NOR": "FRA", "SEN": "IRQ", "IRQ": "SEN",
-    # Group J: ARG-JOR, ALG-AUT
-    "ARG": "JOR", "JOR": "ARG", "ALG": "AUT", "AUT": "ALG",
-    # Group K: POR-COL, COD-UZB
-    "POR": "COL", "COL": "POR", "COD": "UZB", "UZB": "COD",
-    # Group L: ENG-PAN, CRO-GHA
-    "ENG": "PAN", "PAN": "ENG", "CRO": "GHA", "GHA": "CRO",
+    "RSA": "CAN", "CAN": "RSA",   # Sun 28.06
+    "GER": "PAR", "PAR": "GER",   # Mon 29.06
+    "BRA": "JPN", "JPN": "BRA",   # Mon 29.06
+    "NED": "MAR", "MAR": "NED",   # Mon 29.06
+    "CIV": "NOR", "NOR": "CIV",   # Tue 30.06
+    "FRA": "SWE", "SWE": "FRA",   # Tue 30.06
+    "MEX": "ECU", "ECU": "MEX",   # Tue 30.06
+    "ENG": "COD", "COD": "ENG",   # Wed 01.07
+    "BEL": "SEN", "SEN": "BEL",   # Wed 01.07
+    "USA": "BIH", "BIH": "USA",   # Wed 01.07
+    "ESP": "AUT", "AUT": "ESP",   # Thu 02.07
+    "POR": "CRO", "CRO": "POR",   # Thu 02.07
+    "SUI": "ALG", "ALG": "SUI",   # Thu 02.07
+    "ARG": "CPV", "CPV": "ARG",   # Fri 03.07
+    "AUS": "EGY", "EGY": "AUS",   # Fri 03.07
+    "COL": "GHA", "GHA": "COL",   # Fri 03.07
 }
 
-# Projected goals for the upcoming match — FPLJoe.com MD3 (SBOBET & Betfair)
-# All 48 teams direct.
+# Projected goals for the R32 match — FPLJoe.com R32 (SBOBET & Betfair, 28.06.26)
+# The 32 qualified teams direct.
 PROJ_GOALS = {
-    "NED": 2.89, "CIV": 2.77, "BEL": 2.69, "MAR": 2.67, "ENG": 2.61,
-    "SEN": 2.58, "ARG": 2.51, "BIH": 2.29, "BRA": 2.08, "ESP": 1.97,
-    "FRA": 1.94, "KOR": 1.72, "JPN": 1.70, "GER": 1.69, "USA": 1.69,
-    "CRO": 1.68, "MEX": 1.55, "COD": 1.49, "POR": 1.46, "SUI": 1.40,
-    "CPV": 1.33, "KSA": 1.22, "AUT": 1.05, "TUR": 1.17, "CAN": 1.16,
-    "ECU": 1.13, "EGY": 1.13, "SWE": 1.12, "NOR": 1.03, "COL": 1.03,
-    "UZB": 1.00, "ALG": 1.00, "CZE": 1.00, "PAR": 0.99, "AUS": 0.96,
-    "IRN": 0.92, "QAT": 0.83, "GHA": 0.83, "RSA": 0.80, "URU": 0.77,
-    "IRQ": 0.65, "SCO": 0.63, "PAN": 0.62, "NZL": 0.58, "HAI": 0.54,
-    "CUW": 0.52, "JOR": 0.52, "TUN": 0.47,
+    "GER": 2.26, "PAR": 0.67, "FRA": 2.53, "SWE": 0.74, "RSA": 0.75, "CAN": 1.63,
+    "NED": 1.40, "MAR": 0.99, "POR": 1.54, "CRO": 0.89, "ESP": 2.14, "AUT": 0.53,
+    "USA": 2.14, "BIH": 0.65, "BEL": 1.35, "SEN": 0.99, "BRA": 1.72, "JPN": 0.90,
+    "CIV": 1.15, "NOR": 1.59, "MEX": 1.21, "ECU": 0.85, "ENG": 2.20, "COD": 0.48,
+    "ARG": 2.59, "CPV": 0.42, "AUS": 0.96, "EGY": 1.10, "SUI": 1.59, "ALG": 1.00,
+    "COL": 1.64, "GHA": 0.67,
 }
 
-# Clean sheet probability for the upcoming match — FPLJoe.com MD3 (SBOBET & Betfair)
-# All 48 teams direct.
+# Clean sheet probability for the R32 match — FPLJoe.com R32 (SBOBET & Betfair)
+# The 32 qualified teams direct.
 CS_PCT = {
-    "NED": 0.63, "ARG": 0.60, "CIV": 0.59, "MAR": 0.58, "SEN": 0.58,
-    "BEL": 0.56, "ENG": 0.54, "BRA": 0.53, "ESP": 0.46, "CRO": 0.44,
-    "BIH": 0.44, "KOR": 0.43, "EGY": 0.40, "PAR": 0.38, "AUS": 0.37,
-    "MEX": 0.37, "AUT": 0.37, "COD": 0.37, "POR": 0.36, "FRA": 0.36,
-    "ALG": 0.35, "GER": 0.32, "JPN": 0.32, "IRN": 0.32, "SUI": 0.31,
-    "USA": 0.31, "CPV": 0.30, "KSA": 0.26, "CAN": 0.25, "COL": 0.23,
-    "UZB": 0.22, "CZE": 0.21, "GHA": 0.19, "TUR": 0.18, "ECU": 0.18,
-    "SWE": 0.18, "RSA": 0.18, "NOR": 0.14, "URU": 0.14, "SCO": 0.12,
-    "QAT": 0.10, "IRQ": 0.08, "JOR": 0.08, "PAN": 0.07, "HAI": 0.07,
-    "NZL": 0.07, "CUW": 0.06, "TUN": 0.06,
+    "GER": 0.51, "PAR": 0.10, "FRA": 0.48, "SWE": 0.08, "RSA": 0.19, "CAN": 0.47,
+    "NED": 0.37, "MAR": 0.25, "POR": 0.41, "CRO": 0.21, "ESP": 0.59, "AUT": 0.12,
+    "USA": 0.52, "BIH": 0.12, "BEL": 0.37, "SEN": 0.26, "BRA": 0.41, "JPN": 0.18,
+    "CIV": 0.20, "NOR": 0.32, "MEX": 0.43, "ECU": 0.30, "ENG": 0.62, "COD": 0.11,
+    "ARG": 0.66, "CPV": 0.08, "AUS": 0.33, "EGY": 0.38, "SUI": 0.37, "ALG": 0.20,
+    "COL": 0.51, "GHA": 0.19,
 }
 
-# FDR for the upcoming match — FPLJoe.com MD3 (1=easiest, 5=hardest)
+# FDR for the R32 match (1=easiest, 5=hardest)
 # Banded by opponent threat = avg(opp_xGF, opp_CS%):
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
 FDR = {
     # 1 — easiest (facing very weak opponent)
-    "BRA": 1, "MAR": 1, "BEL": 1, "ARG": 1, "NED": 1, "CIV": 1, "SEN": 1, "ENG": 1,
+    "GER": 1, "FRA": 1, "ESP": 1, "USA": 1, "ENG": 1, "ARG": 1, "COL": 1,
     # 2 — easy
-    "CRO": 2, "BIH": 2, "KOR": 2, "ESP": 2, "FRA": 2, "MEX": 2,
+    "CAN": 2, "POR": 2, "BRA": 2, "MEX": 2, "SUI": 2,
     # 3 — moderate
-    "COD": 3, "EGY": 3, "CPV": 3, "KSA": 3, "AUT": 3, "ALG": 3,
-    "SUI": 3, "CAN": 3, "PAR": 3, "AUS": 3, "IRN": 3, "JPN": 3,
-    "GER": 3, "USA": 3, "POR": 3,
+    "NED": 3, "BEL": 3, "NOR": 3, "ECU": 3, "AUS": 3, "EGY": 3,
     # 4 — hard
-    "UZB": 4, "COL": 4, "SWE": 4, "TUR": 4, "CZE": 4, "ECU": 4,
-    "NOR": 4, "RSA": 4, "GHA": 4,
+    "RSA": 4, "MAR": 4, "CRO": 4, "SEN": 4, "JPN": 4, "CIV": 4, "ALG": 4, "GHA": 4,
     # 5 — hardest (facing strong opponent)
-    "IRQ": 5, "SCO": 5, "QAT": 5, "URU": 5, "JOR": 5, "HAI": 5,
-    "NZL": 5, "TUN": 5, "PAN": 5, "CUW": 5,
+    "PAR": 5, "SWE": 5, "AUT": 5, "BIH": 5, "COD": 5, "CPV": 5,
 }
 
 # Group balance classification (from FIFA ranking analysis)
@@ -144,58 +127,45 @@ GROUP_BALANCE = {
     "H": "Most unbalanced", # Spain, Uruguay, Saudi Arabia, Cape Verde
 }
 
-# Tournament qualification probabilities (0.0–1.0) per team.
-# r32 = qualifies from group stage, r16 = reaches last 16, qf = quarters,
-# sf = semis, f = final. Fill in after MD3 results.
+# Tournament qualification probabilities (0.0–1.0) per team — 200k Monte-Carlo of
+# the locked R32 bracket. r32 = reaches last 32 (=1.0, all already qualified),
+# r16 = reaches last 16, qf = quarters, sf = semis, f = reaches the final.
+# R32 advance prob is exact (Poisson on the two FPLJoe lambdas); R16+ use a
+# bookmaker-derived attack/defence proxy. INTERIM — swap for the Elo-based
+# build_r32.py output (data/r32_output.json) when available.
 QUAL_PROBS: dict[str, dict] = {
-    "MEX": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "KOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CZE": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "RSA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "SUI": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CAN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "QAT": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "BIH": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "BRA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "MAR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "SCO": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "HAI": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "USA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "TUR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "AUS": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "PAR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "GER": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "ECU": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CIV": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CUW": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "NED": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "JPN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "SWE": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "TUN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "BEL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "IRN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "EGY": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "NZL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "ESP": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "URU": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "KSA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CPV": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "FRA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "SEN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "NOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "IRQ": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "ARG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "AUT": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "ALG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "JOR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "POR": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "COL": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "COD": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "UZB": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "ENG": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "CRO": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "GHA": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "PAN": {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "GER": {"r32": 1.0, "r16": 0.821, "qf": 0.441, "sf": 0.284, "f": 0.16},
+    "PAR": {"r32": 1.0, "r16": 0.179, "qf": 0.041, "sf": 0.012, "f": 0.003},
+    "FRA": {"r32": 1.0, "r16": 0.836, "qf": 0.481, "sf": 0.317, "f": 0.185},
+    "SWE": {"r32": 1.0, "r16": 0.164, "qf": 0.037, "sf": 0.01, "f": 0.002},
+    "RSA": {"r32": 1.0, "r16": 0.293, "qf": 0.113, "sf": 0.029, "f": 0.008},
+    "CAN": {"r32": 1.0, "r16": 0.707, "qf": 0.422, "sf": 0.184, "f": 0.089},
+    "NED": {"r32": 1.0, "r16": 0.599, "qf": 0.301, "sf": 0.115, "f": 0.049},
+    "MAR": {"r32": 1.0, "r16": 0.401, "qf": 0.164, "sf": 0.049, "f": 0.017},
+    "POR": {"r32": 1.0, "r16": 0.654, "qf": 0.291, "sf": 0.142, "f": 0.063},
+    "CRO": {"r32": 1.0, "r16": 0.346, "qf": 0.105, "sf": 0.036, "f": 0.011},
+    "ESP": {"r32": 1.0, "r16": 0.836, "qf": 0.554, "sf": 0.332, "f": 0.184},
+    "AUT": {"r32": 1.0, "r16": 0.164, "qf": 0.049, "sf": 0.012, "f": 0.003},
+    "USA": {"r32": 1.0, "r16": 0.81, "qf": 0.538, "sf": 0.302, "f": 0.162},
+    "BIH": {"r32": 1.0, "r16": 0.19, "qf": 0.061, "sf": 0.015, "f": 0.003},
+    "BEL": {"r32": 1.0, "r16": 0.59, "qf": 0.255, "sf": 0.11, "f": 0.045},
+    "SEN": {"r32": 1.0, "r16": 0.41, "qf": 0.145, "sf": 0.051, "f": 0.017},
+    "BRA": {"r32": 1.0, "r16": 0.684, "qf": 0.401, "sf": 0.192, "f": 0.087},
+    "JPN": {"r32": 1.0, "r16": 0.316, "qf": 0.124, "sf": 0.037, "f": 0.011},
+    "CIV": {"r32": 1.0, "r16": 0.4, "qf": 0.166, "sf": 0.057, "f": 0.018},
+    "NOR": {"r32": 1.0, "r16": 0.6, "qf": 0.31, "sf": 0.136, "f": 0.057},
+    "MEX": {"r32": 1.0, "r16": 0.592, "qf": 0.236, "sf": 0.119, "f": 0.048},
+    "ECU": {"r32": 1.0, "r16": 0.408, "qf": 0.128, "sf": 0.054, "f": 0.017},
+    "ENG": {"r32": 1.0, "r16": 0.853, "qf": 0.593, "sf": 0.392, "f": 0.22},
+    "COD": {"r32": 1.0, "r16": 0.147, "qf": 0.042, "sf": 0.012, "f": 0.002},
+    "ARG": {"r32": 1.0, "r16": 0.899, "qf": 0.668, "sf": 0.461, "f": 0.297},
+    "CPV": {"r32": 1.0, "r16": 0.101, "qf": 0.026, "sf": 0.006, "f": 0.001},
+    "AUS": {"r32": 1.0, "r16": 0.464, "qf": 0.134, "sf": 0.057, "f": 0.022},
+    "EGY": {"r32": 1.0, "r16": 0.536, "qf": 0.172, "sf": 0.08, "f": 0.033},
+    "SUI": {"r32": 1.0, "r16": 0.636, "qf": 0.329, "sf": 0.135, "f": 0.064},
+    "ALG": {"r32": 1.0, "r16": 0.364, "qf": 0.138, "sf": 0.04, "f": 0.014},
+    "COL": {"r32": 1.0, "r16": 0.73, "qf": 0.434, "sf": 0.197, "f": 0.101},
+    "GHA": {"r32": 1.0, "r16": 0.27, "qf": 0.099, "sf": 0.025, "f": 0.007},
 }
 
 import math as _math

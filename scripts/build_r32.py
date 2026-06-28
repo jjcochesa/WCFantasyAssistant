@@ -94,7 +94,7 @@ BRACKET_ORDER = [
     {"USA", "BIH"}, {"BEL", "SEN"},     # left  — QF4
     {"BRA", "JPN"}, {"CIV", "NOR"},     # right — QF1
     {"MEX", "ECU"}, {"ENG", "COD"},     # right — QF2
-    {"ARG", "URU"}, {"AUS", "EGY"},     # right — QF3
+    {"ARG", "CPV"}, {"AUS", "EGY"},     # right — QF3
     {"SUI", "ALG"}, {"COL", "GHA"},     # right — QF4
 ]
 
