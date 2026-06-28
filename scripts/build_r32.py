@@ -211,9 +211,19 @@ def _devig(odds: list) -> list:
 
 # ── Elo ────────────────────────────────────────────────────────────────────────
 
+# Knockout-variance dampening. A straight Elo win-prob over-credits favourites in
+# a one-off knockout: extra time and penalties drag even a strong side toward a
+# coin flip. Shrink the Elo edge toward 0.5 so multi-round deep runs don't compound
+# too hot. Calibrated to Oddschecker QF/SF market odds (R32 2026): k≈0.65 lands the
+# favourites (e.g. ARG SF) on the market. 1.0 = pure Elo, 0.0 = always 50/50.
+KO_VARIANCE_K = 0.65
+
+
 def _elo_advance_prob(elo_a: float, elo_b: float) -> float:
-    """P(team A advances past B) from Elo expected score (penalties folded in)."""
-    return 1.0 / (1.0 + 10 ** (-(elo_a - elo_b) / 400.0))
+    """P(team A advances past B) in a knockout — Elo expected score shrunk toward
+    0.5 by KO_VARIANCE_K to reflect extra-time/penalty variance."""
+    p_elo = 1.0 / (1.0 + 10 ** (-(elo_a - elo_b) / 400.0))
+    return 0.5 + KO_VARIANCE_K * (p_elo - 0.5)
 
 
 def load_elo(codes: list, elo_file: str = None) -> dict:
