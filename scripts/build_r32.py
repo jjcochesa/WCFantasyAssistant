@@ -319,8 +319,12 @@ def _get(endpoint: str, params: dict, cache: dict, key: str, headers: dict,
             _save_cache(cache)
             return data
         except Exception as e:
-            print(f"  [ERR] {endpoint} {params}: {e}")
-            return {}
+            # Transient network error (connection reset, timeout, DNS) — back off
+            # and retry rather than silently dropping this fixture.
+            w = 3 * (attempt + 1)
+            print(f"  [retry {attempt + 1}/4] {endpoint} {params}: {e} — waiting {w}s")
+            time.sleep(w)
+    print(f"  [ERR] gave up on {endpoint} {params} after 4 attempts")
     return {}
 
 
