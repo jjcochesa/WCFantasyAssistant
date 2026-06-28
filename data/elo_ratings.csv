@@ -1,0 +1,37 @@
+# National-team Elo ratings (eloratings.net scale) for the build_r32.py Monte-Carlo.
+# Used for R16+ advance probabilities (R32 still uses the live bookmaker odds).
+# Approximate seed values — replace with a fresh eloratings.net World.tsv pull
+# (pip install datafc) whenever you want exact current numbers.
+# Format: CODE,rating  (lines that aren't a known team code are ignored)
+ARG,2090
+FRA,2070
+ESP,2065
+BRA,2015
+ENG,1985
+POR,1975
+NED,1960
+GER,1950
+BEL,1930
+CRO,1900
+COL,1875
+SUI,1850
+MAR,1840
+USA,1835
+JPN,1830
+SEN,1820
+NOR,1815
+MEX,1810
+AUT,1800
+ECU,1795
+ALG,1770
+SWE,1765
+CIV,1760
+CAN,1750
+EGY,1745
+BIH,1725
+PAR,1720
+AUS,1715
+GHA,1710
+COD,1705
+RSA,1700
+CPV,1680

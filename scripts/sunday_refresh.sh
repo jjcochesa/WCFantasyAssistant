@@ -34,7 +34,7 @@ echo
 echo "============================================================"
 echo " 2/2  R32 team data + advancement  (data/r32_output.json)"
 echo "============================================================"
-python3 scripts/build_r32.py --key "$KEY"
+python3 scripts/build_r32.py --key "$KEY" --elo-file data/elo_ratings.csv
 
 echo
 echo "============================================================"
