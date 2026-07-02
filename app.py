@@ -178,7 +178,6 @@ SORT_LABELS = {
     "xPts group stage total": "xPts_GS",
     "xPts per game": "xPts/game",
     "Value (xPts/$m)": "value",
-    "xPts × R32% (risk-adjusted)": "xPts_R32",
     "Tournament xPts (all rounds)": "tournament_xpts",
     "Ownership %": "own_%",
     "Price": "price",
@@ -400,9 +399,7 @@ with tab1:
         "own_%":            "Own%",
         "xPts_GS":          "Proj Pts",
         "adj_total":        "Adj Pts",
-        "xPts_R32":         "R32 xPts",
         "tournament_xpts":  "Tourn xPts",
-        "r32_pct":          "R32%",
         "r16_pct":          "R16%",
         "qf_pct":           "QF%",
         "sf_pct":           "SF%",
@@ -449,8 +446,8 @@ with tab1:
     pct_cols   = [c for c in ["CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
 
-    qual_pct_cols = [c for c in ["R32%", "R16%", "QF%", "SF%", "Final%"] if c in disp.columns]
-    qual_xpts_cols = [c for c in ["R32 xPts", "Tourn xPts"] if c in disp.columns]
+    qual_pct_cols = [c for c in ["R16%", "QF%", "SF%", "Final%"] if c in disp.columns]
+    qual_xpts_cols = [c for c in ["Tourn xPts"] if c in disp.columns]
 
     fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'",
                "Exp Games": "{:.2f}"}

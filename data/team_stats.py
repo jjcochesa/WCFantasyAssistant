@@ -18,8 +18,11 @@ Sources:
 """
 
 # Label for the round currently being projected (display only)
-CURRENT_ROUND = "R32"
-CURRENT_ROUND_DATE = "28.06.26"
+# Transition state: 5 R16 matches are set (confirmed teams carry MD5/R16 data);
+# the other 12 teams are still finishing their R32 games (carry R32 data until
+# those results land). Eliminated teams are removed entirely.
+CURRENT_ROUND = "R16"
+CURRENT_ROUND_DATE = "02.07.26"
 
 # Group assignments
 GROUPS = {
@@ -53,62 +56,55 @@ TEAM_NAMES = {
     "QAT": "Qatar", "JOR": "Jordan", "HAI": "Haiti", "IRQ": "Iraq", "CUW": "Curacao",
 }
 
-# Next opponent (3-letter code) — Round of 32 (the 16 locked knockout matches)
+# Next opponent (3-letter code). Confirmed teams point to their R16 opponent;
+# the 12 still-playing teams point to their (unfinished) R32 opponent.
 FIXTURES = {
-    "RSA": "CAN", "CAN": "RSA",   # Sun 28.06
-    "GER": "PAR", "PAR": "GER",   # Mon 29.06
-    "BRA": "JPN", "JPN": "BRA",   # Mon 29.06
-    "NED": "MAR", "MAR": "NED",   # Mon 29.06
-    "CIV": "NOR", "NOR": "CIV",   # Tue 30.06
-    "FRA": "SWE", "SWE": "FRA",   # Tue 30.06
-    "MEX": "ECU", "ECU": "MEX",   # Tue 30.06
-    "ENG": "COD", "COD": "ENG",   # Wed 01.07
-    "BEL": "SEN", "SEN": "BEL",   # Wed 01.07
-    "USA": "BIH", "BIH": "USA",   # Wed 01.07
-    "ESP": "AUT", "AUT": "ESP",   # Thu 02.07
-    "POR": "CRO", "CRO": "POR",   # Thu 02.07
-    "SUI": "ALG", "ALG": "SUI",   # Thu 02.07
-    "ARG": "CPV", "CPV": "ARG",   # Fri 03.07
-    "AUS": "EGY", "EGY": "AUS",   # Fri 03.07
-    "COL": "GHA", "GHA": "COL",   # Fri 03.07
+    # ── Confirmed Round of 16 matches (5) ──
+    "FRA": "PAR", "PAR": "FRA",
+    "CAN": "MAR", "MAR": "CAN",
+    "USA": "BEL", "BEL": "USA",
+    "BRA": "NOR", "NOR": "BRA",
+    "MEX": "ENG", "ENG": "MEX",
+    # ── Pending Round of 32 matches (still to play, feed the last 3 R16 slots) ──
+    "POR": "CRO", "CRO": "POR",
+    "ESP": "AUT", "AUT": "ESP",
+    "SUI": "ALG", "ALG": "SUI",
+    "COL": "GHA", "GHA": "COL",
+    "ARG": "CPV", "CPV": "ARG",
+    "AUS": "EGY", "EGY": "AUS",
 }
 
-# Projected goals for the R32 match — build_r32.py (API-Football SBOBET/Betfair
-# odds → de-vigged → Poisson lambdas). The 32 qualified teams.
+# Projected goals for the upcoming match. Confirmed teams = MD5/R16 (FPLJoe,
+# 02.07.26); still-playing teams = their R32 projection (build_r32.py).
 PROJ_GOALS = {
-    "RSA": 0.8, "CAN": 1.68, "GER": 2.18, "PAR": 0.72, "BRA": 1.72, "JPN": 0.88,
-    "NED": 1.4, "MAR": 1.0, "CIV": 1.12, "NOR": 1.57, "FRA": 2.43, "SWE": 0.73,
-    "MEX": 1.21, "ECU": 0.87, "ENG": 2.18, "COD": 0.57, "BEL": 1.37, "SEN": 0.96,
-    "USA": 2.1, "BIH": 0.68, "ESP": 2.14, "AUT": 0.53, "POR": 1.5, "CRO": 0.88,
-    "SUI": 1.62, "ALG": 0.99, "ARG": 2.57, "CPV": 0.48, "AUS": 0.95, "EGY": 1.13,
-    "COL": 1.61, "GHA": 0.71,
+    # Confirmed R16 (MD5)
+    "FRA": 2.64, "PAR": 0.52, "CAN": 0.9, "MAR": 1.65, "USA": 1.62, "BEL": 1.48,
+    "BRA": 1.9, "NOR": 1.24, "MEX": 1.14, "ENG": 1.32,
+    # Pending R32
+    "POR": 1.5, "CRO": 0.88, "ESP": 2.14, "AUT": 0.53, "SUI": 1.62, "ALG": 0.99,
+    "COL": 1.61, "GHA": 0.71, "ARG": 2.57, "CPV": 0.48, "AUS": 0.95, "EGY": 1.13,
 }
 
-# Clean sheet probability for the R32 match — build_r32.py (CS = e^(-opp_lambda),
-# self-consistent with PROJ_GOALS). The 32 qualified teams.
+# Clean sheet probability for the upcoming match (same split as PROJ_GOALS).
 CS_PCT = {
-    "RSA": 0.19, "CAN": 0.45, "GER": 0.49, "PAR": 0.11, "BRA": 0.41, "JPN": 0.18,
-    "NED": 0.37, "MAR": 0.25, "CIV": 0.21, "NOR": 0.33, "FRA": 0.48, "SWE": 0.09,
-    "MEX": 0.42, "ECU": 0.3, "ENG": 0.56, "COD": 0.11, "BEL": 0.38, "SEN": 0.26,
-    "USA": 0.51, "BIH": 0.12, "ESP": 0.59, "AUT": 0.12, "POR": 0.41, "CRO": 0.22,
-    "SUI": 0.37, "ALG": 0.2, "ARG": 0.62, "CPV": 0.08, "AUS": 0.32, "EGY": 0.39,
-    "COL": 0.49, "GHA": 0.2,
+    # Confirmed R16 (MD5)
+    "FRA": 0.6, "PAR": 0.05, "CAN": 0.18, "MAR": 0.42, "USA": 0.24, "BEL": 0.21,
+    "BRA": 0.3, "NOR": 0.15, "MEX": 0.27, "ENG": 0.33,
+    # Pending R32
+    "POR": 0.41, "CRO": 0.22, "ESP": 0.59, "AUT": 0.12, "SUI": 0.37, "ALG": 0.2,
+    "COL": 0.49, "GHA": 0.2, "ARG": 0.62, "CPV": 0.08, "AUS": 0.32, "EGY": 0.39,
 }
 
-# FDR for the R32 match (1=easiest, 5=hardest) — build_r32.py
+# FDR for the upcoming match (1=easiest, 5=hardest).
 # Banded by opponent threat = avg(opp_xGF, opp_CS%):
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
 FDR = {
-    # 1 — easiest (facing very weak opponent)
-    "GER": 1, "FRA": 1, "ENG": 1, "USA": 1, "ESP": 1, "ARG": 1,
-    # 2 — easy
-    "CAN": 2, "BRA": 2, "MEX": 2, "BEL": 2, "POR": 2, "SUI": 2, "COL": 2,
-    # 3 — moderate
-    "NED": 3, "NOR": 3, "ECU": 3, "AUS": 3, "EGY": 3,
-    # 4 — hard
-    "RSA": 4, "JPN": 4, "MAR": 4, "CIV": 4, "SEN": 4, "CRO": 4, "ALG": 4, "GHA": 4,
-    # 5 — hardest (facing strong opponent)
-    "PAR": 5, "SWE": 5, "COD": 5, "BIH": 5, "AUT": 5, "CPV": 5,
+    # Confirmed R16
+    "FRA": 1, "PAR": 5, "CAN": 4, "MAR": 2, "USA": 3, "BEL": 4,
+    "BRA": 3, "NOR": 4, "MEX": 3, "ENG": 3,
+    # Pending R32
+    "POR": 2, "CRO": 4, "ESP": 1, "AUT": 5, "SUI": 2, "ALG": 4,
+    "COL": 2, "GHA": 4, "ARG": 1, "CPV": 5, "AUS": 3, "EGY": 3,
 }
 
 # Group balance classification (from FIFA ranking analysis)
@@ -127,45 +123,48 @@ GROUP_BALANCE = {
     "H": "Most unbalanced", # Spain, Uruguay, Saudi Arabia, Cape Verde
 }
 
-# Tournament qualification probabilities (0.0–1.0) per team — build_r32.py
-# Monte-Carlo of the locked R32 bracket. r32 = reaches last 32 (=1.0, already
-# qualified), r16 = reaches last 16, qf = quarters, sf = semis, f = reaches final.
-# R32 advance prob from the live bookmaker odds; R16+ from national-team Elo
-# (data/elo_ratings.csv) with knockout-variance dampening (KO_VARIANCE_K=0.65)
-# calibrated to Oddschecker QF/SF market odds. Source of truth: data/r32_output.json.
+# Tournament qualification probabilities (0.0–1.0) — reach-probabilities from a
+# 400k Monte-Carlo of the FULL remaining bracket at the R32→R16 transition.
+# Confirmed R16 teams: r16 = 1.0 (already through). Still-playing teams: r16 =
+# P(win their R32). r32 = 1.0 for all (everyone reached R32). Confirmed R16 games
+# use MD5 odds; pending R32 games use R32 odds; R16-pending + QF/SF/Final use the
+# calibrated Elo (KO_VARIANCE_K). See EXP_GAMES for expected remaining matches.
 QUAL_PROBS: dict[str, dict] = {
-    "RSA": {"r32": 1.0, "r16": 0.2964, "qf": 0.0967, "sf": 0.0281, "f": 0.0087},
-    "CAN": {"r32": 1.0, "r16": 0.7036, "qf": 0.2547, "sf": 0.081, "f": 0.0277},
-    "GER": {"r32": 1.0, "r16": 0.8008, "qf": 0.3519, "sf": 0.2053, "f": 0.1017},
-    "PAR": {"r32": 1.0, "r16": 0.1992, "qf": 0.0574, "sf": 0.0222, "f": 0.007},
-    "BRA": {"r32": 1.0, "r16": 0.6889, "qf": 0.4703, "sf": 0.2825, "f": 0.1576},
-    "JPN": {"r32": 1.0, "r16": 0.3111, "qf": 0.1656, "sf": 0.0735, "f": 0.0305},
-    "NED": {"r32": 1.0, "r16": 0.5951, "qf": 0.4082, "sf": 0.1927, "f": 0.0972},
-    "MAR": {"r32": 1.0, "r16": 0.4049, "qf": 0.2404, "sf": 0.0901, "f": 0.0362},
-    "CIV": {"r32": 1.0, "r16": 0.3959, "qf": 0.1344, "sf": 0.0521, "f": 0.0194},
-    "NOR": {"r32": 1.0, "r16": 0.6041, "qf": 0.2297, "sf": 0.0986, "f": 0.0401},
-    "FRA": {"r32": 1.0, "r16": 0.8252, "qf": 0.524, "sf": 0.352, "f": 0.2101},
-    "SWE": {"r32": 1.0, "r16": 0.1748, "qf": 0.0668, "sf": 0.0286, "f": 0.0101},
-    "MEX": {"r32": 1.0, "r16": 0.5898, "qf": 0.2306, "sf": 0.0971, "f": 0.0386},
-    "ECU": {"r32": 1.0, "r16": 0.4102, "qf": 0.1559, "sf": 0.0633, "f": 0.0246},
-    "ENG": {"r32": 1.0, "r16": 0.8303, "qf": 0.5446, "sf": 0.3093, "f": 0.165},
-    "COD": {"r32": 1.0, "r16": 0.1697, "qf": 0.069, "sf": 0.0236, "f": 0.0079},
-    "BEL": {"r32": 1.0, "r16": 0.5999, "qf": 0.3619, "sf": 0.1588, "f": 0.0763},
-    "SEN": {"r32": 1.0, "r16": 0.4001, "qf": 0.2024, "sf": 0.0713, "f": 0.0277},
-    "USA": {"r32": 1.0, "r16": 0.7969, "qf": 0.3621, "sf": 0.1308, "f": 0.0525},
-    "BIH": {"r32": 1.0, "r16": 0.2031, "qf": 0.0736, "sf": 0.0216, "f": 0.0073},
-    "ESP": {"r32": 1.0, "r16": 0.8339, "qf": 0.5043, "sf": 0.3373, "f": 0.2013},
-    "AUT": {"r32": 1.0, "r16": 0.1661, "qf": 0.0614, "sf": 0.0275, "f": 0.0104},
-    "POR": {"r32": 1.0, "r16": 0.6442, "qf": 0.2942, "sf": 0.1775, "f": 0.0919},
-    "CRO": {"r32": 1.0, "r16": 0.3558, "qf": 0.1401, "sf": 0.0753, "f": 0.034},
-    "SUI": {"r32": 1.0, "r16": 0.6436, "qf": 0.335, "sf": 0.1365, "f": 0.0604},
-    "ALG": {"r32": 1.0, "r16": 0.3564, "qf": 0.1603, "sf": 0.0574, "f": 0.0216},
-    "ARG": {"r32": 1.0, "r16": 0.8857, "qf": 0.6662, "sf": 0.4674, "f": 0.2985},
-    "CPV": {"r32": 1.0, "r16": 0.1143, "qf": 0.0518, "sf": 0.019, "f": 0.006},
-    "AUS": {"r32": 1.0, "r16": 0.4537, "qf": 0.1245, "sf": 0.0494, "f": 0.0165},
-    "EGY": {"r32": 1.0, "r16": 0.5463, "qf": 0.1575, "sf": 0.067, "f": 0.024},
-    "COL": {"r32": 1.0, "r16": 0.7082, "qf": 0.3881, "sf": 0.1651, "f": 0.0764},
-    "GHA": {"r32": 1.0, "r16": 0.2918, "qf": 0.1166, "sf": 0.0382, "f": 0.0128},
+    # ── Confirmed R16 (r16 = 1.0) ──
+    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 0.8868, "sf": 0.6243, "f": 0.3711},
+    "PAR": {"r32": 1.0, "r16": 1.0, "qf": 0.1132, "sf": 0.0477, "f": 0.015},
+    "CAN": {"r32": 1.0, "r16": 1.0, "qf": 0.328, "sf": 0.0965, "f": 0.0322},
+    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 0.672, "sf": 0.2315, "f": 0.0915},
+    "USA": {"r32": 1.0, "r16": 1.0, "qf": 0.5293, "sf": 0.1925, "f": 0.0757},
+    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 0.4707, "sf": 0.2048, "f": 0.0958},
+    "BRA": {"r32": 1.0, "r16": 1.0, "qf": 0.64, "sf": 0.38, "f": 0.2119},
+    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 0.36, "sf": 0.1523, "f": 0.0616},
+    "MEX": {"r32": 1.0, "r16": 1.0, "qf": 0.457, "sf": 0.1775, "f": 0.0711},
+    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 0.543, "sf": 0.2902, "f": 0.1546},
+    # ── Pending R32 (r16 = P(win R32)) ──
+    "POR": {"r32": 1.0, "r16": 0.6475, "qf": 0.2945, "sf": 0.1724, "f": 0.0863},
+    "CRO": {"r32": 1.0, "r16": 0.3525, "qf": 0.1392, "sf": 0.0721, "f": 0.0319},
+    "ESP": {"r32": 1.0, "r16": 0.8354, "qf": 0.505, "sf": 0.3319, "f": 0.191},
+    "AUT": {"r32": 1.0, "r16": 0.1646, "qf": 0.0613, "sf": 0.0263, "f": 0.0095},
+    "SUI": {"r32": 1.0, "r16": 0.6455, "qf": 0.3348, "sf": 0.1361, "f": 0.0576},
+    "ALG": {"r32": 1.0, "r16": 0.3545, "qf": 0.1583, "sf": 0.0569, "f": 0.0204},
+    "COL": {"r32": 1.0, "r16": 0.7142, "qf": 0.393, "sf": 0.1674, "f": 0.0742},
+    "GHA": {"r32": 1.0, "r16": 0.2858, "qf": 0.1139, "sf": 0.0366, "f": 0.0119},
+    "ARG": {"r32": 1.0, "r16": 0.8865, "qf": 0.6665, "sf": 0.4682, "f": 0.2923},
+    "CPV": {"r32": 1.0, "r16": 0.1135, "qf": 0.0514, "sf": 0.0189, "f": 0.0058},
+    "AUS": {"r32": 1.0, "r16": 0.4534, "qf": 0.1246, "sf": 0.0496, "f": 0.016},
+    "EGY": {"r32": 1.0, "r16": 0.5466, "qf": 0.1575, "sf": 0.0664, "f": 0.0226},
+}
+
+# Expected REMAINING matches per team from the same Monte-Carlo (next guaranteed
+# game + every round they're simulated to advance to). Used for tournament_xpts
+# instead of summing QUAL_PROBS, so already-played rounds aren't double-counted.
+EXP_GAMES: dict[str, float] = {
+    "FRA": 2.882, "PAR": 1.176, "CAN": 1.457, "MAR": 1.995, "USA": 1.797,
+    "BEL": 1.771, "BRA": 2.232, "NOR": 1.574, "MEX": 1.706, "ENG": 1.988,
+    "POR": 2.201, "CRO": 1.596, "ESP": 2.863, "AUT": 1.262, "SUI": 2.174,
+    "ALG": 1.59, "COL": 2.349, "GHA": 1.448, "ARG": 3.313, "CPV": 1.19,
+    "AUS": 1.644, "EGY": 1.793,
 }
 
 import math as _math
@@ -217,6 +216,10 @@ def get_qual_probs(team_code: str) -> dict:
 
 
 def get_expected_games(team_code: str) -> float:
-    """Sum of all stage probabilities = expected additional games beyond MD3."""
+    """Expected number of REMAINING matches (next guaranteed game + rounds the team
+    is projected to advance to). Prefers the Monte-Carlo EXP_GAMES; falls back to
+    summing reach-probabilities for any team not in that table."""
+    if team_code in EXP_GAMES:
+        return EXP_GAMES[team_code]
     p = get_qual_probs(team_code)
     return round(p["r32"] + p["r16"] + p["qf"] + p["sf"] + p["f"], 3)
