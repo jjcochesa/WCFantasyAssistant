@@ -18,11 +18,11 @@ Sources:
 """
 
 # Label for the round currently being projected (display only)
-# Transition state: 5 R16 matches are set (confirmed teams carry MD5/R16 data);
-# the other 12 teams are still finishing their R32 games (carry R32 data until
-# those results land). Eliminated teams are removed entirely.
+# Transition state: 6 R16 matches are set (confirmed teams carry MD5/R16 data);
+# 8 teams are still finishing their R32 games (carry R32 data until those results
+# land). Eliminated teams are removed entirely.
 CURRENT_ROUND = "R16"
-CURRENT_ROUND_DATE = "02.07.26"
+CURRENT_ROUND_DATE = "03.07.26"
 
 # Group assignments
 GROUPS = {
@@ -59,40 +59,39 @@ TEAM_NAMES = {
 # Next opponent (3-letter code). Confirmed teams point to their R16 opponent;
 # the 12 still-playing teams point to their (unfinished) R32 opponent.
 FIXTURES = {
-    # ── Confirmed Round of 16 matches (5) ──
+    # ── Confirmed Round of 16 matches (6) ──
     "FRA": "PAR", "PAR": "FRA",
     "CAN": "MAR", "MAR": "CAN",
+    "POR": "ESP", "ESP": "POR",
     "USA": "BEL", "BEL": "USA",
     "BRA": "NOR", "NOR": "BRA",
     "MEX": "ENG", "ENG": "MEX",
-    # ── Pending Round of 32 matches (still to play, feed the last 3 R16 slots) ──
-    "POR": "CRO", "CRO": "POR",
-    "ESP": "AUT", "AUT": "ESP",
-    "SUI": "ALG", "ALG": "SUI",
-    "COL": "GHA", "GHA": "COL",
+    # ── Pending Round of 32 matches (still to play, feed the last 2 R16 slots) ──
     "ARG": "CPV", "CPV": "ARG",
     "AUS": "EGY", "EGY": "AUS",
+    "SUI": "ALG", "ALG": "SUI",
+    "COL": "GHA", "GHA": "COL",
 }
 
 # Projected goals for the upcoming match. Confirmed teams = MD5/R16 (FPLJoe,
 # 02.07.26); still-playing teams = their R32 projection (build_r32.py).
 PROJ_GOALS = {
-    # Confirmed R16 (MD5)
-    "FRA": 2.64, "PAR": 0.52, "CAN": 0.9, "MAR": 1.65, "USA": 1.62, "BEL": 1.48,
-    "BRA": 1.9, "NOR": 1.24, "MEX": 1.14, "ENG": 1.32,
+    # Confirmed R16 (MD5 03.07)
+    "FRA": 2.61, "PAR": 0.51, "CAN": 0.89, "MAR": 1.68, "POR": 1.13, "ESP": 1.75,
+    "USA": 1.62, "BEL": 1.54, "BRA": 1.92, "NOR": 1.22, "MEX": 1.17, "ENG": 1.35,
     # Pending R32
-    "POR": 1.5, "CRO": 0.88, "ESP": 2.14, "AUT": 0.53, "SUI": 1.62, "ALG": 0.99,
-    "COL": 1.61, "GHA": 0.71, "ARG": 2.57, "CPV": 0.48, "AUS": 0.95, "EGY": 1.13,
+    "ARG": 2.57, "CPV": 0.48, "AUS": 0.95, "EGY": 1.13, "SUI": 1.62, "ALG": 0.99,
+    "COL": 1.61, "GHA": 0.71,
 }
 
 # Clean sheet probability for the upcoming match (same split as PROJ_GOALS).
 CS_PCT = {
-    # Confirmed R16 (MD5)
-    "FRA": 0.6, "PAR": 0.05, "CAN": 0.18, "MAR": 0.42, "USA": 0.24, "BEL": 0.21,
-    "BRA": 0.3, "NOR": 0.15, "MEX": 0.27, "ENG": 0.33,
+    # Confirmed R16 (MD5 03.07)
+    "FRA": 0.61, "PAR": 0.05, "CAN": 0.18, "MAR": 0.42, "POR": 0.17, "ESP": 0.34,
+    "USA": 0.22, "BEL": 0.21, "BRA": 0.31, "NOR": 0.15, "MEX": 0.26, "ENG": 0.32,
     # Pending R32
-    "POR": 0.41, "CRO": 0.22, "ESP": 0.59, "AUT": 0.12, "SUI": 0.37, "ALG": 0.2,
-    "COL": 0.49, "GHA": 0.2, "ARG": 0.62, "CPV": 0.08, "AUS": 0.32, "EGY": 0.39,
+    "ARG": 0.62, "CPV": 0.08, "AUS": 0.32, "EGY": 0.39, "SUI": 0.37, "ALG": 0.2,
+    "COL": 0.49, "GHA": 0.2,
 }
 
 # FDR for the upcoming match (1=easiest, 5=hardest).
@@ -100,11 +99,11 @@ CS_PCT = {
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
 FDR = {
     # Confirmed R16
-    "FRA": 1, "PAR": 5, "CAN": 4, "MAR": 2, "USA": 3, "BEL": 4,
-    "BRA": 3, "NOR": 4, "MEX": 3, "ENG": 3,
+    "FRA": 1, "PAR": 5, "CAN": 4, "MAR": 2, "POR": 4, "ESP": 3,
+    "USA": 4, "BEL": 4, "BRA": 3, "NOR": 4, "MEX": 3, "ENG": 3,
     # Pending R32
-    "POR": 2, "CRO": 4, "ESP": 1, "AUT": 5, "SUI": 2, "ALG": 4,
-    "COL": 2, "GHA": 4, "ARG": 1, "CPV": 5, "AUS": 3, "EGY": 3,
+    "ARG": 1, "CPV": 5, "AUS": 3, "EGY": 3, "SUI": 2, "ALG": 4,
+    "COL": 2, "GHA": 4,
 }
 
 # Group balance classification (from FIFA ranking analysis)
@@ -131,40 +130,37 @@ GROUP_BALANCE = {
 # calibrated Elo (KO_VARIANCE_K). See EXP_GAMES for expected remaining matches.
 QUAL_PROBS: dict[str, dict] = {
     # ── Confirmed R16 (r16 = 1.0) ──
-    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 0.8868, "sf": 0.6243, "f": 0.3711},
-    "PAR": {"r32": 1.0, "r16": 1.0, "qf": 0.1132, "sf": 0.0477, "f": 0.015},
-    "CAN": {"r32": 1.0, "r16": 1.0, "qf": 0.328, "sf": 0.0965, "f": 0.0322},
-    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 0.672, "sf": 0.2315, "f": 0.0915},
-    "USA": {"r32": 1.0, "r16": 1.0, "qf": 0.5293, "sf": 0.1925, "f": 0.0757},
-    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 0.4707, "sf": 0.2048, "f": 0.0958},
-    "BRA": {"r32": 1.0, "r16": 1.0, "qf": 0.64, "sf": 0.38, "f": 0.2119},
-    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 0.36, "sf": 0.1523, "f": 0.0616},
-    "MEX": {"r32": 1.0, "r16": 1.0, "qf": 0.457, "sf": 0.1775, "f": 0.0711},
-    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 0.543, "sf": 0.2902, "f": 0.1546},
+    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 0.8854, "sf": 0.6242, "f": 0.3601},
+    "PAR": {"r32": 1.0, "r16": 1.0, "qf": 0.1146, "sf": 0.0474, "f": 0.0143},
+    "CAN": {"r32": 1.0, "r16": 1.0, "qf": 0.3188, "sf": 0.0942, "f": 0.0297},
+    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 0.6812, "sf": 0.2342, "f": 0.0893},
+    "POR": {"r32": 1.0, "r16": 1.0, "qf": 0.3633, "sf": 0.2124, "f": 0.1068},
+    "ESP": {"r32": 1.0, "r16": 1.0, "qf": 0.6367, "sf": 0.4187, "f": 0.241},
+    "USA": {"r32": 1.0, "r16": 1.0, "qf": 0.5179, "sf": 0.1726, "f": 0.0678},
+    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 0.4821, "sf": 0.1963, "f": 0.091},
+    "BRA": {"r32": 1.0, "r16": 1.0, "qf": 0.6479, "sf": 0.386, "f": 0.2149},
+    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 0.3521, "sf": 0.1488, "f": 0.06},
+    "MEX": {"r32": 1.0, "r16": 1.0, "qf": 0.4569, "sf": 0.1761, "f": 0.0705},
+    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 0.5431, "sf": 0.289, "f": 0.1545},
     # ── Pending R32 (r16 = P(win R32)) ──
-    "POR": {"r32": 1.0, "r16": 0.6475, "qf": 0.2945, "sf": 0.1724, "f": 0.0863},
-    "CRO": {"r32": 1.0, "r16": 0.3525, "qf": 0.1392, "sf": 0.0721, "f": 0.0319},
-    "ESP": {"r32": 1.0, "r16": 0.8354, "qf": 0.505, "sf": 0.3319, "f": 0.191},
-    "AUT": {"r32": 1.0, "r16": 0.1646, "qf": 0.0613, "sf": 0.0263, "f": 0.0095},
-    "SUI": {"r32": 1.0, "r16": 0.6455, "qf": 0.3348, "sf": 0.1361, "f": 0.0576},
-    "ALG": {"r32": 1.0, "r16": 0.3545, "qf": 0.1583, "sf": 0.0569, "f": 0.0204},
-    "COL": {"r32": 1.0, "r16": 0.7142, "qf": 0.393, "sf": 0.1674, "f": 0.0742},
-    "GHA": {"r32": 1.0, "r16": 0.2858, "qf": 0.1139, "sf": 0.0366, "f": 0.0119},
-    "ARG": {"r32": 1.0, "r16": 0.8865, "qf": 0.6665, "sf": 0.4682, "f": 0.2923},
-    "CPV": {"r32": 1.0, "r16": 0.1135, "qf": 0.0514, "sf": 0.0189, "f": 0.0058},
-    "AUS": {"r32": 1.0, "r16": 0.4534, "qf": 0.1246, "sf": 0.0496, "f": 0.016},
-    "EGY": {"r32": 1.0, "r16": 0.5466, "qf": 0.1575, "sf": 0.0664, "f": 0.0226},
+    "ARG": {"r32": 1.0, "r16": 0.8873, "qf": 0.6674, "sf": 0.4686, "f": 0.2916},
+    "CPV": {"r32": 1.0, "r16": 0.1127, "qf": 0.0504, "sf": 0.0186, "f": 0.0056},
+    "AUS": {"r32": 1.0, "r16": 0.4541, "qf": 0.1247, "sf": 0.0496, "f": 0.0158},
+    "EGY": {"r32": 1.0, "r16": 0.5459, "qf": 0.1575, "sf": 0.0665, "f": 0.0227},
+    "SUI": {"r32": 1.0, "r16": 0.6458, "qf": 0.3362, "sf": 0.1372, "f": 0.0586},
+    "ALG": {"r32": 1.0, "r16": 0.3542, "qf": 0.1579, "sf": 0.0563, "f": 0.0206},
+    "COL": {"r32": 1.0, "r16": 0.7137, "qf": 0.3915, "sf": 0.1663, "f": 0.0737},
+    "GHA": {"r32": 1.0, "r16": 0.2863, "qf": 0.1144, "sf": 0.0368, "f": 0.0116},
 }
 
 # Expected REMAINING matches per team from the same Monte-Carlo (next guaranteed
 # game + every round they're simulated to advance to). Used for tournament_xpts
 # instead of summing QUAL_PROBS, so already-played rounds aren't double-counted.
 EXP_GAMES: dict[str, float] = {
-    "FRA": 2.882, "PAR": 1.176, "CAN": 1.457, "MAR": 1.995, "USA": 1.797,
-    "BEL": 1.771, "BRA": 2.232, "NOR": 1.574, "MEX": 1.706, "ENG": 1.988,
-    "POR": 2.201, "CRO": 1.596, "ESP": 2.863, "AUT": 1.262, "SUI": 2.174,
-    "ALG": 1.59, "COL": 2.349, "GHA": 1.448, "ARG": 3.313, "CPV": 1.19,
-    "AUS": 1.644, "EGY": 1.793,
+    "FRA": 2.87, "PAR": 1.176, "CAN": 1.443, "MAR": 2.005, "POR": 1.682,
+    "ESP": 2.296, "USA": 1.758, "BEL": 1.769, "BRA": 2.249, "NOR": 1.561,
+    "MEX": 1.704, "ENG": 1.987, "ARG": 3.315, "CPV": 1.187, "AUS": 1.644,
+    "EGY": 1.793, "SUI": 2.178, "ALG": 1.589, "COL": 2.345, "GHA": 1.449,
 }
 
 import math as _math
