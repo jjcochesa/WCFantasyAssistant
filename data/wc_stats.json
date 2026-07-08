@@ -1,8 +1,8 @@
 {
-  "fetched_at": "2026-06-28T14:24:10.844949+00:00",
-  "through_round": "Group Stage - 3",
-  "fixtures_used": 72,
-  "api_requests": 145,
+  "fetched_at": "2026-07-08T12:53:27.728648+00:00",
+  "through_round": "Round of 16",
+  "fixtures_used": 96,
+  "api_requests": 49,
   "players": {
     "raul rangel": {
       "display_name": "Raúl Rangel",
@@ -12,8 +12,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 258,
-      "matches": 3
+      "minutes": 451,
+      "matches": 5
     },
     "israel reyes": {
       "display_name": "Israel Reyes",
@@ -22,20 +22,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 190,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 200,
+      "matches": 4
     },
     "cesar montes": {
       "display_name": "César Montes",
       "team": "Mexico",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 2,
+      "minutes": 315,
+      "matches": 4
     },
     "johan vasquez": {
       "display_name": "Johan Vásquez",
@@ -43,10 +43,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 3,
+      "minutes": 373,
+      "matches": 4
     },
     "jesus gallardo": {
       "display_name": "Jesús Gallardo",
@@ -54,10 +54,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 2,
-      "minutes": 192,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 3,
+      "minutes": 385,
+      "matches": 5
     },
     "erik lira": {
       "display_name": "Erik Lira",
@@ -65,21 +65,21 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 166,
-      "matches": 2
+      "key_passes": 5,
+      "tackles": 7,
+      "minutes": 359,
+      "matches": 4
     },
     "roberto alvarado": {
       "display_name": "Roberto Alvarado",
       "team": "Mexico",
       "goals": 0,
-      "assists": 2,
+      "assists": 3,
       "shots_on": 0,
-      "key_passes": 6,
-      "tackles": 7,
-      "minutes": 260,
-      "matches": 3
+      "key_passes": 13,
+      "tackles": 9,
+      "minutes": 443,
+      "matches": 5
     },
     "brian gutierrez": {
       "display_name": "Brian Gutiérrez",
@@ -87,43 +87,43 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 4,
-      "tackles": 1,
-      "minutes": 137,
-      "matches": 2
+      "key_passes": 5,
+      "tackles": 2,
+      "minutes": 211,
+      "matches": 4
     },
     "alvaro fidalgo": {
       "display_name": "Álvaro Fidalgo",
       "team": "Mexico",
       "goals": 1,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 1,
+      "shots_on": 2,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 84,
-      "matches": 2
+      "minutes": 108,
+      "matches": 3
     },
     "julian quinones": {
       "display_name": "Julián Quiñones",
       "team": "Mexico",
-      "goals": 2,
-      "assists": 0,
-      "shots_on": 4,
-      "key_passes": 4,
-      "tackles": 2,
-      "minutes": 253,
-      "matches": 3
+      "goals": 4,
+      "assists": 1,
+      "shots_on": 6,
+      "key_passes": 10,
+      "tackles": 4,
+      "minutes": 414,
+      "matches": 5
     },
     "raul jimenez": {
       "display_name": "Raúl Jiménez",
       "team": "Mexico",
-      "goals": 1,
+      "goals": 3,
       "assists": 0,
-      "shots_on": 3,
+      "shots_on": 7,
       "key_passes": 2,
       "tackles": 1,
-      "minutes": 156,
-      "matches": 2
+      "minutes": 333,
+      "matches": 4
     },
     "gilberto mora": {
       "display_name": "Gilberto Mora",
@@ -131,10 +131,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 0,
-      "minutes": 96,
-      "matches": 2
+      "key_passes": 5,
+      "tackles": 3,
+      "minutes": 215,
+      "matches": 4
     },
     "luis chavez": {
       "display_name": "Luis Chávez",
@@ -154,9 +154,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 6,
-      "minutes": 194,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 252,
+      "matches": 4
     },
     "armando gonzalez": {
       "display_name": "Armando González",
@@ -188,8 +188,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 367,
+      "matches": 4
     },
     "khuliso mudau": {
       "display_name": "Khuliso Mudau",
@@ -198,9 +198,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 7,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 367,
+      "matches": 4
     },
     "nkosinathi sibisi": {
       "display_name": "Nkosinathi Sibisi",
@@ -221,8 +221,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 367,
+      "matches": 4
     },
     "mbekezeli mbokazi": {
       "display_name": "Mbekezeli Mbokazi",
@@ -231,9 +231,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 2,
-      "tackles": 4,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 367,
+      "matches": 4
     },
     "aubrey modiba": {
       "display_name": "Aubrey Modiba",
@@ -242,20 +242,20 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 3,
-      "tackles": 10,
-      "minutes": 257,
-      "matches": 3
+      "tackles": 11,
+      "minutes": 354,
+      "matches": 4
     },
     "teboho mokoena": {
       "display_name": "Teboho Mokoena",
       "team": "South Africa",
       "goals": 1,
       "assists": 0,
-      "shots_on": 1,
+      "shots_on": 2,
       "key_passes": 6,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 277,
+      "matches": 3
     },
     "siphephelo sithole": {
       "display_name": "Siphephelo Sithole",
@@ -287,8 +287,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 157,
-      "matches": 3
+      "minutes": 168,
+      "matches": 4
     },
     "lyle foster": {
       "display_name": "Lyle Foster",
@@ -309,8 +309,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 6,
-      "minutes": 214,
-      "matches": 3
+      "minutes": 266,
+      "matches": 4
     },
     "themba zwane": {
       "display_name": "Themba Zwane",
@@ -331,8 +331,8 @@
       "shots_on": 3,
       "key_passes": 0,
       "tackles": 4,
-      "minutes": 128,
-      "matches": 3
+      "minutes": 214,
+      "matches": 4
     },
     "oswin appollis": {
       "display_name": "Oswin Appollis",
@@ -340,10 +340,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 165,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 5,
+      "minutes": 262,
+      "matches": 4
     },
     "kim seung-gyu": {
       "display_name": "Kim Seung-gyu",
@@ -694,8 +694,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 457,
+      "matches": 5
     },
     "alistair johnston": {
       "display_name": "Alistair Johnston",
@@ -704,9 +704,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 9,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 457,
+      "matches": 5
     },
     "luc de fougerolles": {
       "display_name": "Luc De Fougerolles",
@@ -714,21 +714,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 5,
-      "minutes": 251,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 8,
+      "minutes": 379,
+      "matches": 5
     },
     "derek cornelius": {
       "display_name": "Derek Cornelius",
       "team": "Canada",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 0,
+      "shots_on": 1,
+      "key_passes": 1,
       "tackles": 5,
-      "minutes": 225,
-      "matches": 3
+      "minutes": 322,
+      "matches": 4
     },
     "richie laryea": {
       "display_name": "Richie Laryea",
@@ -737,20 +737,20 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 5,
-      "tackles": 5,
-      "minutes": 263,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 438,
+      "matches": 5
     },
     "tajon buchanan": {
       "display_name": "Tajon Buchanan",
       "team": "Canada",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
+      "shots_on": 3,
       "key_passes": 3,
-      "tackles": 5,
-      "minutes": 218,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 380,
+      "matches": 5
     },
     "ismael kone": {
       "display_name": "Ismael Koné",
@@ -766,13 +766,13 @@
     "stephen eustaquio": {
       "display_name": "Stephen Eustaquio",
       "team": "Canada",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 4,
-      "tackles": 4,
-      "minutes": 211,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 12,
+      "tackles": 11,
+      "minutes": 398,
+      "matches": 5
     },
     "liam millar": {
       "display_name": "Liam Millar",
@@ -780,32 +780,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 93,
-      "matches": 2
+      "key_passes": 4,
+      "tackles": 4,
+      "minutes": 163,
+      "matches": 3
     },
     "jonathan david": {
       "display_name": "Jonathan David",
       "team": "Canada",
       "goals": 3,
       "assists": 0,
-      "shots_on": 6,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 241,
-      "matches": 3
+      "shots_on": 8,
+      "key_passes": 3,
+      "tackles": 4,
+      "minutes": 428,
+      "matches": 5
     },
     "tani oluwaseyi": {
       "display_name": "Tani Oluwaseyi",
       "team": "Canada",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
+      "shots_on": 4,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 127,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 260,
+      "matches": 5
     },
     "ali ahmed": {
       "display_name": "Ali Ahmed",
@@ -813,10 +813,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 3,
-      "minutes": 158,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 236,
+      "matches": 4
     },
     "jacob shaffelburg": {
       "display_name": "Jacob Shaffelburg",
@@ -824,10 +824,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 4,
+      "key_passes": 5,
       "tackles": 1,
-      "minutes": 62,
-      "matches": 3
+      "minutes": 101,
+      "matches": 5
     },
     "promise david": {
       "display_name": "Promise David",
@@ -835,10 +835,10 @@
       "goals": 1,
       "assists": 1,
       "shots_on": 3,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 45,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 3,
+      "minutes": 84,
+      "matches": 4
     },
     "cyle larin": {
       "display_name": "Cyle Larin",
@@ -848,8 +848,8 @@
       "shots_on": 4,
       "key_passes": 2,
       "tackles": 0,
-      "minutes": 162,
-      "matches": 3
+      "minutes": 189,
+      "matches": 4
     },
     "jonathan osorio": {
       "display_name": "Jonathan Osorio",
@@ -859,8 +859,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 1,
-      "matches": 1
+      "minutes": 14,
+      "matches": 2
     },
     "nikola vasilj": {
       "display_name": "Nikola Vasilj",
@@ -870,8 +870,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "amar dedic": {
       "display_name": "Amar Dedić",
@@ -879,10 +879,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 180,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 9,
+      "minutes": 270,
+      "matches": 3
     },
     "nikola katic": {
       "display_name": "Nikola Katić",
@@ -891,9 +891,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 8,
-      "minutes": 243,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 318,
+      "matches": 4
     },
     "tarik muharemovic": {
       "display_name": "Tarik Muharemović",
@@ -903,8 +903,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 170,
-      "matches": 2
+      "minutes": 260,
+      "matches": 3
     },
     "sead kolasinac": {
       "display_name": "Sead Kolašinac",
@@ -913,20 +913,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 3,
-      "tackles": 6,
-      "minutes": 264,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 339,
+      "matches": 4
     },
     "esmir bajraktarevic": {
       "display_name": "Esmir Bajraktarević",
       "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 2,
+      "shots_on": 2,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 190,
-      "matches": 3
+      "minutes": 229,
+      "matches": 4
     },
     "benjamin tahirovic": {
       "display_name": "Benjamin Tahirović",
@@ -934,10 +934,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 5,
-      "minutes": 198,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 6,
+      "minutes": 237,
+      "matches": 4
     },
     "ivan basic": {
       "display_name": "Ivan Bašić",
@@ -958,19 +958,19 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 3,
-      "minutes": 209,
-      "matches": 3
+      "minutes": 224,
+      "matches": 4
     },
     "ermedin demirovic": {
       "display_name": "Ermedin Demirović",
       "team": "Bosnia-Herzegovina",
       "goals": 0,
       "assists": 0,
-      "shots_on": 2,
+      "shots_on": 4,
       "key_passes": 0,
-      "tackles": 4,
-      "minutes": 266,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 356,
+      "matches": 4
     },
     "jovo lukic": {
       "display_name": "Jovo Lukić",
@@ -991,8 +991,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 28,
-      "matches": 1
+      "minutes": 79,
+      "matches": 2
     },
     "samed bazdar": {
       "display_name": "Samed Baždar",
@@ -1012,9 +1012,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 147,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 198,
+      "matches": 4
     },
     "kerim alajbegovic": {
       "display_name": "Kerim Alajbegović",
@@ -1024,8 +1024,8 @@
       "shots_on": 1,
       "key_passes": 4,
       "tackles": 0,
-      "minutes": 187,
-      "matches": 3
+      "minutes": 277,
+      "matches": 4
     },
     "dzenis burnic": {
       "display_name": "Dženis Burnić",
@@ -1046,8 +1046,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 360,
+      "matches": 4
     },
     "alexander freeman": {
       "display_name": "Alexander Freeman",
@@ -1055,10 +1055,10 @@
       "goals": 1,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 6,
-      "minutes": 193,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 14,
+      "minutes": 373,
+      "matches": 5
     },
     "chris richards": {
       "display_name": "Chris Richards",
@@ -1067,9 +1067,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 4,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 5,
+      "minutes": 360,
+      "matches": 4
     },
     "tim ream": {
       "display_name": "Tim Ream",
@@ -1077,10 +1077,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 360,
+      "matches": 4
     },
     "antonee robinson": {
       "display_name": "Antonee Robinson",
@@ -1088,10 +1088,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 4,
-      "minutes": 170,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 12,
+      "minutes": 349,
+      "matches": 4
     },
     "tyler adams": {
       "display_name": "Tyler Adams",
@@ -1100,20 +1100,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 6,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 342,
+      "matches": 4
     },
     "malik tillman": {
       "display_name": "Malik Tillman",
       "team": "USA",
-      "goals": 0,
+      "goals": 2,
       "assists": 1,
-      "shots_on": 2,
-      "key_passes": 5,
-      "tackles": 3,
-      "minutes": 185,
-      "matches": 3
+      "shots_on": 4,
+      "key_passes": 7,
+      "tackles": 8,
+      "minutes": 365,
+      "matches": 5
     },
     "sergino dest": {
       "display_name": "Sergiño Dest",
@@ -1121,10 +1121,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 0,
-      "minutes": 166,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 1,
+      "minutes": 298,
+      "matches": 5
     },
     "weston mckennie": {
       "display_name": "Weston McKennie",
@@ -1132,10 +1132,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 7,
-      "tackles": 5,
-      "minutes": 265,
-      "matches": 3
+      "key_passes": 8,
+      "tackles": 8,
+      "minutes": 444,
+      "matches": 5
     },
     "christian pulisic": {
       "display_name": "Christian Pulišić",
@@ -1144,20 +1144,20 @@
       "assists": 1,
       "shots_on": 2,
       "key_passes": 3,
-      "tackles": 2,
-      "minutes": 77,
-      "matches": 2
+      "tackles": 3,
+      "minutes": 224,
+      "matches": 4
     },
     "folarin balogun": {
       "display_name": "Folarin Balogun",
       "team": "USA",
-      "goals": 2,
+      "goals": 3,
       "assists": 0,
-      "shots_on": 3,
+      "shots_on": 5,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 161,
-      "matches": 2
+      "minutes": 314,
+      "matches": 4
     },
     "sebastian berhalter": {
       "display_name": "Sebastian Berhalter",
@@ -1165,10 +1165,10 @@
       "goals": 1,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 5,
-      "tackles": 2,
-      "minutes": 151,
-      "matches": 3
+      "key_passes": 7,
+      "tackles": 3,
+      "minutes": 195,
+      "matches": 5
     },
     "tim weah": {
       "display_name": "Tim Weah",
@@ -1188,9 +1188,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 182,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 212,
+      "matches": 5
     },
     "giovanni reyna": {
       "display_name": "Giovanni Reyna",
@@ -1198,10 +1198,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 85,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 1,
+      "minutes": 131,
+      "matches": 5
     },
     "orlando gill": {
       "display_name": "Orlando Gill",
@@ -1211,8 +1211,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 480,
+      "matches": 5
     },
     "juan caceres": {
       "display_name": "Juan Cáceres",
@@ -1221,9 +1221,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 16,
-      "minutes": 250,
-      "matches": 3
+      "tackles": 22,
+      "minutes": 439,
+      "matches": 5
     },
     "gustavo gomez": {
       "display_name": "Gustavo Gómez",
@@ -1232,9 +1232,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 480,
+      "matches": 5
     },
     "omar alderete": {
       "display_name": "Omar Alderete",
@@ -1244,19 +1244,19 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 264,
-      "matches": 3
+      "minutes": 322,
+      "matches": 4
     },
     "junior alonso": {
       "display_name": "Junior Alonso",
       "team": "Paraguay",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 181,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 2,
+      "tackles": 11,
+      "minutes": 390,
+      "matches": 5
     },
     "diego gomez": {
       "display_name": "Diego Gómez",
@@ -1265,9 +1265,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 8,
-      "minutes": 236,
-      "matches": 3
+      "tackles": 12,
+      "minutes": 307,
+      "matches": 4
     },
     "andres cubas": {
       "display_name": "Andrés Cubas",
@@ -1275,10 +1275,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 9,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 21,
+      "minutes": 480,
+      "matches": 5
     },
     "damian bobadilla": {
       "display_name": "Damián Bobadilla",
@@ -1287,9 +1287,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 91,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 190,
+      "matches": 4
     },
     "miguel almiron": {
       "display_name": "Miguel Almirón",
@@ -1298,9 +1298,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 5,
-      "minutes": 127,
-      "matches": 2
+      "tackles": 9,
+      "minutes": 288,
+      "matches": 4
     },
     "antonio sanabria": {
       "display_name": "Antonio Sanabria",
@@ -1309,20 +1309,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 0,
-      "minutes": 62,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 83,
+      "matches": 2
     },
     "julio enciso": {
       "display_name": "Julio Enciso",
       "team": "Paraguay",
-      "goals": 0,
+      "goals": 1,
       "assists": 2,
-      "shots_on": 0,
-      "key_passes": 5,
-      "tackles": 4,
-      "minutes": 269,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 6,
+      "tackles": 5,
+      "minutes": 387,
+      "matches": 5
     },
     "mauricio": {
       "display_name": "Mauricio",
@@ -1330,10 +1330,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 90,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 172,
+      "matches": 4
     },
     "alex arce": {
       "display_name": "Alex Arce",
@@ -1353,9 +1353,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 124,
-      "matches": 3
+      "tackles": 1,
+      "minutes": 244,
+      "matches": 5
     },
     "ramon sosa": {
       "display_name": "Ramón Sosa",
@@ -1563,19 +1563,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 480,
+      "matches": 5
     },
     "denis zakaria": {
       "display_name": "Denis Zakaria",
       "team": "Switzerland",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 3,
-      "minutes": 90,
-      "matches": 1
+      "shots_on": 2,
+      "key_passes": 1,
+      "tackles": 7,
+      "minutes": 264,
+      "matches": 3
     },
     "nico elvedi": {
       "display_name": "Nico Elvedi",
@@ -1584,9 +1584,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 480,
+      "matches": 5
     },
     "manuel akanji": {
       "display_name": "Manuel Akanji",
@@ -1594,10 +1594,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 6,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 8,
+      "minutes": 480,
+      "matches": 5
     },
     "ricardo rodriguez": {
       "display_name": "Ricardo Rodríguez",
@@ -1606,9 +1606,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 4,
-      "tackles": 6,
-      "minutes": 269,
-      "matches": 3
+      "tackles": 9,
+      "minutes": 430,
+      "matches": 5
     },
     "michel aebischer": {
       "display_name": "Michel Aebischer",
@@ -1618,8 +1618,8 @@
       "shots_on": 1,
       "key_passes": 4,
       "tackles": 5,
-      "minutes": 152,
-      "matches": 3
+      "minutes": 162,
+      "matches": 4
     },
     "granit xhaka": {
       "display_name": "Granit Xhaka",
@@ -1628,42 +1628,42 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 4,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 480,
+      "matches": 5
     },
     "remo freuler": {
       "display_name": "Remo Freuler",
       "team": "Switzerland",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 5,
-      "minutes": 269,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 479,
+      "matches": 5
     },
     "dan ndoye": {
       "display_name": "Dan Ndoye",
       "team": "Switzerland",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 4,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 146,
-      "matches": 3
+      "shots_on": 6,
+      "key_passes": 2,
+      "tackles": 6,
+      "minutes": 322,
+      "matches": 5
     },
     "breel embolo": {
       "display_name": "Breel Embolo",
       "team": "Switzerland",
-      "goals": 1,
+      "goals": 2,
       "assists": 2,
-      "shots_on": 3,
+      "shots_on": 4,
       "key_passes": 8,
       "tackles": 1,
-      "minutes": 264,
-      "matches": 3
+      "minutes": 434,
+      "matches": 5
     },
     "ruben vargas": {
       "display_name": "Rubén Vargas",
@@ -1671,32 +1671,32 @@
       "goals": 2,
       "assists": 1,
       "shots_on": 4,
-      "key_passes": 6,
-      "tackles": 3,
-      "minutes": 178,
-      "matches": 3
+      "key_passes": 9,
+      "tackles": 5,
+      "minutes": 280,
+      "matches": 5
     },
     "fabian rieder": {
       "display_name": "Fabian Rieder",
       "team": "Switzerland",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 3,
-      "minutes": 96,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 3,
+      "tackles": 5,
+      "minutes": 218,
+      "matches": 4
     },
     "johan manzambi": {
       "display_name": "Johan Manzambi",
       "team": "Switzerland",
       "goals": 3,
-      "assists": 1,
+      "assists": 2,
       "shots_on": 3,
-      "key_passes": 2,
+      "key_passes": 3,
       "tackles": 0,
-      "minutes": 129,
-      "matches": 3
+      "minutes": 200,
+      "matches": 4
     },
     "zeki amdouni": {
       "display_name": "Zeki Amdouni",
@@ -1706,8 +1706,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 11,
-      "matches": 1
+      "minutes": 42,
+      "matches": 3
     },
     "miro muheim": {
       "display_name": "Miro Muheim",
@@ -1716,9 +1716,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 9,
-      "matches": 1
+      "tackles": 1,
+      "minutes": 58,
+      "matches": 2
     },
     "ardon jashari": {
       "display_name": "Ardon Jashari",
@@ -1726,10 +1726,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 9,
-      "matches": 1
+      "key_passes": 1,
+      "tackles": 1,
+      "minutes": 54,
+      "matches": 2
     },
     "alisson": {
       "display_name": "Alisson",
@@ -1739,8 +1739,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 450,
+      "matches": 5
     },
     "roger ibanez": {
       "display_name": "Roger Ibañez",
@@ -1759,21 +1759,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 5,
+      "minutes": 450,
+      "matches": 5
     },
     "gabriel magalhaes": {
       "display_name": "Gabriel Magalhães",
       "team": "Brazil",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 5,
+      "minutes": 450,
+      "matches": 5
     },
     "douglas santos": {
       "display_name": "Douglas Santos",
@@ -1781,32 +1781,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 10,
-      "minutes": 262,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 18,
+      "minutes": 442,
+      "matches": 5
     },
     "casemiro": {
       "display_name": "Casemiro",
       "team": "Brazil",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 11,
-      "minutes": 200,
-      "matches": 3
+      "shots_on": 2,
+      "key_passes": 4,
+      "tackles": 14,
+      "minutes": 379,
+      "matches": 5
     },
     "bruno guimaraes": {
       "display_name": "Bruno Guimarães",
       "team": "Brazil",
       "goals": 0,
-      "assists": 3,
-      "shots_on": 0,
-      "key_passes": 5,
-      "tackles": 7,
-      "minutes": 251,
-      "matches": 3
+      "assists": 4,
+      "shots_on": 2,
+      "key_passes": 10,
+      "tackles": 11,
+      "minutes": 419,
+      "matches": 5
     },
     "lucas paqueta": {
       "display_name": "Lucas Paquetá",
@@ -1814,10 +1814,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 7,
-      "tackles": 6,
-      "minutes": 191,
-      "matches": 3
+      "key_passes": 9,
+      "tackles": 8,
+      "minutes": 236,
+      "matches": 4
     },
     "raphinha": {
       "display_name": "Raphinha",
@@ -1835,11 +1835,11 @@
       "team": "Brazil",
       "goals": 4,
       "assists": 1,
-      "shots_on": 8,
-      "key_passes": 5,
-      "tackles": 2,
-      "minutes": 261,
-      "matches": 3
+      "shots_on": 11,
+      "key_passes": 9,
+      "tackles": 3,
+      "minutes": 441,
+      "matches": 5
     },
     "igor thiago": {
       "display_name": "Igor Thiago",
@@ -1858,10 +1858,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 2,
-      "minutes": 225,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 7,
+      "minutes": 405,
+      "matches": 5
     },
     "fabinho": {
       "display_name": "Fabinho",
@@ -1871,19 +1871,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 70,
-      "matches": 2
+      "minutes": 78,
+      "matches": 3
     },
     "matheus cunha": {
       "display_name": "Matheus Cunha",
       "team": "Brazil",
       "goals": 3,
       "assists": 0,
-      "shots_on": 4,
+      "shots_on": 5,
       "key_passes": 1,
-      "tackles": 5,
-      "minutes": 169,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 293,
+      "matches": 5
     },
     "luiz henrique": {
       "display_name": "Luiz Henrique",
@@ -1903,9 +1903,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 19,
-      "matches": 2
+      "tackles": 5,
+      "minutes": 43,
+      "matches": 4
     },
     "bono": {
       "display_name": "Bono",
@@ -1922,23 +1922,23 @@
       "display_name": "Achraf Hakimi",
       "team": "Morocco",
       "goals": 1,
-      "assists": 1,
-      "shots_on": 3,
-      "key_passes": 12,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "assists": 2,
+      "shots_on": 4,
+      "key_passes": 15,
+      "tackles": 11,
+      "minutes": 480,
+      "matches": 5
     },
     "issa diop": {
       "display_name": "Issa Diop",
       "team": "Morocco",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 387,
+      "matches": 4
     },
     "chadi riad": {
       "display_name": "Chadi Riad",
@@ -1948,8 +1948,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 345,
+      "matches": 4
     },
     "noussair mazraoui": {
       "display_name": "Noussair Mazraoui",
@@ -1958,20 +1958,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 5,
-      "minutes": 186,
-      "matches": 3
+      "tackles": 13,
+      "minutes": 396,
+      "matches": 5
     },
     "neil el aynaoui": {
       "display_name": "Neil El Aynaoui",
       "team": "Morocco",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 12,
-      "minutes": 263,
-      "matches": 3
+      "shots_on": 2,
+      "key_passes": 3,
+      "tackles": 16,
+      "minutes": 473,
+      "matches": 5
     },
     "ayyoub bouaddi": {
       "display_name": "Ayyoub Bouaddi",
@@ -1980,42 +1980,42 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 5,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 322,
+      "matches": 4
     },
     "brahim diaz": {
       "display_name": "Brahim Díaz",
       "team": "Morocco",
       "goals": 0,
-      "assists": 2,
+      "assists": 4,
       "shots_on": 1,
-      "key_passes": 6,
-      "tackles": 0,
-      "minutes": 219,
-      "matches": 3
+      "key_passes": 8,
+      "tackles": 3,
+      "minutes": 388,
+      "matches": 5
     },
     "azzedine ounahi": {
       "display_name": "Azzedine Ounahi",
       "team": "Morocco",
-      "goals": 0,
+      "goals": 2,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 4,
+      "shots_on": 2,
+      "key_passes": 8,
       "tackles": 1,
-      "minutes": 174,
-      "matches": 3
+      "minutes": 347,
+      "matches": 5
     },
     "bilal el khannouss": {
       "display_name": "Bilal El Khannouss",
       "team": "Morocco",
       "goals": 0,
       "assists": 0,
-      "shots_on": 3,
-      "key_passes": 6,
-      "tackles": 8,
-      "minutes": 254,
-      "matches": 3
+      "shots_on": 4,
+      "key_passes": 7,
+      "tackles": 11,
+      "minutes": 404,
+      "matches": 5
     },
     "ismael saibari": {
       "display_name": "Ismael Saibari",
@@ -2023,21 +2023,21 @@
       "goals": 3,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 2,
+      "key_passes": 4,
       "tackles": 3,
-      "minutes": 243,
-      "matches": 3
+      "minutes": 385,
+      "matches": 5
     },
     "chemsdine talbi": {
       "display_name": "Chemsdine Talbi",
       "team": "Morocco",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 38,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 2,
+      "minutes": 98,
+      "matches": 4
     },
     "samir el mourabet": {
       "display_name": "Samir El Mourabet",
@@ -2047,8 +2047,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 1,
-      "minutes": 42,
-      "matches": 3
+      "minutes": 96,
+      "matches": 5
     },
     "anass salah-eddine": {
       "display_name": "Anass Salah-Eddine",
@@ -2057,9 +2057,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 93,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 138,
+      "matches": 3
     },
     "ayoube amaimouni echghouyab": {
       "display_name": "Ayoube Amaimouni Echghouyab",
@@ -2075,13 +2075,13 @@
     "soufiane rahimi": {
       "display_name": "Soufiane Rahimi",
       "team": "Morocco",
-      "goals": 1,
+      "goals": 2,
       "assists": 1,
-      "shots_on": 1,
+      "shots_on": 4,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 45,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 147,
+      "matches": 5
     },
     "johny placide": {
       "display_name": "Johny Placide",
@@ -2421,8 +2421,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 389,
+      "matches": 4
     },
     "jacob italiano": {
       "display_name": "Jacob Italiano",
@@ -2441,10 +2441,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 10,
+      "minutes": 390,
+      "matches": 4
     },
     "harry souttar": {
       "display_name": "Harry Souttar",
@@ -2454,8 +2454,8 @@
       "shots_on": 1,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 390,
+      "matches": 4
     },
     "cameron burgess": {
       "display_name": "Cameron Burgess",
@@ -2475,9 +2475,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 4,
-      "tackles": 4,
-      "minutes": 264,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 309,
+      "matches": 4
     },
     "connor metcalfe": {
       "display_name": "Connor Metcalfe",
@@ -2485,10 +2485,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 2,
-      "tackles": 5,
-      "minutes": 225,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 6,
+      "minutes": 315,
+      "matches": 4
     },
     "aiden o'neill": {
       "display_name": "Aiden O'Neill",
@@ -2496,10 +2496,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
+      "key_passes": 5,
       "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "paul okon-engstler": {
       "display_name": "Paul Okon-Engstler",
@@ -2508,9 +2508,9 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 5,
-      "minutes": 174,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 204,
+      "matches": 4
     },
     "nestory irankunda": {
       "display_name": "Nestory Irankunda",
@@ -2518,10 +2518,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 1,
+      "key_passes": 3,
       "tackles": 0,
-      "minutes": 190,
-      "matches": 3
+      "minutes": 264,
+      "matches": 4
     },
     "mohamed toure": {
       "display_name": "Mohamed Touré",
@@ -2531,8 +2531,8 @@
       "shots_on": 1,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 119,
-      "matches": 2
+      "minutes": 165,
+      "matches": 3
     },
     "nishan velupillay": {
       "display_name": "Nishan Velupillay",
@@ -2572,11 +2572,11 @@
       "team": "Australia",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 103,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 223,
+      "matches": 3
     },
     "jackson irvine": {
       "display_name": "Jackson Irvine",
@@ -2584,10 +2584,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 109,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 229,
+      "matches": 4
     },
     "ugurcan cakir": {
       "display_name": "Uğurcan Çakır",
@@ -2773,30 +2773,30 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 390,
+      "matches": 4
     },
     "joshua kimmich": {
       "display_name": "Joshua Kimmich",
       "team": "Germany",
       "goals": 0,
       "assists": 2,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 8,
-      "tackles": 5,
-      "minutes": 233,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 353,
+      "matches": 4
     },
     "jonathan tah": {
       "display_name": "Jonathan Tah",
       "team": "Germany",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 2,
       "tackles": 3,
-      "minutes": 253,
-      "matches": 3
+      "minutes": 373,
+      "matches": 4
     },
     "nico schlotterbeck": {
       "display_name": "Nico Schlotterbeck",
@@ -2815,10 +2815,10 @@
       "goals": 1,
       "assists": 1,
       "shots_on": 2,
-      "key_passes": 3,
-      "tackles": 8,
-      "minutes": 163,
-      "matches": 2
+      "key_passes": 5,
+      "tackles": 13,
+      "minutes": 283,
+      "matches": 3
     },
     "felix nmecha": {
       "display_name": "Felix Nmecha",
@@ -2827,9 +2827,9 @@
       "assists": 1,
       "shots_on": 3,
       "key_passes": 2,
-      "tackles": 12,
-      "minutes": 227,
-      "matches": 3
+      "tackles": 13,
+      "minutes": 272,
+      "matches": 4
     },
     "aleksandar pavlovic": {
       "display_name": "Aleksandar Pavlović",
@@ -2837,10 +2837,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
+      "key_passes": 3,
       "tackles": 3,
-      "minutes": 195,
-      "matches": 3
+      "minutes": 274,
+      "matches": 4
     },
     "leroy sane": {
       "display_name": "Leroy Sané",
@@ -2849,9 +2849,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 3,
-      "tackles": 5,
-      "minutes": 240,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 328,
+      "matches": 4
     },
     "jamal musiala": {
       "display_name": "Jamal Musiala",
@@ -2860,31 +2860,31 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 4,
-      "tackles": 7,
-      "minutes": 214,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 271,
+      "matches": 4
     },
     "florian wirtz": {
       "display_name": "Florian Wirtz",
       "team": "Germany",
       "goals": 0,
-      "assists": 2,
+      "assists": 3,
       "shots_on": 1,
-      "key_passes": 8,
-      "tackles": 5,
-      "minutes": 253,
-      "matches": 3
+      "key_passes": 12,
+      "tackles": 7,
+      "minutes": 363,
+      "matches": 4
     },
     "kai havertz": {
       "display_name": "Kai Havertz",
       "team": "Germany",
-      "goals": 2,
+      "goals": 3,
       "assists": 0,
-      "shots_on": 4,
-      "key_passes": 1,
+      "shots_on": 7,
+      "key_passes": 2,
       "tackles": 3,
-      "minutes": 235,
-      "matches": 3
+      "minutes": 355,
+      "matches": 4
     },
     "deniz undav": {
       "display_name": "Deniz Undav",
@@ -2894,8 +2894,8 @@
       "shots_on": 4,
       "key_passes": 7,
       "tackles": 0,
-      "minutes": 86,
-      "matches": 3
+      "minutes": 149,
+      "matches": 4
     },
     "david raum": {
       "display_name": "David Raum",
@@ -2916,8 +2916,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 152,
-      "matches": 3
+      "minutes": 262,
+      "matches": 4
     },
     "leon goretzka": {
       "display_name": "Leon Goretzka",
@@ -2925,21 +2925,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 30,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 105,
+      "matches": 3
     },
     "waldemar anton": {
       "display_name": "Waldemar Anton",
       "team": "Germany",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 0,
+      "shots_on": 1,
+      "key_passes": 1,
       "tackles": 2,
-      "minutes": 13,
-      "matches": 1
+      "minutes": 54,
+      "matches": 2
     },
     "eloy room": {
       "display_name": "Eloy Room",
@@ -3103,8 +3103,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 390,
+      "matches": 4
     },
     "denzel dumfries": {
       "display_name": "Denzel Dumfries",
@@ -3113,9 +3113,9 @@
       "assists": 2,
       "shots_on": 2,
       "key_passes": 4,
-      "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 390,
+      "matches": 4
     },
     "jan paul van hecke": {
       "display_name": "Jan Paul van Hecke",
@@ -3123,10 +3123,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 1,
-      "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 9,
+      "minutes": 390,
+      "matches": 4
     },
     "virgil van dijk": {
       "display_name": "Virgil van Dijk",
@@ -3136,19 +3136,19 @@
       "shots_on": 2,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 390,
+      "matches": 4
     },
     "micky van de ven": {
       "display_name": "Micky van de Ven",
       "team": "Netherlands",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 1,
-      "tackles": 3,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 266,
+      "matches": 3
     },
     "ryan gravenberch": {
       "display_name": "Ryan Gravenberch",
@@ -3158,8 +3158,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 4,
-      "minutes": 261,
-      "matches": 3
+      "minutes": 347,
+      "matches": 4
     },
     "frenkie de jong": {
       "display_name": "Frenkie de Jong",
@@ -3168,9 +3168,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 7,
-      "minutes": 221,
-      "matches": 3
+      "tackles": 9,
+      "minutes": 331,
+      "matches": 4
     },
     "tijjani reijnders": {
       "display_name": "Tijjani Reijnders",
@@ -3187,12 +3187,12 @@
       "display_name": "Crysencio Summerville",
       "team": "Netherlands",
       "goals": 2,
-      "assists": 1,
+      "assists": 2,
       "shots_on": 2,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 133,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 4,
+      "minutes": 253,
+      "matches": 4
     },
     "donyell malen": {
       "display_name": "Donyell Malen",
@@ -3208,13 +3208,13 @@
     "cody gakpo": {
       "display_name": "Cody Gakpo",
       "team": "Netherlands",
-      "goals": 2,
+      "goals": 3,
       "assists": 1,
-      "shots_on": 5,
+      "shots_on": 6,
       "key_passes": 3,
-      "tackles": 2,
-      "minutes": 258,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 371,
+      "matches": 4
     },
     "quinten timber": {
       "display_name": "Quinten Timber",
@@ -3224,8 +3224,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 20,
-      "matches": 1
+      "minutes": 54,
+      "matches": 2
     },
     "teun koopmeiners": {
       "display_name": "Teun Koopmeiners",
@@ -3234,9 +3234,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 69,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 118,
+      "matches": 4
     },
     "memphis depay": {
       "display_name": "Memphis Depay",
@@ -3257,8 +3257,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 99,
-      "matches": 2
+      "minutes": 170,
+      "matches": 3
     },
     "brian brobbey": {
       "display_name": "Brian Brobbey",
@@ -3267,9 +3267,9 @@
       "assists": 0,
       "shots_on": 3,
       "key_passes": 5,
-      "tackles": 1,
-      "minutes": 161,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 232,
+      "matches": 4
     },
     "zion suzuki": {
       "display_name": "Zion Suzuki",
@@ -3279,8 +3279,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "tsuyoshi watanabe": {
       "display_name": "Tsuyoshi Watanabe",
@@ -3301,8 +3301,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 141,
-      "matches": 2
+      "minutes": 231,
+      "matches": 3
     },
     "hiroki ito": {
       "display_name": "Hiroki Itō",
@@ -3312,8 +3312,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 4,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "ritsu doan": {
       "display_name": "Ritsu Doan",
@@ -3322,20 +3322,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 216,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 282,
+      "matches": 4
     },
     "kaishu sano": {
       "display_name": "Kaishu Sano",
       "team": "Japan",
-      "goals": 0,
+      "goals": 1,
       "assists": 1,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 1,
       "tackles": 3,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 270,
+      "matches": 3
     },
     "daichi kamada": {
       "display_name": "Daichi Kamada",
@@ -3343,10 +3343,10 @@
       "goals": 2,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 4,
+      "key_passes": 5,
       "tackles": 4,
-      "minutes": 253,
-      "matches": 3
+      "minutes": 331,
+      "matches": 4
     },
     "keito nakamura": {
       "display_name": "Keito Nakamura",
@@ -3355,9 +3355,9 @@
       "assists": 1,
       "shots_on": 2,
       "key_passes": 4,
-      "tackles": 3,
-      "minutes": 244,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 310,
+      "matches": 4
     },
     "takefusa kubo": {
       "display_name": "Takefusa Kubo",
@@ -3376,21 +3376,21 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 156,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 6,
+      "minutes": 245,
+      "matches": 3
     },
     "ayase ueda": {
       "display_name": "Ayase Ueda",
       "team": "Japan",
       "goals": 2,
       "assists": 1,
-      "shots_on": 3,
+      "shots_on": 4,
       "key_passes": 3,
       "tackles": 1,
-      "minutes": 234,
-      "matches": 3
+      "minutes": 324,
+      "matches": 4
     },
     "junya ito": {
       "display_name": "Junya Ito",
@@ -3398,10 +3398,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 4,
-      "tackles": 3,
-      "minutes": 137,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 4,
+      "minutes": 215,
+      "matches": 4
     },
     "yukinari sugawara": {
       "display_name": "Yukinari Sugawara",
@@ -3410,9 +3410,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 121,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 145,
+      "matches": 4
     },
     "takehiro tomiyasu": {
       "display_name": "Takehiro Tomiyasu",
@@ -3422,8 +3422,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 94,
-      "matches": 2
+      "minutes": 184,
+      "matches": 3
     },
     "koki ogawa": {
       "display_name": "Koki Ogawa",
@@ -3433,8 +3433,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 39,
-      "matches": 2
+      "minutes": 40,
+      "matches": 3
     },
     "kento shiogai": {
       "display_name": "Kento Shiogai",
@@ -3455,8 +3455,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "guela doue": {
       "display_name": "Guéla Doué",
@@ -3464,10 +3464,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 187,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 6,
+      "minutes": 277,
+      "matches": 4
     },
     "wilfried singo": {
       "display_name": "Wilfried Singo",
@@ -3485,11 +3485,11 @@
       "team": "Ivory Coast",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 5,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 270,
+      "matches": 3
     },
     "ghislain konan": {
       "display_name": "Ghislain Konan",
@@ -3498,9 +3498,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 3,
+      "minutes": 269,
+      "matches": 3
     },
     "yan diomande": {
       "display_name": "Yan Diomande",
@@ -3508,21 +3508,21 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 10,
-      "tackles": 10,
-      "minutes": 242,
-      "matches": 3
+      "key_passes": 11,
+      "tackles": 13,
+      "minutes": 331,
+      "matches": 4
     },
     "franck kessie": {
       "display_name": "Franck Kessié",
       "team": "Ivory Coast",
       "goals": 1,
       "assists": 0,
-      "shots_on": 1,
+      "shots_on": 2,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 257,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 347,
+      "matches": 4
     },
     "seko fofana": {
       "display_name": "Seko Fofana",
@@ -3542,20 +3542,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 79,
-      "matches": 2
+      "tackles": 1,
+      "minutes": 80,
+      "matches": 3
     },
     "nicolas pepe": {
       "display_name": "Nicolas Pépé",
       "team": "Ivory Coast",
       "goals": 2,
-      "assists": 0,
-      "shots_on": 2,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 157,
-      "matches": 3
+      "assists": 1,
+      "shots_on": 3,
+      "key_passes": 4,
+      "tackles": 1,
+      "minutes": 244,
+      "matches": 4
     },
     "elye wahi": {
       "display_name": "Elye Wahi",
@@ -3565,19 +3565,19 @@
       "shots_on": 2,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 79,
-      "matches": 2
+      "minutes": 109,
+      "matches": 3
     },
     "amad diallo": {
       "display_name": "Amad Diallo",
       "team": "Ivory Coast",
-      "goals": 1,
+      "goals": 2,
       "assists": 0,
-      "shots_on": 2,
-      "key_passes": 3,
+      "shots_on": 4,
+      "key_passes": 4,
       "tackles": 5,
-      "minutes": 154,
-      "matches": 3
+      "minutes": 184,
+      "matches": 4
     },
     "ange-yoan bonny": {
       "display_name": "Ange-Yoan Bonny",
@@ -3586,9 +3586,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 176,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 236,
+      "matches": 4
     },
     "ibrahim sangare": {
       "display_name": "Ibrahim Sangaré",
@@ -3596,10 +3596,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 10,
-      "minutes": 178,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 13,
+      "minutes": 268,
+      "matches": 4
     },
     "christ inao oulai": {
       "display_name": "Christ Inao Oulaï",
@@ -3607,10 +3607,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 5,
-      "minutes": 148,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 6,
+      "minutes": 208,
+      "matches": 4
     },
     "odilon kossounou": {
       "display_name": "Odilon Kossounou",
@@ -3619,9 +3619,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 190,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 280,
+      "matches": 4
     },
     "hernan galindez": {
       "display_name": "Hernán Galíndez",
@@ -3631,8 +3631,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "alan franco": {
       "display_name": "Alan Franco",
@@ -3642,8 +3642,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 8,
-      "minutes": 209,
-      "matches": 3
+      "minutes": 254,
+      "matches": 4
     },
     "joel ordonez": {
       "display_name": "Joel Ordóñez",
@@ -3653,8 +3653,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 5,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 225,
+      "matches": 3
     },
     "willian pacho": {
       "display_name": "Willian Pacho",
@@ -3662,10 +3662,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 5,
+      "minutes": 360,
+      "matches": 4
     },
     "piero hincapie": {
       "display_name": "Piero Hincapié",
@@ -3673,21 +3673,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 9,
-      "minutes": 251,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 12,
+      "minutes": 341,
+      "matches": 4
     },
     "john yeboah": {
       "display_name": "John Yeboah",
       "team": "Ecuador",
       "goals": 0,
       "assists": 0,
-      "shots_on": 2,
+      "shots_on": 3,
       "key_passes": 7,
-      "tackles": 2,
-      "minutes": 236,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 315,
+      "matches": 4
     },
     "moises caicedo": {
       "display_name": "Moisés Caicedo",
@@ -3695,10 +3695,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 8,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 9,
+      "tackles": 9,
+      "minutes": 360,
+      "matches": 4
     },
     "pedro vite": {
       "display_name": "Pedro Vite",
@@ -3707,9 +3707,9 @@
       "assists": 1,
       "shots_on": 1,
       "key_passes": 9,
-      "tackles": 14,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 15,
+      "minutes": 360,
+      "matches": 4
     },
     "alan minda": {
       "display_name": "Alan Minda",
@@ -3728,10 +3728,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 5,
-      "key_passes": 6,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 7,
+      "tackles": 9,
+      "minutes": 360,
+      "matches": 4
     },
     "enner valencia": {
       "display_name": "Enner Valencia",
@@ -3741,8 +3741,8 @@
       "shots_on": 6,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 231,
-      "matches": 3
+      "minutes": 290,
+      "matches": 4
     },
     "nilson angulo": {
       "display_name": "Nilson Angulo",
@@ -3751,9 +3751,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 139,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 218,
+      "matches": 4
     },
     "jackson porozo": {
       "display_name": "Jackson Porozo",
@@ -3773,9 +3773,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 67,
-      "matches": 3
+      "tackles": 1,
+      "minutes": 112,
+      "matches": 4
     },
     "kevin rodriguez": {
       "display_name": "Kevin Rodriguez",
@@ -3783,10 +3783,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 4,
+      "key_passes": 5,
       "tackles": 1,
-      "minutes": 84,
-      "matches": 3
+      "minutes": 115,
+      "matches": 4
     },
     "kristoffer nordfeldt": {
       "display_name": "Kristoffer Nordfeldt",
@@ -3806,9 +3806,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 11,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 13,
+      "minutes": 360,
+      "matches": 4
     },
     "isak hien": {
       "display_name": "Isak Hien",
@@ -3828,9 +3828,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 267,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 357,
+      "matches": 4
     },
     "jesper karlstrom": {
       "display_name": "Jesper Karlström",
@@ -3860,10 +3860,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 0,
-      "minutes": 130,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 1,
+      "minutes": 138,
+      "matches": 4
     },
     "yasin ayari": {
       "display_name": "Yasin Ayari",
@@ -3871,10 +3871,10 @@
       "goals": 2,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 5,
+      "key_passes": 6,
       "tackles": 5,
-      "minutes": 259,
-      "matches": 3
+      "minutes": 341,
+      "matches": 4
     },
     "gabriel gudmundsson": {
       "display_name": "Gabriel Gudmundsson",
@@ -3883,31 +3883,31 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 4,
-      "minutes": 242,
-      "matches": 3
+      "tackles": 6,
+      "minutes": 332,
+      "matches": 4
     },
     "viktor gyokeres": {
       "display_name": "Viktor Gyökeres",
       "team": "Sweden",
       "goals": 1,
       "assists": 2,
-      "shots_on": 5,
-      "key_passes": 8,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "shots_on": 6,
+      "key_passes": 9,
+      "tackles": 2,
+      "minutes": 360,
+      "matches": 4
     },
     "alexander isak": {
       "display_name": "Alexander Isak",
       "team": "Sweden",
       "goals": 1,
       "assists": 3,
-      "shots_on": 5,
+      "shots_on": 6,
       "key_passes": 7,
-      "tackles": 1,
-      "minutes": 269,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 358,
+      "matches": 4
     },
     "elliot stroud": {
       "display_name": "Elliot Stroud",
@@ -3916,9 +3916,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 101,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 167,
+      "matches": 4
     },
     "lucas bergvall": {
       "display_name": "Lucas Bergvall",
@@ -3927,20 +3927,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 3,
-      "tackles": 2,
-      "minutes": 112,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 178,
+      "matches": 4
     },
     "mattias svanberg": {
       "display_name": "Mattias Svanberg",
       "team": "Sweden",
       "goals": 1,
       "assists": 0,
-      "shots_on": 1,
+      "shots_on": 2,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 13,
-      "matches": 1
+      "minutes": 21,
+      "matches": 2
     },
     "daniel svensson": {
       "display_name": "Daniel Svensson",
@@ -3948,10 +3948,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 16,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 3,
+      "minutes": 98,
+      "matches": 3
     },
     "anthony elanga": {
       "display_name": "Anthony Elanga",
@@ -3959,10 +3959,10 @@
       "goals": 2,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 126,
-      "matches": 3
+      "minutes": 216,
+      "matches": 4
     },
     "abdelmouhib chamakh": {
       "display_name": "Abdelmouhib Chamakh",
@@ -4148,8 +4148,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 450,
+      "matches": 5
     },
     "marcos llorente": {
       "display_name": "Marcos Llorente",
@@ -4168,10 +4168,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 3,
+      "minutes": 450,
+      "matches": 5
     },
     "aymeric laporte": {
       "display_name": "Aymeric Laporte",
@@ -4180,20 +4180,20 @@
       "assists": 1,
       "shots_on": 1,
       "key_passes": 3,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 449,
+      "matches": 5
     },
     "marc cucurella": {
       "display_name": "Marc Cucurella",
       "team": "Spain",
       "goals": 0,
-      "assists": 0,
+      "assists": 2,
       "shots_on": 2,
-      "key_passes": 3,
+      "key_passes": 5,
       "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 450,
+      "matches": 5
     },
     "fabian ruiz": {
       "display_name": "Fabián Ruiz",
@@ -4203,8 +4203,8 @@
       "shots_on": 1,
       "key_passes": 2,
       "tackles": 2,
-      "minutes": 121,
-      "matches": 3
+      "minutes": 136,
+      "matches": 5
     },
     "rodri": {
       "display_name": "Rodri",
@@ -4212,10 +4212,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 4,
-      "tackles": 8,
-      "minutes": 267,
-      "matches": 3
+      "key_passes": 7,
+      "tackles": 17,
+      "minutes": 447,
+      "matches": 5
     },
     "pedri": {
       "display_name": "Pedri",
@@ -4223,32 +4223,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 6,
-      "tackles": 5,
-      "minutes": 220,
-      "matches": 3
+      "key_passes": 8,
+      "tackles": 9,
+      "minutes": 394,
+      "matches": 5
     },
     "ferran torres": {
       "display_name": "Ferran Torres",
       "team": "Spain",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 2,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 140,
-      "matches": 3
+      "minutes": 174,
+      "matches": 5
     },
     "mikel oyarzabal": {
       "display_name": "Mikel Oyarzabal",
       "team": "Spain",
-      "goals": 2,
+      "goals": 4,
       "assists": 1,
-      "shots_on": 4,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 211,
-      "matches": 3
+      "shots_on": 9,
+      "key_passes": 4,
+      "tackles": 3,
+      "minutes": 390,
+      "matches": 5
     },
     "pablo gavi": {
       "display_name": "Pablo Gavi",
@@ -4258,30 +4258,30 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 3,
-      "minutes": 71,
-      "matches": 1
+      "minutes": 82,
+      "matches": 2
     },
     "mikel merino": {
       "display_name": "Mikel Merino",
-      "team": "Spain",
-      "goals": 0,
-      "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 108,
-      "matches": 3
-    },
-    "lamine yamal": {
-      "display_name": "Lamine Yamal",
       "team": "Spain",
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
       "key_passes": 3,
       "tackles": 2,
-      "minutes": 140,
-      "matches": 3
+      "minutes": 141,
+      "matches": 5
+    },
+    "lamine yamal": {
+      "display_name": "Lamine Yamal",
+      "team": "Spain",
+      "goals": 1,
+      "assists": 0,
+      "shots_on": 8,
+      "key_passes": 5,
+      "tackles": 7,
+      "minutes": 315,
+      "matches": 5
     },
     "dani olmo": {
       "display_name": "Dani Olmo",
@@ -4289,10 +4289,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 100,
-      "matches": 3
+      "key_passes": 6,
+      "tackles": 6,
+      "minutes": 256,
+      "matches": 5
     },
     "nico williams": {
       "display_name": "Nico Williams",
@@ -4313,8 +4313,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 390,
+      "matches": 4
     },
     "steven moreira": {
       "display_name": "Steven Moreira",
@@ -4322,10 +4322,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 3,
-      "minutes": 181,
-      "matches": 3
+      "minutes": 301,
+      "matches": 4
     },
     "pico": {
       "display_name": "Pico",
@@ -4334,31 +4334,31 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 390,
+      "matches": 4
     },
     "diney borges": {
       "display_name": "Diney Borges",
       "team": "Cape Verde",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "shots_on": 2,
+      "key_passes": 1,
+      "tackles": 11,
+      "minutes": 390,
+      "matches": 4
     },
     "sidny lopes cabral": {
       "display_name": "Sidny Lopes Cabral",
       "team": "Cape Verde",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 166,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 2,
+      "tackles": 5,
+      "minutes": 286,
+      "matches": 3
     },
     "kevin lenini": {
       "display_name": "Kevin Lenini",
@@ -4367,20 +4367,20 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 2,
-      "tackles": 5,
-      "minutes": 251,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 351,
+      "matches": 4
     },
     "ryan mendes": {
       "display_name": "Ryan Mendes",
       "team": "Cape Verde",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 4,
-      "minutes": 251,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 5,
+      "minutes": 331,
+      "matches": 4
     },
     "laros duarte": {
       "display_name": "Laros Duarte",
@@ -4388,10 +4388,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 5,
-      "tackles": 0,
-      "minutes": 99,
-      "matches": 3
+      "key_passes": 6,
+      "tackles": 1,
+      "minutes": 166,
+      "matches": 4
     },
     "jamiro monteiro": {
       "display_name": "Jamiro Monteiro",
@@ -4399,10 +4399,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 3,
-      "minutes": 230,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 283,
+      "matches": 4
     },
     "jovane cabral": {
       "display_name": "Jovane Cabral",
@@ -4411,9 +4411,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 61,
-      "matches": 1
+      "tackles": 4,
+      "minutes": 141,
+      "matches": 2
     },
     "dailon rocha livramento": {
       "display_name": "Dailon Rocha Livramento",
@@ -4422,20 +4422,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 122,
-      "matches": 2
+      "tackles": 1,
+      "minutes": 175,
+      "matches": 3
     },
     "deroy duarte": {
       "display_name": "Deroy Duarte",
       "team": "Cape Verde",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 2,
       "key_passes": 2,
-      "tackles": 7,
-      "minutes": 164,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 264,
+      "matches": 4
     },
     "willy semedo": {
       "display_name": "Willy Semedo",
@@ -4445,8 +4445,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 90,
-      "matches": 2
+      "minutes": 130,
+      "matches": 3
     },
     "nuno da costa": {
       "display_name": "Nuno Da Costa",
@@ -4456,8 +4456,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 90,
-      "matches": 3
+      "minutes": 157,
+      "matches": 4
     },
     "joao paulo": {
       "display_name": "João Paulo",
@@ -4489,19 +4489,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 276,
-      "matches": 3
+      "minutes": 486,
+      "matches": 5
     },
     "thomas meunier": {
       "display_name": "Thomas Meunier",
       "team": "Belgium",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 1,
-      "key_passes": 1,
+      "key_passes": 3,
       "tackles": 3,
-      "minutes": 148,
-      "matches": 2
+      "minutes": 190,
+      "matches": 3
     },
     "nathan ngoy": {
       "display_name": "Nathan Ngoy",
@@ -4509,10 +4509,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 156,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 5,
+      "minutes": 246,
+      "matches": 3
     },
     "brandon mechele": {
       "display_name": "Brandon Mechele",
@@ -4520,21 +4520,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 3,
-      "minutes": 276,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 5,
+      "minutes": 486,
+      "matches": 5
     },
     "timothy castagne": {
       "display_name": "Timothy Castagne",
       "team": "Belgium",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 4,
-      "tackles": 5,
-      "minutes": 184,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 7,
+      "tackles": 12,
+      "minutes": 394,
+      "matches": 5
     },
     "amadou onana": {
       "display_name": "Amadou Onana",
@@ -4543,31 +4543,31 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 80,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 112,
+      "matches": 4
     },
     "youri tielemans": {
       "display_name": "Youri Tielemans",
       "team": "Belgium",
-      "goals": 0,
+      "goals": 2,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 6,
-      "tackles": 3,
-      "minutes": 265,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 8,
+      "tackles": 7,
+      "minutes": 475,
+      "matches": 5
     },
     "leandro trossard": {
       "display_name": "Leandro Trossard",
       "team": "Belgium",
       "goals": 2,
-      "assists": 0,
-      "shots_on": 2,
-      "key_passes": 13,
-      "tackles": 5,
-      "minutes": 252,
-      "matches": 3
+      "assists": 2,
+      "shots_on": 3,
+      "key_passes": 17,
+      "tackles": 6,
+      "minutes": 450,
+      "matches": 5
     },
     "kevin de bruyne": {
       "display_name": "Kevin De Bruyne",
@@ -4575,10 +4575,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 4,
-      "key_passes": 9,
+      "key_passes": 10,
       "tackles": 2,
-      "minutes": 245,
-      "matches": 3
+      "minutes": 301,
+      "matches": 4
     },
     "jeremy doku": {
       "display_name": "Jérémy Doku",
@@ -4586,65 +4586,65 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 3,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 142,
-      "matches": 2
+      "minutes": 221,
+      "matches": 4
     },
     "charles de ketelaere": {
       "display_name": "Charles De Ketelaere",
       "team": "Belgium",
-      "goals": 0,
-      "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 4,
-      "minutes": 151,
-      "matches": 2
+      "goals": 2,
+      "assists": 1,
+      "shots_on": 4,
+      "key_passes": 6,
+      "tackles": 6,
+      "minutes": 263,
+      "matches": 4
     },
     "maxim de cuyper": {
       "display_name": "Maxim De Cuyper",
       "team": "Belgium",
       "goals": 0,
       "assists": 0,
-      "shots_on": 5,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 220,
-      "matches": 3
+      "shots_on": 6,
+      "key_passes": 5,
+      "tackles": 6,
+      "minutes": 388,
+      "matches": 5
     },
     "nicolas raskin": {
       "display_name": "Nicolas Raskin",
       "team": "Belgium",
       "goals": 0,
-      "assists": 1,
-      "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 4,
-      "minutes": 103,
-      "matches": 3
+      "assists": 2,
+      "shots_on": 1,
+      "key_passes": 4,
+      "tackles": 9,
+      "minutes": 256,
+      "matches": 5
     },
     "romelu lukaku": {
       "display_name": "Romelu Lukaku",
       "team": "Belgium",
-      "goals": 1,
+      "goals": 3,
       "assists": 1,
-      "shots_on": 1,
-      "key_passes": 1,
+      "shots_on": 3,
+      "key_passes": 3,
       "tackles": 0,
-      "minutes": 108,
-      "matches": 3
+      "minutes": 206,
+      "matches": 5
     },
     "hans vanaken": {
       "display_name": "Hans Vanaken",
       "team": "Belgium",
-      "goals": 0,
-      "assists": 1,
-      "shots_on": 0,
-      "key_passes": 7,
-      "tackles": 0,
-      "minutes": 138,
-      "matches": 3
+      "goals": 1,
+      "assists": 2,
+      "shots_on": 1,
+      "key_passes": 8,
+      "tackles": 3,
+      "minutes": 270,
+      "matches": 5
     },
     "matias fernandez-pardo": {
       "display_name": "Matías Fernández-Pardo",
@@ -4665,8 +4665,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 492,
+      "matches": 5
     },
     "mohamed hany": {
       "display_name": "Mohamed Hany",
@@ -4674,21 +4674,21 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 13,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 14,
+      "minutes": 492,
+      "matches": 5
     },
     "yasser ibrahim": {
       "display_name": "Yasser Ibrahim",
       "team": "Egypt",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 6,
-      "minutes": 256,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 478,
+      "matches": 5
     },
     "hamdy fathy": {
       "display_name": "Hamdy Fathy",
@@ -4697,9 +4697,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 6,
-      "minutes": 129,
-      "matches": 2
+      "tackles": 11,
+      "minutes": 253,
+      "matches": 4
     },
     "ahmed fatouh": {
       "display_name": "Ahmed Fatouh",
@@ -4716,12 +4716,12 @@
       "display_name": "Marwan Attia",
       "team": "Egypt",
       "goals": 0,
-      "assists": 0,
-      "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 3,
-      "minutes": 225,
-      "matches": 3
+      "assists": 1,
+      "shots_on": 1,
+      "key_passes": 5,
+      "tackles": 8,
+      "minutes": 446,
+      "matches": 5
     },
     "mohanad lasheen": {
       "display_name": "Mohanad Lasheen",
@@ -4730,42 +4730,42 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 13,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 16,
+      "minutes": 366,
+      "matches": 4
     },
     "mostafa ziko": {
       "display_name": "Mostafa Ziko",
       "team": "Egypt",
-      "goals": 1,
+      "goals": 2,
       "assists": 1,
-      "shots_on": 2,
-      "key_passes": 4,
-      "tackles": 2,
-      "minutes": 228,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 6,
+      "tackles": 6,
+      "minutes": 375,
+      "matches": 5
     },
     "mohamed salah": {
       "display_name": "Mohamed Salah",
       "team": "Egypt",
       "goals": 1,
       "assists": 2,
-      "shots_on": 3,
-      "key_passes": 11,
+      "shots_on": 4,
+      "key_passes": 16,
       "tackles": 1,
-      "minutes": 218,
-      "matches": 3
+      "minutes": 440,
+      "matches": 5
     },
     "emam ashour": {
       "display_name": "Emam Ashour",
       "team": "Egypt",
-      "goals": 1,
+      "goals": 2,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
+      "shots_on": 2,
+      "key_passes": 4,
       "tackles": 3,
-      "minutes": 201,
-      "matches": 3
+      "minutes": 366,
+      "matches": 5
     },
     "omar marmoush": {
       "display_name": "Omar Marmoush",
@@ -4773,21 +4773,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 3,
-      "minutes": 211,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 4,
+      "minutes": 338,
+      "matches": 5
     },
     "rami rabia": {
       "display_name": "Rami Rabia",
       "team": "Egypt",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 158,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 380,
+      "matches": 5
     },
     "zizo": {
       "display_name": "Zizo",
@@ -4797,8 +4797,8 @@
       "shots_on": 1,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 63,
-      "matches": 3
+      "minutes": 69,
+      "matches": 4
     },
     "hamza abdelkarim": {
       "display_name": "Hamza Abdelkarim",
@@ -4808,19 +4808,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 42,
-      "matches": 3
+      "minutes": 57,
+      "matches": 4
     },
     "karim hafez": {
       "display_name": "Karim Hafez",
       "team": "Egypt",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 2,
-      "matches": 1
+      "key_passes": 1,
+      "tackles": 3,
+      "minutes": 184,
+      "matches": 3
     },
     "ibrahim adel": {
       "display_name": "Ibrahim Adel",
@@ -5534,8 +5534,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 450,
+      "matches": 5
     },
     "jules kounde": {
       "display_name": "Jules Koundé",
@@ -5543,10 +5543,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 9,
-      "minutes": 260,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 13,
+      "minutes": 425,
+      "matches": 5
     },
     "dayot upamecano": {
       "display_name": "Dayot Upamecano",
@@ -5554,10 +5554,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 7,
-      "minutes": 256,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 11,
+      "minutes": 436,
+      "matches": 5
     },
     "william saliba": {
       "display_name": "William Saliba",
@@ -5566,9 +5566,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 2,
+      "minutes": 360,
+      "matches": 4
     },
     "theo hernandez": {
       "display_name": "Theo Hernández",
@@ -5576,10 +5576,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 192,
+      "matches": 3
     },
     "aurelien tchouameni": {
       "display_name": "Aurélien Tchouaméni",
@@ -5587,76 +5587,76 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 11,
-      "minutes": 180,
-      "matches": 2
+      "key_passes": 4,
+      "tackles": 14,
+      "minutes": 270,
+      "matches": 3
     },
     "adrien rabiot": {
       "display_name": "Adrien Rabiot",
       "team": "France",
       "goals": 0,
       "assists": 1,
-      "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 180,
-      "matches": 2
+      "shots_on": 1,
+      "key_passes": 6,
+      "tackles": 2,
+      "minutes": 360,
+      "matches": 4
     },
     "michael olise": {
       "display_name": "Michael Olise",
       "team": "France",
       "goals": 0,
-      "assists": 3,
-      "shots_on": 2,
-      "key_passes": 7,
-      "tackles": 3,
-      "minutes": 223,
-      "matches": 3
+      "assists": 5,
+      "shots_on": 5,
+      "key_passes": 10,
+      "tackles": 5,
+      "minutes": 398,
+      "matches": 5
     },
     "ousmane dembele": {
       "display_name": "Ousmane Dembélé",
       "team": "France",
       "goals": 4,
-      "assists": 1,
+      "assists": 2,
       "shots_on": 5,
-      "key_passes": 5,
-      "tackles": 2,
-      "minutes": 213,
-      "matches": 3
+      "key_passes": 11,
+      "tackles": 3,
+      "minutes": 372,
+      "matches": 5
     },
     "desire doue": {
       "display_name": "Désiré Doué",
       "team": "France",
       "goals": 1,
       "assists": 0,
-      "shots_on": 4,
-      "key_passes": 4,
-      "tackles": 3,
-      "minutes": 199,
-      "matches": 3
+      "shots_on": 5,
+      "key_passes": 8,
+      "tackles": 5,
+      "minutes": 243,
+      "matches": 5
     },
     "kylian mbappe": {
       "display_name": "Kylian Mbappé",
       "team": "France",
-      "goals": 4,
+      "goals": 7,
       "assists": 2,
-      "shots_on": 9,
-      "key_passes": 6,
+      "shots_on": 17,
+      "key_passes": 12,
       "tackles": 1,
-      "minutes": 266,
-      "matches": 3
+      "minutes": 441,
+      "matches": 5
     },
     "bradley barcola": {
       "display_name": "Bradley Barcola",
       "team": "France",
-      "goals": 1,
+      "goals": 2,
       "assists": 1,
-      "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 118,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 5,
+      "tackles": 4,
+      "minutes": 269,
+      "matches": 5
     },
     "rayan cherki": {
       "display_name": "Rayan Cherki",
@@ -5666,8 +5666,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 60,
-      "matches": 3
+      "minutes": 86,
+      "matches": 5
     },
     "edouard mendy": {
       "display_name": "Edouard Mendy",
@@ -5687,9 +5687,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 3,
-      "tackles": 9,
-      "minutes": 277,
-      "matches": 3
+      "tackles": 13,
+      "minutes": 397,
+      "matches": 4
     },
     "kalidou koulibaly": {
       "display_name": "Kalidou Koulibaly",
@@ -5706,12 +5706,12 @@
       "display_name": "Moussa Niakhaté",
       "team": "Senegal",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 2,
       "tackles": 2,
-      "minutes": 277,
-      "matches": 3
+      "minutes": 397,
+      "matches": 4
     },
     "el hadji malick diouf": {
       "display_name": "El Hadji Malick Diouf",
@@ -5721,19 +5721,19 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 3,
-      "minutes": 144,
-      "matches": 2
+      "minutes": 171,
+      "matches": 3
     },
     "idrissa gana gueye": {
       "display_name": "Idrissa Gana Gueye",
       "team": "Senegal",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 5,
       "tackles": 6,
-      "minutes": 275,
-      "matches": 3
+      "minutes": 371,
+      "matches": 4
     },
     "pape gueye": {
       "display_name": "Pape Gueye",
@@ -5743,19 +5743,19 @@
       "shots_on": 3,
       "key_passes": 3,
       "tackles": 3,
-      "minutes": 177,
-      "matches": 3
+      "minutes": 243,
+      "matches": 4
     },
     "ismaila sarr": {
       "display_name": "Ismaïla Sarr",
       "team": "Senegal",
-      "goals": 3,
+      "goals": 4,
       "assists": 1,
-      "shots_on": 5,
-      "key_passes": 3,
+      "shots_on": 6,
+      "key_passes": 5,
       "tackles": 1,
-      "minutes": 246,
-      "matches": 3
+      "minutes": 366,
+      "matches": 4
     },
     "lamine camara": {
       "display_name": "Lamine Camara",
@@ -5764,20 +5764,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 6,
-      "tackles": 1,
-      "minutes": 196,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 250,
+      "matches": 4
     },
     "sadio mane": {
       "display_name": "Sadio Mané",
       "team": "Senegal",
       "goals": 0,
       "assists": 1,
-      "shots_on": 2,
-      "key_passes": 9,
-      "tackles": 3,
-      "minutes": 277,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 12,
+      "tackles": 4,
+      "minutes": 370,
+      "matches": 4
     },
     "nicolas jackson": {
       "display_name": "Nicolas Jackson",
@@ -5787,8 +5787,8 @@
       "shots_on": 3,
       "key_passes": 3,
       "tackles": 2,
-      "minutes": 213,
-      "matches": 3
+      "minutes": 240,
+      "matches": 4
     },
     "ibrahim mbaye": {
       "display_name": "Ibrahim Mbaye",
@@ -5796,21 +5796,21 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 0,
-      "minutes": 108,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 1,
+      "minutes": 155,
+      "matches": 4
     },
     "habib diarra": {
       "display_name": "Habib Diarra",
       "team": "Senegal",
-      "goals": 1,
+      "goals": 2,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 2,
-      "minutes": 71,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 2,
+      "tackles": 3,
+      "minutes": 144,
+      "matches": 3
     },
     "iliman ndiaye": {
       "display_name": "Iliman Ndiaye",
@@ -5818,10 +5818,10 @@
       "goals": 1,
       "assists": 2,
       "shots_on": 2,
-      "key_passes": 3,
-      "tackles": 0,
-      "minutes": 57,
-      "matches": 2
+      "key_passes": 4,
+      "tackles": 1,
+      "minutes": 130,
+      "matches": 3
     },
     "ahmadou bamba dieng": {
       "display_name": "Ahmadou Bamba Dieng",
@@ -5840,10 +5840,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 1,
-      "minutes": 78,
-      "matches": 3
+      "minutes": 198,
+      "matches": 4
     },
     "jalal hassan": {
       "display_name": "Jalal Hassan",
@@ -6029,8 +6029,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 360,
+      "matches": 4
     },
     "julian ryerson": {
       "display_name": "Julian Ryerson",
@@ -6039,9 +6039,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 4,
-      "tackles": 5,
-      "minutes": 103,
-      "matches": 2
+      "tackles": 7,
+      "minutes": 166,
+      "matches": 3
     },
     "kristoffer ajer": {
       "display_name": "Kristoffer Ajer",
@@ -6049,21 +6049,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 3,
-      "minutes": 180,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 6,
+      "minutes": 360,
+      "matches": 4
     },
     "torbjorn heggem": {
       "display_name": "Torbjørn Heggem",
       "team": "Norway",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 174,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 354,
+      "matches": 4
     },
     "david moller wolfe": {
       "display_name": "David Møller Wolfe",
@@ -6072,20 +6072,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 163,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 342,
+      "matches": 4
     },
     "martin odegaard": {
       "display_name": "Martin Ødegaard",
       "team": "Norway",
       "goals": 0,
-      "assists": 2,
-      "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 3,
-      "minutes": 171,
-      "matches": 2
+      "assists": 3,
+      "shots_on": 2,
+      "key_passes": 4,
+      "tackles": 6,
+      "minutes": 351,
+      "matches": 4
     },
     "sander berge": {
       "display_name": "Sander Berge",
@@ -6094,9 +6094,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 360,
+      "matches": 4
     },
     "fredrik aursnes": {
       "display_name": "Fredrik Aursnes",
@@ -6105,20 +6105,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 8,
-      "minutes": 208,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 250,
+      "matches": 5
     },
     "antonio nusa": {
       "display_name": "Antonio Nusa",
       "team": "Norway",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 157,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 2,
+      "tackles": 3,
+      "minutes": 273,
+      "matches": 5
     },
     "alexander sorloth": {
       "display_name": "Alexander Sørloth",
@@ -6126,21 +6126,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 157,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 1,
+      "minutes": 273,
+      "matches": 4
     },
     "erling haaland": {
       "display_name": "Erling Haaland",
       "team": "Norway",
-      "goals": 4,
+      "goals": 7,
       "assists": 0,
-      "shots_on": 7,
-      "key_passes": 3,
+      "shots_on": 12,
+      "key_passes": 6,
       "tackles": 0,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 360,
+      "matches": 4
     },
     "leo ostigard": {
       "display_name": "Leo Østigård",
@@ -6150,19 +6150,19 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 3,
-      "minutes": 124,
-      "matches": 3
+      "minutes": 125,
+      "matches": 4
     },
     "andreas schjelderup": {
       "display_name": "Andreas Schjelderup",
       "team": "Norway",
       "goals": 0,
-      "assists": 1,
-      "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 1,
-      "minutes": 119,
-      "matches": 3
+      "assists": 3,
+      "shots_on": 1,
+      "key_passes": 5,
+      "tackles": 2,
+      "minutes": 183,
+      "matches": 5
     },
     "oscar bobb": {
       "display_name": "Oscar Bobb",
@@ -6170,10 +6170,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 117,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 3,
+      "minutes": 181,
+      "matches": 5
     },
     "kristian thorstvedt": {
       "display_name": "Kristian Thorstvedt",
@@ -6190,12 +6190,12 @@
       "display_name": "Patrick Berg",
       "team": "Norway",
       "goals": 0,
-      "assists": 1,
+      "assists": 2,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 144,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 7,
+      "minutes": 324,
+      "matches": 5
     },
     "emiliano martinez": {
       "display_name": "Emiliano Martínez",
@@ -6205,41 +6205,41 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 492,
+      "matches": 5
     },
     "gonzalo montiel": {
       "display_name": "Gonzalo Montiel",
       "team": "Argentina",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 2,
-      "minutes": 45,
-      "matches": 1
+      "minutes": 90,
+      "matches": 3
     },
     "cristian romero": {
       "display_name": "Cristian Romero",
       "team": "Argentina",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 137,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 352,
+      "matches": 4
     },
     "lisandro martinez": {
       "display_name": "Lisandro Martínez",
       "team": "Argentina",
-      "goals": 0,
-      "assists": 0,
-      "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 3,
-      "minutes": 180,
-      "matches": 2
+      "goals": 1,
+      "assists": 1,
+      "shots_on": 1,
+      "key_passes": 2,
+      "tackles": 7,
+      "minutes": 402,
+      "matches": 4
     },
     "facundo medina": {
       "display_name": "Facundo Medina",
@@ -6248,42 +6248,42 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 5,
-      "minutes": 172,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 265,
+      "matches": 4
     },
     "rodrigo de paul": {
       "display_name": "Rodrigo De Paul",
       "team": "Argentina",
       "goals": 0,
       "assists": 1,
-      "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 172,
-      "matches": 2
+      "shots_on": 1,
+      "key_passes": 4,
+      "tackles": 6,
+      "minutes": 322,
+      "matches": 4
     },
     "alexis mac allister": {
       "display_name": "Alexis Mac Allister",
       "team": "Argentina",
       "goals": 0,
-      "assists": 0,
-      "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 8,
-      "minutes": 209,
-      "matches": 3
+      "assists": 1,
+      "shots_on": 2,
+      "key_passes": 4,
+      "tackles": 15,
+      "minutes": 431,
+      "matches": 5
     },
     "enzo fernandez": {
       "display_name": "Enzo Fernández",
       "team": "Argentina",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 3,
       "key_passes": 2,
-      "tackles": 6,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 8,
+      "minutes": 402,
+      "matches": 4
     },
     "thiago almada": {
       "display_name": "Thiago Almada",
@@ -6291,32 +6291,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 5,
-      "minutes": 149,
-      "matches": 3
+      "minutes": 213,
+      "matches": 4
     },
     "lionel messi": {
       "display_name": "Lionel Messi",
       "team": "Argentina",
-      "goals": 6,
-      "assists": 0,
-      "shots_on": 9,
-      "key_passes": 6,
-      "tackles": 4,
-      "minutes": 200,
-      "matches": 3
+      "goals": 8,
+      "assists": 1,
+      "shots_on": 17,
+      "key_passes": 16,
+      "tackles": 6,
+      "minutes": 422,
+      "matches": 5
     },
     "lautaro martinez": {
       "display_name": "Lautaro Martínez",
       "team": "Argentina",
       "goals": 1,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 2,
-      "key_passes": 1,
+      "key_passes": 3,
       "tackles": 3,
-      "minutes": 180,
-      "matches": 3
+      "minutes": 279,
+      "matches": 5
     },
     "nahuel molina": {
       "display_name": "Nahuel Molina",
@@ -6324,10 +6324,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 3,
-      "minutes": 135,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 9,
+      "minutes": 312,
+      "matches": 4
     },
     "nicolas gonzalez": {
       "display_name": "Nicolás González",
@@ -6335,21 +6335,21 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 60,
-      "matches": 2
+      "key_passes": 4,
+      "tackles": 3,
+      "minutes": 152,
+      "matches": 4
     },
     "julian alvarez": {
       "display_name": "Julián Alvarez",
       "team": "Argentina",
       "goals": 0,
       "assists": 0,
-      "shots_on": 2,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 143,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 295,
+      "matches": 5
     },
     "nicolas otamendi": {
       "display_name": "Nicolás Otamendi",
@@ -6359,8 +6359,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 3,
-      "minutes": 133,
-      "matches": 3
+      "minutes": 140,
+      "matches": 4
     },
     "nico paz": {
       "display_name": "Nico Paz",
@@ -6381,8 +6381,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 270,
+      "matches": 3
     },
     "rafik belghali": {
       "display_name": "Rafik Belghali",
@@ -6390,10 +6390,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 4,
-      "minutes": 251,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 8,
+      "minutes": 333,
+      "matches": 4
     },
     "aissa mandi": {
       "display_name": "Aïssa Mandi",
@@ -6402,9 +6402,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 3,
-      "tackles": 4,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 360,
+      "matches": 4
     },
     "ramy bensebaini": {
       "display_name": "Ramy Bensebaini",
@@ -6413,9 +6413,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 8,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 360,
+      "matches": 4
     },
     "rayan ait-nouri": {
       "display_name": "Rayan Aït-Nouri",
@@ -6423,10 +6423,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 10,
-      "minutes": 194,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 16,
+      "minutes": 284,
+      "matches": 4
     },
     "hicham boudaoui": {
       "display_name": "Hicham Boudaoui",
@@ -6435,9 +6435,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 109,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 128,
+      "matches": 3
     },
     "nabil bentaleb": {
       "display_name": "Nabil Bentaleb",
@@ -6446,9 +6446,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 4,
-      "tackles": 6,
-      "minutes": 217,
-      "matches": 3
+      "tackles": 8,
+      "minutes": 288,
+      "matches": 4
     },
     "ibrahim maza": {
       "display_name": "Ibrahim Maza",
@@ -6457,9 +6457,9 @@
       "assists": 0,
       "shots_on": 3,
       "key_passes": 3,
-      "tackles": 2,
-      "minutes": 261,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 351,
+      "matches": 4
     },
     "anis hadj moussa": {
       "display_name": "Anis Hadj Moussa",
@@ -6469,8 +6469,8 @@
       "shots_on": 0,
       "key_passes": 3,
       "tackles": 1,
-      "minutes": 78,
-      "matches": 2
+      "minutes": 97,
+      "matches": 3
     },
     "amine gouiri": {
       "display_name": "Amine Gouiri",
@@ -6480,30 +6480,30 @@
       "shots_on": 2,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 221,
-      "matches": 3
+      "minutes": 253,
+      "matches": 4
     },
     "fares chaibi": {
       "display_name": "Farès Chaïbi",
       "team": "Algeria",
       "goals": 0,
       "assists": 0,
-      "shots_on": 2,
-      "key_passes": 2,
-      "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 4,
+      "tackles": 6,
+      "minutes": 360,
+      "matches": 4
     },
     "houssem aouar": {
       "display_name": "Houssem Aouar",
       "team": "Algeria",
       "goals": 0,
       "assists": 2,
-      "shots_on": 0,
-      "key_passes": 3,
+      "shots_on": 1,
+      "key_passes": 5,
       "tackles": 2,
-      "minutes": 115,
-      "matches": 2
+      "minutes": 173,
+      "matches": 3
     },
     "riyad mahrez": {
       "display_name": "Riyad Mahrez",
@@ -6513,8 +6513,8 @@
       "shots_on": 3,
       "key_passes": 5,
       "tackles": 4,
-      "minutes": 192,
-      "matches": 3
+      "minutes": 263,
+      "matches": 4
     },
     "mohamed amoura": {
       "display_name": "Mohamed Amoura",
@@ -6533,10 +6533,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 9,
-      "matches": 1
+      "minutes": 17,
+      "matches": 2
     },
     "ramiz zerrouki": {
       "display_name": "Ramiz Zerrouki",
@@ -6546,8 +6546,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 53,
-      "matches": 2
+      "minutes": 111,
+      "matches": 3
     },
     "alexander schlager": {
       "display_name": "Alexander Schlager",
@@ -6557,8 +6557,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "stefan posch": {
       "display_name": "Stefan Posch",
@@ -6567,9 +6567,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 248,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 333,
+      "matches": 4
     },
     "philipp lienhart": {
       "display_name": "Philipp Lienhart",
@@ -6590,8 +6590,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 2,
-      "minutes": 188,
-      "matches": 3
+      "minutes": 278,
+      "matches": 4
     },
     "phillipp mwene": {
       "display_name": "Phillipp Mwene",
@@ -6611,9 +6611,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 9,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 315,
+      "matches": 4
     },
     "xaver schlager": {
       "display_name": "Xaver Schlager",
@@ -6623,8 +6623,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 6,
-      "minutes": 194,
-      "matches": 3
+      "minutes": 239,
+      "matches": 4
     },
     "romano schmid": {
       "display_name": "Romano Schmid",
@@ -6632,10 +6632,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 206,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 5,
+      "minutes": 266,
+      "matches": 4
     },
     "konrad laimer": {
       "display_name": "Konrad Laimer",
@@ -6644,9 +6644,9 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 5,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 360,
+      "matches": 4
     },
     "marcel sabitzer": {
       "display_name": "Marcel Sabitzer",
@@ -6654,10 +6654,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 4,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 6,
+      "tackles": 4,
+      "minutes": 360,
+      "matches": 4
     },
     "sasa kalajdzic": {
       "display_name": "Saša Kalajdžić",
@@ -6666,9 +6666,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 0,
-      "minutes": 47,
-      "matches": 2
+      "tackles": 1,
+      "minutes": 77,
+      "matches": 3
     },
     "marko arnautovic": {
       "display_name": "Marko Arnautović",
@@ -6676,10 +6676,10 @@
       "goals": 2,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 2,
-      "minutes": 112,
-      "matches": 3
+      "minutes": 142,
+      "matches": 4
     },
     "kevin danso": {
       "display_name": "Kevin Danso",
@@ -6688,9 +6688,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 149,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 239,
+      "matches": 4
     },
     "carney chukwuemeka": {
       "display_name": "Carney Chukwuemeka",
@@ -6700,8 +6700,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 44,
-      "matches": 2
+      "minutes": 89,
+      "matches": 3
     },
     "paul wanner": {
       "display_name": "Paul Wanner",
@@ -6710,9 +6710,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 144,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 234,
+      "matches": 4
     },
     "patrick wimmer": {
       "display_name": "Patrick Wimmer",
@@ -6909,8 +6909,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 450,
+      "matches": 5
     },
     "joao cancelo": {
       "display_name": "João Cancelo",
@@ -6918,10 +6918,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 314,
+      "matches": 5
     },
     "tomas araujo": {
       "display_name": "Tomás Araújo",
@@ -6941,9 +6941,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 450,
+      "matches": 5
     },
     "nuno mendes": {
       "display_name": "Nuno Mendes",
@@ -6951,10 +6951,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 6,
-      "tackles": 3,
-      "minutes": 251,
-      "matches": 3
+      "key_passes": 11,
+      "tackles": 9,
+      "minutes": 397,
+      "matches": 5
     },
     "joao neves": {
       "display_name": "João Neves",
@@ -6962,10 +6962,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 4,
-      "minutes": 211,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 13,
+      "minutes": 391,
+      "matches": 5
     },
     "vitinha": {
       "display_name": "Vitinha",
@@ -6974,9 +6974,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 0,
-      "minutes": 236,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 381,
+      "matches": 5
     },
     "bernardo silva": {
       "display_name": "Bernardo Silva",
@@ -6986,19 +6986,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 59,
-      "matches": 2
+      "minutes": 103,
+      "matches": 4
     },
     "bruno fernandes": {
       "display_name": "Bruno Fernandes",
       "team": "Portugal",
       "goals": 0,
       "assists": 1,
-      "shots_on": 2,
-      "key_passes": 4,
-      "tackles": 7,
-      "minutes": 270,
-      "matches": 3
+      "shots_on": 3,
+      "key_passes": 6,
+      "tackles": 8,
+      "minutes": 423,
+      "matches": 5
     },
     "pedro neto": {
       "display_name": "Pedro Neto",
@@ -7007,20 +7007,20 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 1,
-      "minutes": 206,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 352,
+      "matches": 5
     },
     "cristiano ronaldo": {
       "display_name": "Cristiano Ronaldo",
       "team": "Portugal",
-      "goals": 2,
+      "goals": 3,
       "assists": 0,
-      "shots_on": 6,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "shots_on": 9,
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 441,
+      "matches": 5
     },
     "francisco conceicao": {
       "display_name": "Francisco Conceição",
@@ -7028,21 +7028,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
+      "key_passes": 4,
       "tackles": 3,
-      "minutes": 90,
-      "matches": 2
+      "minutes": 133,
+      "matches": 4
     },
     "rafael leao": {
       "display_name": "Rafael Leão",
       "team": "Portugal",
       "goals": 1,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 1,
-      "key_passes": 1,
+      "key_passes": 3,
       "tackles": 0,
-      "minutes": 52,
-      "matches": 3
+      "minutes": 161,
+      "matches": 5
     },
     "nelson semedo": {
       "display_name": "Nélson Semedo",
@@ -7050,21 +7050,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 63,
-      "matches": 2
+      "minutes": 124,
+      "matches": 4
     },
     "goncalo ramos": {
       "display_name": "Gonçalo Ramos",
       "team": "Portugal",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 12,
-      "matches": 1
+      "minutes": 39,
+      "matches": 2
     },
     "lionel mpasi nzau": {
       "display_name": "Lionel Mpasi Nzau",
@@ -7074,8 +7074,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 279,
-      "matches": 3
+      "minutes": 369,
+      "matches": 4
     },
     "aaron wan-bissaka": {
       "display_name": "Aaron Wan-Bissaka",
@@ -7084,20 +7084,20 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 3,
-      "tackles": 7,
-      "minutes": 274,
-      "matches": 3
+      "tackles": 10,
+      "minutes": 364,
+      "matches": 4
     },
     "chancel mbemba": {
       "display_name": "Chancel Mbemba",
       "team": "DR Congo",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 4,
-      "minutes": 279,
-      "matches": 3
+      "minutes": 369,
+      "matches": 4
     },
     "axel tuanzebe": {
       "display_name": "Axel Tuanzebe",
@@ -7106,9 +7106,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 279,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 369,
+      "matches": 4
     },
     "steve kapuadi": {
       "display_name": "Steve Kapuadi",
@@ -7127,10 +7127,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 5,
-      "tackles": 4,
-      "minutes": 229,
-      "matches": 3
+      "key_passes": 6,
+      "tackles": 8,
+      "minutes": 318,
+      "matches": 4
     },
     "ngal'ayel mukau": {
       "display_name": "Ngal'ayel Mukau",
@@ -7139,9 +7139,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 129,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 205,
+      "matches": 4
     },
     "samuel moutoussamy": {
       "display_name": "Samuel Moutoussamy",
@@ -7150,9 +7150,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 9,
-      "minutes": 244,
-      "matches": 3
+      "tackles": 14,
+      "minutes": 333,
+      "matches": 4
     },
     "edo kayembe": {
       "display_name": "Edo Kayembe",
@@ -7161,9 +7161,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 146,
-      "matches": 2
+      "tackles": 3,
+      "minutes": 160,
+      "matches": 3
     },
     "yoane wissa": {
       "display_name": "Yoane Wissa",
@@ -7173,8 +7173,8 @@
       "shots_on": 3,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 279,
-      "matches": 3
+      "minutes": 369,
+      "matches": 4
     },
     "cedric bakambu": {
       "display_name": "Cédric Bakambu",
@@ -7193,10 +7193,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 3,
-      "tackles": 8,
-      "minutes": 177,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 9,
+      "minutes": 267,
+      "matches": 4
     },
     "joris kayembe": {
       "display_name": "Joris Kayembe",
@@ -7206,8 +7206,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 4,
-      "minutes": 50,
-      "matches": 3
+      "minutes": 58,
+      "matches": 4
     },
     "charles pickel": {
       "display_name": "Charles Pickel",
@@ -7248,10 +7248,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 463,
+      "matches": 5
     },
     "reece james": {
       "display_name": "Reece James",
@@ -7272,8 +7272,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 463,
+      "matches": 5
     },
     "john stones": {
       "display_name": "John Stones",
@@ -7283,8 +7283,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 87,
-      "matches": 1
+      "minutes": 134,
+      "matches": 3
     },
     "nico o'reilly": {
       "display_name": "Nico O'Reilly",
@@ -7292,10 +7292,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 4,
-      "tackles": 4,
-      "minutes": 204,
-      "matches": 3
+      "key_passes": 5,
+      "tackles": 5,
+      "minutes": 368,
+      "matches": 5
     },
     "elliot anderson": {
       "display_name": "Elliot Anderson",
@@ -7303,10 +7303,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 7,
-      "minutes": 248,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 14,
+      "minutes": 413,
+      "matches": 5
     },
     "declan rice": {
       "display_name": "Declan Rice",
@@ -7314,10 +7314,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 10,
+      "key_passes": 12,
       "tackles": 2,
-      "minutes": 162,
-      "matches": 2
+      "minutes": 354,
+      "matches": 4
     },
     "noni madueke": {
       "display_name": "Noni Madueke",
@@ -7325,43 +7325,43 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 6,
-      "tackles": 2,
-      "minutes": 182,
-      "matches": 3
+      "key_passes": 9,
+      "tackles": 4,
+      "minutes": 243,
+      "matches": 4
     },
     "jude bellingham": {
       "display_name": "Jude Bellingham",
       "team": "England",
-      "goals": 2,
+      "goals": 4,
       "assists": 1,
-      "shots_on": 3,
-      "key_passes": 6,
-      "tackles": 9,
-      "minutes": 224,
-      "matches": 3
+      "shots_on": 9,
+      "key_passes": 8,
+      "tackles": 12,
+      "minutes": 417,
+      "matches": 5
     },
     "anthony gordon": {
       "display_name": "Anthony Gordon",
       "team": "England",
       "goals": 0,
-      "assists": 0,
-      "shots_on": 2,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 137,
-      "matches": 2
+      "assists": 2,
+      "shots_on": 3,
+      "key_passes": 5,
+      "tackles": 4,
+      "minutes": 269,
+      "matches": 4
     },
     "harry kane": {
       "display_name": "Harry Kane",
       "team": "England",
-      "goals": 3,
-      "assists": 0,
-      "shots_on": 6,
-      "key_passes": 2,
-      "tackles": 1,
-      "minutes": 264,
-      "matches": 3
+      "goals": 6,
+      "assists": 1,
+      "shots_on": 10,
+      "key_passes": 4,
+      "tackles": 2,
+      "minutes": 444,
+      "matches": 5
     },
     "morgan rogers": {
       "display_name": "Morgan Rogers",
@@ -7371,30 +7371,30 @@
       "shots_on": 0,
       "key_passes": 4,
       "tackles": 3,
-      "minutes": 125,
-      "matches": 3
+      "minutes": 138,
+      "matches": 4
     },
     "bukayo saka": {
       "display_name": "Bukayo Saka",
       "team": "England",
       "goals": 0,
-      "assists": 2,
+      "assists": 3,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 106,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 7,
+      "minutes": 192,
+      "matches": 5
     },
     "marcus rashford": {
       "display_name": "Marcus Rashford",
       "team": "England",
       "goals": 1,
       "assists": 0,
-      "shots_on": 2,
+      "shots_on": 3,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 122,
-      "matches": 3
+      "tackles": 2,
+      "minutes": 183,
+      "matches": 4
     },
     "djed spence": {
       "display_name": "Djed Spence",
@@ -7403,9 +7403,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 103,
-      "matches": 3
+      "tackles": 7,
+      "minutes": 202,
+      "matches": 5
     },
     "marc guehi": {
       "display_name": "Marc Guéhi",
@@ -7415,8 +7415,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 190,
-      "matches": 3
+      "minutes": 383,
+      "matches": 5
     },
     "dominik livakovic": {
       "display_name": "Dominik Livaković",
@@ -7426,8 +7426,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 360,
+      "matches": 4
     },
     "josip sutalo": {
       "display_name": "Josip Šutalo",
@@ -7436,9 +7436,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 360,
+      "matches": 4
     },
     "luka vuskovic": {
       "display_name": "Luka Vušković",
@@ -7459,8 +7459,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 3,
-      "minutes": 145,
-      "matches": 3
+      "minutes": 162,
+      "matches": 4
     },
     "josip stanisic": {
       "display_name": "Josip Stanišić",
@@ -7469,9 +7469,9 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 4,
+      "minutes": 360,
+      "matches": 4
     },
     "luka modric": {
       "display_name": "Luka Modrić",
@@ -7479,10 +7479,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 5,
-      "tackles": 4,
-      "minutes": 229,
-      "matches": 3
+      "key_passes": 7,
+      "tackles": 7,
+      "minutes": 319,
+      "matches": 4
     },
     "mario pasalic": {
       "display_name": "Mario Pašalić",
@@ -7490,32 +7490,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 99,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 2,
+      "minutes": 121,
+      "matches": 4
     },
     "ivan perisic": {
       "display_name": "Ivan Perišić",
       "team": "Croatia",
-      "goals": 0,
+      "goals": 1,
       "assists": 1,
-      "shots_on": 1,
+      "shots_on": 2,
       "key_passes": 5,
-      "tackles": 6,
-      "minutes": 270,
-      "matches": 3
+      "tackles": 9,
+      "minutes": 360,
+      "matches": 4
     },
     "petar sucic": {
       "display_name": "Petar Sučić",
       "team": "Croatia",
       "goals": 1,
       "assists": 1,
-      "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 2,
-      "minutes": 198,
-      "matches": 3
+      "shots_on": 2,
+      "key_passes": 4,
+      "tackles": 5,
+      "minutes": 288,
+      "matches": 4
     },
     "martin baturina": {
       "display_name": "Martin Baturina",
@@ -7523,10 +7523,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 3,
+      "key_passes": 4,
       "tackles": 3,
-      "minutes": 256,
-      "matches": 3
+      "minutes": 324,
+      "matches": 4
     },
     "petar musa": {
       "display_name": "Petar Musa",
@@ -7544,11 +7544,11 @@
       "team": "Croatia",
       "goals": 0,
       "assists": 1,
-      "shots_on": 1,
+      "shots_on": 4,
       "key_passes": 1,
-      "tackles": 4,
-      "minutes": 182,
-      "matches": 3
+      "tackles": 5,
+      "minutes": 271,
+      "matches": 4
     },
     "marco pasalic": {
       "display_name": "Marco Pašalić",
@@ -7566,11 +7566,11 @@
       "team": "Croatia",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 48,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 2,
+      "tackles": 1,
+      "minutes": 93,
+      "matches": 3
     },
     "nikola vlasic": {
       "display_name": "Nikola Vlašić",
@@ -7578,10 +7578,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 100,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 8,
+      "minutes": 189,
+      "matches": 3
     },
     "andrej kramaric": {
       "display_name": "Andrej Kramarić",
@@ -7591,8 +7591,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 57,
-      "matches": 2
+      "minutes": 70,
+      "matches": 3
     },
     "lawrence ati zigi": {
       "display_name": "Lawrence Ati Zigi",
@@ -7602,8 +7602,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 45,
-      "matches": 1
+      "minutes": 135,
+      "matches": 2
     },
     "marvin senaya": {
       "display_name": "Marvin Senaya",
@@ -7612,9 +7612,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 18,
-      "minutes": 267,
-      "matches": 3
+      "tackles": 20,
+      "minutes": 280,
+      "matches": 4
     },
     "jonas adjei adjetey": {
       "display_name": "Jonas Adjei Adjetey",
@@ -7634,9 +7634,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 3,
+      "minutes": 270,
+      "matches": 3
     },
     "gideon mensah": {
       "display_name": "Gideon Mensah",
@@ -7644,10 +7644,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 6,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 7,
+      "minutes": 360,
+      "matches": 4
     },
     "ernest nuamah": {
       "display_name": "Ernest Nuamah",
@@ -7656,9 +7656,9 @@
       "assists": 1,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 2,
-      "minutes": 77,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 88,
+      "matches": 3
     },
     "caleb yirenkyi": {
       "display_name": "Caleb Yirenkyi",
@@ -7666,10 +7666,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 2,
-      "minutes": 193,
-      "matches": 3
+      "minutes": 272,
+      "matches": 4
     },
     "elisha owusu": {
       "display_name": "Elisha Owusu",
@@ -7677,10 +7677,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 123,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 5,
+      "minutes": 151,
+      "matches": 3
     },
     "antoine semenyo": {
       "display_name": "Antoine Semenyo",
@@ -7688,10 +7688,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 2,
+      "minutes": 360,
+      "matches": 4
     },
     "kamaldeen sulemana": {
       "display_name": "Kamaldeen Sulemana",
@@ -7711,9 +7711,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 2,
-      "minutes": 225,
-      "matches": 3
+      "tackles": 3,
+      "minutes": 304,
+      "matches": 4
     },
     "benjamin asare": {
       "display_name": "Benjamin Asare",
@@ -7734,8 +7734,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 1,
-      "minutes": 101,
-      "matches": 3
+      "minutes": 129,
+      "matches": 4
     },
     "brandon thomas-asante": {
       "display_name": "Brandon Thomas-Asante",
@@ -7756,8 +7756,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 187,
-      "matches": 3
+      "minutes": 249,
+      "matches": 4
     },
     "prince kwabena adu": {
       "display_name": "Prince Kwabena Adu",
@@ -7767,8 +7767,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 37,
-      "matches": 2
+      "minutes": 48,
+      "matches": 3
     },
     "orlando mosquera": {
       "display_name": "Orlando Mosquera",
@@ -8119,8 +8119,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 480,
+      "matches": 5
     },
     "daniel munoz": {
       "display_name": "Daniel Muñoz",
@@ -8128,21 +8128,21 @@
       "goals": 2,
       "assists": 0,
       "shots_on": 2,
-      "key_passes": 1,
-      "tackles": 5,
-      "minutes": 189,
-      "matches": 3
+      "key_passes": 3,
+      "tackles": 10,
+      "minutes": 399,
+      "matches": 5
     },
     "davinson sanchez": {
       "display_name": "Davinson Sánchez",
       "team": "Colombia",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 4,
+      "shots_on": 2,
+      "key_passes": 5,
       "tackles": 4,
-      "minutes": 270,
-      "matches": 3
+      "minutes": 480,
+      "matches": 5
     },
     "jhon lucumi": {
       "display_name": "Jhon Lucumí",
@@ -8150,32 +8150,32 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 270,
-      "matches": 3
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 479,
+      "matches": 5
     },
     "johan mojica": {
       "display_name": "Johan Mojica",
       "team": "Colombia",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 2,
+      "tackles": 5,
+      "minutes": 390,
+      "matches": 4
     },
     "gustavo puerta": {
       "display_name": "Gustavo Puerta",
       "team": "Colombia",
       "goals": 0,
       "assists": 1,
-      "shots_on": 3,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 260,
-      "matches": 3
+      "shots_on": 5,
+      "key_passes": 6,
+      "tackles": 3,
+      "minutes": 470,
+      "matches": 5
     },
     "jefferson lerma": {
       "display_name": "Jefferson Lerma",
@@ -8183,21 +8183,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 0,
-      "minutes": 240,
-      "matches": 3
+      "key_passes": 4,
+      "tackles": 2,
+      "minutes": 412,
+      "matches": 5
     },
     "jhon arias": {
       "display_name": "Jhon Arias",
       "team": "Colombia",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 3,
-      "key_passes": 7,
-      "tackles": 8,
-      "minutes": 242,
-      "matches": 3
+      "shots_on": 4,
+      "key_passes": 8,
+      "tackles": 15,
+      "minutes": 381,
+      "matches": 5
     },
     "james rodriguez": {
       "display_name": "James Rodríguez",
@@ -8205,54 +8205,54 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 3,
-      "key_passes": 10,
-      "tackles": 0,
-      "minutes": 206,
-      "matches": 3
+      "key_passes": 11,
+      "tackles": 3,
+      "minutes": 317,
+      "matches": 5
     },
     "luis javier suarez": {
       "display_name": "Luis Javier Suárez",
       "team": "Colombia",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 1,
-      "minutes": 168,
-      "matches": 3
+      "key_passes": 2,
+      "tackles": 4,
+      "minutes": 332,
+      "matches": 5
     },
     "luis diaz": {
       "display_name": "Luis Díaz",
       "team": "Colombia",
       "goals": 1,
       "assists": 1,
-      "shots_on": 3,
-      "key_passes": 6,
-      "tackles": 1,
-      "minutes": 269,
-      "matches": 3
+      "shots_on": 6,
+      "key_passes": 10,
+      "tackles": 2,
+      "minutes": 478,
+      "matches": 5
     },
     "jaminton campaz": {
       "display_name": "Jaminton Campaz",
       "team": "Colombia",
       "goals": 1,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 18,
-      "matches": 1
+      "shots_on": 3,
+      "key_passes": 2,
+      "tackles": 2,
+      "minutes": 80,
+      "matches": 3
     },
     "richard rios": {
       "display_name": "Richard Ríos",
       "team": "Colombia",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 2,
-      "minutes": 53,
-      "matches": 3
+      "shots_on": 1,
+      "key_passes": 1,
+      "tackles": 4,
+      "minutes": 136,
+      "matches": 5
     },
     "cucho hernandez": {
       "display_name": "Cucho Hernández",
@@ -8260,10 +8260,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 0,
-      "minutes": 10,
-      "matches": 1
+      "minutes": 48,
+      "matches": 2
     },
     "kevin castano": {
       "display_name": "Kevin Castaño",
@@ -8337,10 +8337,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 2,
-      "minutes": 159,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 6,
+      "minutes": 245,
+      "matches": 3
     },
     "relebohile mofokeng": {
       "display_name": "Relebohile Mofokeng",
@@ -8348,10 +8348,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 5,
-      "tackles": 2,
-      "minutes": 125,
-      "matches": 2
+      "key_passes": 6,
+      "tackles": 3,
+      "minutes": 170,
+      "matches": 3
     },
     "kamogelo sebelebele": {
       "display_name": "Kamogelo Sebelebele",
@@ -8371,9 +8371,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 102,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 145,
+      "matches": 4
     },
     "djibril sow": {
       "display_name": "Djibril Sow",
@@ -8381,10 +8381,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 1,
-      "minutes": 93,
-      "matches": 2
+      "minutes": 168,
+      "matches": 3
     },
     "luca jaquez": {
       "display_name": "Luca Jaquez",
@@ -8405,8 +8405,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 21,
-      "matches": 2
+      "minutes": 54,
+      "matches": 3
     },
     "edin dzeko": {
       "display_name": "Edin Džeko",
@@ -8414,10 +8414,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 128,
-      "matches": 2
+      "minutes": 179,
+      "matches": 3
     },
     "amir hadziahmetovic": {
       "display_name": "Amir Hadžiahmetović",
@@ -8438,19 +8438,19 @@
       "shots_on": 2,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 33,
-      "matches": 2
+      "minutes": 72,
+      "matches": 3
     },
     "moise bombito": {
       "display_name": "Moise Bombito",
       "team": "Canada",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 45,
-      "matches": 1
+      "tackles": 1,
+      "minutes": 194,
+      "matches": 3
     },
     "nathan-dylan saliba": {
       "display_name": "Nathan-Dylan Saliba",
@@ -8459,9 +8459,9 @@
       "assists": 2,
       "shots_on": 1,
       "key_passes": 4,
-      "tackles": 3,
-      "minutes": 123,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 182,
+      "matches": 3
     },
     "niko sigur": {
       "display_name": "Niko Sigur",
@@ -8469,10 +8469,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 17,
-      "matches": 1
+      "key_passes": 2,
+      "tackles": 1,
+      "minutes": 142,
+      "matches": 3
     },
     "sultan al-brake": {
       "display_name": "Sultan Al-Brake",
@@ -8513,10 +8513,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "key_passes": 5,
+      "tackles": 9,
+      "minutes": 349,
+      "matches": 4
     },
     "luis romo": {
       "display_name": "Luis Romo",
@@ -8524,10 +8524,10 @@
       "goals": 1,
       "assists": 1,
       "shots_on": 1,
-      "key_passes": 2,
-      "tackles": 5,
-      "minutes": 134,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 6,
+      "minutes": 268,
+      "matches": 4
     },
     "orbelin pineda": {
       "display_name": "Orbelín Pineda",
@@ -8537,8 +8537,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 19,
-      "matches": 1
+      "minutes": 29,
+      "matches": 2
     },
     "obed vargas": {
       "display_name": "Obed Vargas",
@@ -8548,8 +8548,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 46,
-      "matches": 2
+      "minutes": 63,
+      "matches": 3
     },
     "santiago gimenez": {
       "display_name": "Santiago Giménez",
@@ -8559,8 +8559,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 37,
-      "matches": 2
+      "minutes": 91,
+      "matches": 4
     },
     "cesar huerta": {
       "display_name": "César Huerta",
@@ -8636,8 +8636,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 1,
-      "matches": 1
+      "minutes": 2,
+      "matches": 2
     },
     "mathew leckie": {
       "display_name": "Mathew Leckie",
@@ -8657,9 +8657,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 4,
-      "tackles": 0,
-      "minutes": 87,
-      "matches": 2
+      "tackles": 1,
+      "minutes": 161,
+      "matches": 3
     },
     "kieran tierney": {
       "display_name": "Kieran Tierney",
@@ -8699,11 +8699,11 @@
       "team": "Brazil",
       "goals": 0,
       "assists": 1,
-      "shots_on": 1,
-      "key_passes": 5,
-      "tackles": 2,
-      "minutes": 132,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 10,
+      "tackles": 4,
+      "minutes": 289,
+      "matches": 4
     },
     "endrick": {
       "display_name": "Endrick",
@@ -8713,19 +8713,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 34,
-      "matches": 2
+      "minutes": 111,
+      "matches": 4
     },
     "gabriel martinelli": {
       "display_name": "Gabriel Martinelli",
       "team": "Brazil",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 1,
+      "shots_on": 1,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 50,
-      "matches": 2
+      "minutes": 141,
+      "matches": 4
     },
     "ederson": {
       "display_name": "Éderson",
@@ -8735,8 +8735,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 9,
-      "matches": 1
+      "minutes": 20,
+      "matches": 2
     },
     "jean-kevin duverne": {
       "display_name": "Jean-Kévin Duverne",
@@ -8797,12 +8797,12 @@
       "display_name": "Matías Galarza",
       "team": "Paraguay",
       "goals": 1,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 10,
-      "minutes": 178,
-      "matches": 2
+      "key_passes": 3,
+      "tackles": 16,
+      "minutes": 388,
+      "matches": 4
     },
     "isidro pitta": {
       "display_name": "Isidro Pitta",
@@ -8833,9 +8833,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 13,
-      "matches": 2
+      "tackles": 6,
+      "minutes": 165,
+      "matches": 4
     },
     "gabriel avalos": {
       "display_name": "Gabriel Ávalos",
@@ -8845,8 +8845,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 68,
-      "matches": 2
+      "minutes": 142,
+      "matches": 4
     },
     "guus til": {
       "display_name": "Guus Til",
@@ -8877,9 +8877,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 34,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 58,
+      "matches": 2
     },
     "taha abdi ali": {
       "display_name": "Taha Abdi Ali",
@@ -8889,8 +8889,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 0,
-      "minutes": 11,
-      "matches": 1
+      "minutes": 35,
+      "matches": 2
     },
     "jamie leweling": {
       "display_name": "Jamie Leweling",
@@ -8910,9 +8910,9 @@
       "assists": 1,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 0,
-      "minutes": 30,
-      "matches": 1
+      "tackles": 1,
+      "minutes": 40,
+      "matches": 2
     },
     "simon adingra": {
       "display_name": "Simon Adingra",
@@ -8933,8 +8933,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 15,
-      "matches": 1
+      "minutes": 16,
+      "matches": 2
     },
     "jordy alcivar": {
       "display_name": "Jordy Alcivar",
@@ -8966,8 +8966,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 14,
-      "matches": 2
+      "minutes": 25,
+      "matches": 3
     },
     "joshua brenet": {
       "display_name": "Joshua Brenet",
@@ -9064,9 +9064,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 7,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 9,
+      "minutes": 192,
+      "matches": 3
     },
     "junnosuke suzuki": {
       "display_name": "Junnosuke Suzuki",
@@ -9075,9 +9075,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 17,
-      "matches": 1
+      "tackles": 1,
+      "minutes": 41,
+      "matches": 2
     },
     "ayumu seko": {
       "display_name": "Ayumu Seko",
@@ -9115,24 +9115,24 @@
     "pedro porro": {
       "display_name": "Pedro Porro",
       "team": "Spain",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 3,
-      "minutes": 90,
-      "matches": 1
+      "shots_on": 2,
+      "key_passes": 8,
+      "tackles": 8,
+      "minutes": 270,
+      "matches": 3
     },
     "alex baena": {
       "display_name": "Alex Baena",
       "team": "Spain",
       "goals": 1,
-      "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
-      "tackles": 2,
-      "minutes": 127,
-      "matches": 2
+      "assists": 1,
+      "shots_on": 4,
+      "key_passes": 8,
+      "tackles": 5,
+      "minutes": 273,
+      "matches": 4
     },
     "yeremy pino": {
       "display_name": "Yéremy Pino",
@@ -9175,8 +9175,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 82,
-      "matches": 2
+      "minutes": 83,
+      "matches": 3
     },
     "dodi lukebakio": {
       "display_name": "Dodi Lukebakio",
@@ -9184,10 +9184,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 1,
-      "minutes": 32,
-      "matches": 1
+      "key_passes": 1,
+      "tackles": 2,
+      "minutes": 163,
+      "matches": 3
     },
     "arthur theate": {
       "display_name": "Arthur Theate",
@@ -9195,10 +9195,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 1,
-      "minutes": 113,
-      "matches": 2
+      "minutes": 233,
+      "matches": 3
     },
     "saleh hardani": {
       "display_name": "Saleh Hardani",
@@ -9261,10 +9261,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 0,
-      "minutes": 58,
-      "matches": 1
+      "minutes": 78,
+      "matches": 2
     },
     "helio varela": {
       "display_name": "Hélio Varela",
@@ -9272,21 +9272,21 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 0,
-      "minutes": 61,
-      "matches": 2
+      "minutes": 101,
+      "matches": 3
     },
     "yannick semedo": {
       "display_name": "Yannick Semedo",
       "team": "Cape Verde",
       "goals": 0,
-      "assists": 0,
+      "assists": 1,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 3,
       "tackles": 1,
-      "minutes": 10,
-      "matches": 1
+      "minutes": 30,
+      "matches": 2
     },
     "francis de vries": {
       "display_name": "Francis De Vries",
@@ -9307,8 +9307,8 @@
       "shots_on": 3,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 104,
-      "matches": 2
+      "minutes": 173,
+      "matches": 4
     },
     "hossam abdelmaguid": {
       "display_name": "Hossam Abdelmaguid",
@@ -9317,9 +9317,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 14,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 67,
+      "matches": 2
     },
     "mohamed abdelmonem": {
       "display_name": "Mohamed Abdelmonem",
@@ -9338,21 +9338,21 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 98,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 3,
+      "minutes": 198,
+      "matches": 4
     },
     "leandro paredes": {
       "display_name": "Leandro Paredes",
       "team": "Argentina",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 98,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 236,
+      "matches": 4
     },
     "michael gregoritsch": {
       "display_name": "Michael Gregoritsch",
@@ -9362,8 +9362,8 @@
       "shots_on": 0,
       "key_passes": 2,
       "tackles": 1,
-      "minutes": 130,
-      "matches": 2
+      "minutes": 190,
+      "matches": 3
     },
     "marco friedl": {
       "display_name": "Marco Friedl",
@@ -9384,30 +9384,30 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 22,
-      "matches": 1
+      "minutes": 33,
+      "matches": 2
     },
     "lucas digne": {
       "display_name": "Lucas Digne",
       "team": "France",
       "goals": 0,
       "assists": 0,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 1,
-      "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "tackles": 4,
+      "minutes": 258,
+      "matches": 3
     },
     "manu kone": {
       "display_name": "Manu Koné",
       "team": "France",
       "goals": 0,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 1,
-      "tackles": 5,
-      "minutes": 180,
-      "matches": 2
+      "shots_on": 2,
+      "key_passes": 2,
+      "tackles": 6,
+      "minutes": 270,
+      "matches": 3
     },
     "malo gusto": {
       "display_name": "Malo Gusto",
@@ -9415,10 +9415,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 19,
-      "matches": 2
+      "key_passes": 1,
+      "tackles": 1,
+      "minutes": 34,
+      "matches": 3
     },
     "maghnes akliouche": {
       "display_name": "Maghnes Akliouche",
@@ -9492,10 +9492,10 @@
       "goals": 1,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 1,
+      "key_passes": 2,
       "tackles": 1,
-      "minutes": 122,
-      "matches": 2
+      "minutes": 205,
+      "matches": 3
     },
     "ismail jakobs": {
       "display_name": "Ismail Jakobs",
@@ -9504,9 +9504,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 133,
-      "matches": 2
+      "tackles": 5,
+      "minutes": 226,
+      "matches": 3
     },
     "mory diaw": {
       "display_name": "Mory Diaw",
@@ -9516,8 +9516,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 124,
-      "matches": 2
+      "minutes": 244,
+      "matches": 3
     },
     "pape matar sarr": {
       "display_name": "Pape Matar Sarr",
@@ -9527,8 +9527,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 18,
-      "matches": 1
+      "minutes": 65,
+      "matches": 2
     },
     "husam ali mohammad abudahab": {
       "display_name": "Husam Ali Mohammad Abudahab",
@@ -9592,9 +9592,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 84,
-      "matches": 2
+      "tackles": 3,
+      "minutes": 116,
+      "matches": 3
     },
     "zineddine belaid": {
       "display_name": "Zineddine Belaid",
@@ -9614,9 +9614,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 2,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 5,
+      "minutes": 360,
+      "matches": 4
     },
     "joao felix": {
       "display_name": "João Félix",
@@ -9624,10 +9624,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 1,
-      "key_passes": 0,
-      "tackles": 4,
-      "minutes": 133,
-      "matches": 2
+      "key_passes": 2,
+      "tackles": 6,
+      "minutes": 204,
+      "matches": 3
     },
     "francisco trincao": {
       "display_name": "Francisco Trincão",
@@ -9714,8 +9714,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 35,
-      "matches": 2
+      "minutes": 55,
+      "matches": 3
     },
     "thomas partey": {
       "display_name": "Thomas Partey",
@@ -9723,10 +9723,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
+      "key_passes": 1,
       "tackles": 4,
-      "minutes": 180,
-      "matches": 2
+      "minutes": 270,
+      "matches": 3
     },
     "inaki williams": {
       "display_name": "Iñaki Williams",
@@ -9736,8 +9736,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 66,
-      "matches": 1
+      "minutes": 128,
+      "matches": 2
     },
     "kojo peprah oppong": {
       "display_name": "Kojo Peprah Oppong",
@@ -9790,9 +9790,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 4,
-      "minutes": 180,
-      "matches": 2
+      "tackles": 5,
+      "minutes": 270,
+      "matches": 3
     },
     "ante budimir": {
       "display_name": "Ante Budimir",
@@ -9802,8 +9802,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 111,
-      "matches": 2
+      "minutes": 156,
+      "matches": 3
     },
     "luka sucic": {
       "display_name": "Luka Sučić",
@@ -9822,10 +9822,10 @@
       "goals": 0,
       "assists": 1,
       "shots_on": 0,
-      "key_passes": 2,
+      "key_passes": 9,
       "tackles": 0,
-      "minutes": 46,
-      "matches": 2
+      "minutes": 117,
+      "matches": 4
     },
     "jhon cordoba": {
       "display_name": "Jhon Córdoba",
@@ -9835,8 +9835,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 92,
-      "matches": 2
+      "minutes": 100,
+      "matches": 3
     },
     "nathanael mbuku": {
       "display_name": "Nathanaël Mbuku",
@@ -9845,9 +9845,9 @@
       "assists": 0,
       "shots_on": 2,
       "key_passes": 2,
-      "tackles": 3,
-      "minutes": 80,
-      "matches": 2
+      "tackles": 4,
+      "minutes": 144,
+      "matches": 3
     },
     "christian fassnacht": {
       "display_name": "Christian Fassnacht",
@@ -9888,10 +9888,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "key_passes": 1,
+      "tackles": 3,
+      "minutes": 180,
+      "matches": 2
     },
     "dennis hadzikadunic": {
       "display_name": "Dennis Hadžikadunić",
@@ -9945,8 +9945,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "minutes": 300,
+      "matches": 3
     },
     "redouane halhal": {
       "display_name": "Redouane Halhal",
@@ -9956,8 +9956,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 1,
-      "minutes": 90,
-      "matches": 1
+      "minutes": 180,
+      "matches": 2
     },
     "sofyan amrabat": {
       "display_name": "Sofyan Amrabat",
@@ -9967,8 +9967,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 90,
-      "matches": 1
+      "minutes": 117,
+      "matches": 2
     },
     "ayoub el kaabi": {
       "display_name": "Ayoub El Kaabi",
@@ -9988,9 +9988,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 0,
-      "tackles": 1,
-      "minutes": 20,
-      "matches": 1
+      "tackles": 3,
+      "minutes": 61,
+      "matches": 2
     },
     "duckens nazon": {
       "display_name": "Duckens Nazon",
@@ -10017,13 +10017,13 @@
     "neymar": {
       "display_name": "Neymar",
       "team": "Brazil",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 1,
-      "key_passes": 3,
+      "shots_on": 2,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 14,
-      "matches": 1
+      "minutes": 37,
+      "matches": 2
     },
     "alex sandro": {
       "display_name": "Alex Sandro",
@@ -10077,8 +10077,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 63,
-      "matches": 1
+      "minutes": 85,
+      "matches": 2
     },
     "guillermo ochoa": {
       "display_name": "Guillermo Ochoa",
@@ -10097,10 +10097,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 1,
-      "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "key_passes": 2,
+      "tackles": 7,
+      "minutes": 187,
+      "matches": 2
     },
     "tshepang moremi": {
       "display_name": "Tshepang Moremi",
@@ -10110,8 +10110,8 @@
       "shots_on": 0,
       "key_passes": 1,
       "tackles": 1,
-      "minutes": 28,
-      "matches": 1
+      "minutes": 39,
+      "matches": 2
     },
     "jens castrop": {
       "display_name": "Jens Castrop",
@@ -10154,8 +10154,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 30,
-      "matches": 1
+      "minutes": 40,
+      "matches": 2
     },
     "maximilian beier": {
       "display_name": "Maximilian Beier",
@@ -10241,9 +10241,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 23,
-      "matches": 1
+      "tackles": 1,
+      "minutes": 34,
+      "matches": 2
     },
     "jean michael seri": {
       "display_name": "Jean Michaël Seri",
@@ -10275,8 +10275,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "minutes": 180,
+      "matches": 2
     },
     "ken sema": {
       "display_name": "Ken Sema",
@@ -10330,8 +10330,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 18,
-      "matches": 1
+      "minutes": 26,
+      "matches": 2
     },
     "ozan kabak": {
       "display_name": "Ozan Kabak",
@@ -10451,8 +10451,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 2,
-      "minutes": 90,
-      "matches": 1
+      "minutes": 210,
+      "matches": 2
     },
     "ajdin hrustic": {
       "display_name": "Ajdin Hrustić",
@@ -10460,10 +10460,10 @@
       "goals": 0,
       "assists": 0,
       "shots_on": 0,
-      "key_passes": 2,
+      "key_passes": 4,
       "tackles": 0,
-      "minutes": 32,
-      "matches": 1
+      "minutes": 78,
+      "matches": 2
     },
     "abdoulaye seck": {
       "display_name": "Abdoulaye Seck",
@@ -10660,8 +10660,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 9,
-      "matches": 1
+      "minutes": 18,
+      "matches": 2
     },
     "sergio rochet": {
       "display_name": "Sergio Rochet",
@@ -10704,8 +10704,8 @@
       "shots_on": 1,
       "key_passes": 1,
       "tackles": 0,
-      "minutes": 45,
-      "matches": 1
+      "minutes": 46,
+      "matches": 2
     },
     "mohammad ghorbani": {
       "display_name": "Mohammad Ghorbani",
@@ -10725,9 +10725,9 @@
       "assists": 0,
       "shots_on": 1,
       "key_passes": 1,
-      "tackles": 0,
-      "minutes": 90,
-      "matches": 1
+      "tackles": 3,
+      "minutes": 180,
+      "matches": 2
     },
     "fidel escobar": {
       "display_name": "Fidel Escobar",
@@ -10769,9 +10769,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 63,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 117,
+      "matches": 2
     },
     "jordan henderson": {
       "display_name": "Jordan Henderson",
@@ -10825,8 +10825,8 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 45,
-      "matches": 1
+      "minutes": 54,
+      "matches": 2
     },
     "diogo dalot": {
       "display_name": "Diogo Dalot",
@@ -10835,9 +10835,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 1,
-      "tackles": 1,
-      "minutes": 45,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 64,
+      "matches": 2
     },
     "samu costa": {
       "display_name": "Samú Costa",
@@ -10864,13 +10864,13 @@
     "brian cipenga": {
       "display_name": "Brian Cipenga",
       "team": "DR Congo",
-      "goals": 0,
+      "goals": 1,
       "assists": 0,
-      "shots_on": 0,
-      "key_passes": 0,
-      "tackles": 2,
-      "minutes": 72,
-      "matches": 1
+      "shots_on": 1,
+      "key_passes": 1,
+      "tackles": 4,
+      "minutes": 148,
+      "matches": 2
     },
     "fiston mayele": {
       "display_name": "Fiston Mayele",
@@ -10880,8 +10880,8 @@
       "shots_on": 1,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 48,
-      "matches": 1
+      "minutes": 56,
+      "matches": 2
     },
     "theo bongonda": {
       "display_name": "Théo Bongonda",
@@ -10891,19 +10891,19 @@
       "shots_on": 0,
       "key_passes": 0,
       "tackles": 0,
-      "minutes": 27,
-      "matches": 1
+      "minutes": 41,
+      "matches": 2
     },
     "meschak elia": {
       "display_name": "Meschak Elia",
       "team": "DR Congo",
       "goals": 0,
       "assists": 1,
-      "shots_on": 0,
+      "shots_on": 1,
       "key_passes": 3,
       "tackles": 1,
-      "minutes": 27,
-      "matches": 1
+      "minutes": 53,
+      "matches": 2
     },
     "jamshid iskandarov": {
       "display_name": "Jamshid Iskandarov",
@@ -10956,9 +10956,9 @@
       "assists": 0,
       "shots_on": 0,
       "key_passes": 0,
-      "tackles": 0,
-      "minutes": 45,
-      "matches": 1
+      "tackles": 2,
+      "minutes": 90,
+      "matches": 2
     },
     "amer jamous": {
       "display_name": "Amer Jamous",
@@ -11035,6 +11035,325 @@
       "key_passes": 0,
       "tackles": 1,
       "minutes": 8,
+      "matches": 1
+    },
+    "alphonso davies": {
+      "display_name": "Alphonso Davies",
+      "team": "Canada",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 1,
+      "tackles": 0,
+      "minutes": 22,
+      "matches": 1
+    },
+    "shuto machino": {
+      "display_name": "Shuto Machino",
+      "team": "Japan",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 12,
+      "matches": 1
+    },
+    "nick woltemade": {
+      "display_name": "Nick Woltemade",
+      "team": "Germany",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 1,
+      "minutes": 32,
+      "matches": 1
+    },
+    "gustavo caballero": {
+      "display_name": "Gustavo Caballero",
+      "team": "Paraguay",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 1,
+      "key_passes": 0,
+      "tackles": 4,
+      "minutes": 94,
+      "matches": 2
+    },
+    "braian ojeda": {
+      "display_name": "Braian Ojeda",
+      "team": "Paraguay",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 21,
+      "matches": 1
+    },
+    "fabian balbuena": {
+      "display_name": "Fabián Balbuena",
+      "team": "Paraguay",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "wout weghorst": {
+      "display_name": "Wout Weghorst",
+      "team": "Netherlands",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 1,
+      "tackles": 1,
+      "minutes": 49,
+      "matches": 1
+    },
+    "jorrel hato": {
+      "display_name": "Jorrel Hato",
+      "team": "Netherlands",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 2,
+      "minutes": 34,
+      "matches": 1
+    },
+    "marten de roon": {
+      "display_name": "Marten de Roon",
+      "team": "Netherlands",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 10,
+      "matches": 1
+    },
+    "gustaf nilsson": {
+      "display_name": "Gustaf Nilsson",
+      "team": "Sweden",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "yaimar medina": {
+      "display_name": "Yaimar Medina",
+      "team": "Ecuador",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 45,
+      "matches": 1
+    },
+    "kendry paez": {
+      "display_name": "Kendry Páez",
+      "team": "Ecuador",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 1,
+      "tackles": 0,
+      "minutes": 11,
+      "matches": 1
+    },
+    "diego moreira": {
+      "display_name": "Diego Moreira",
+      "team": "Belgium",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 1,
+      "minutes": 57,
+      "matches": 1
+    },
+    "bara sapoko ndiaye": {
+      "display_name": "Bara Sapoko Ndiaye",
+      "team": "Senegal",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 1,
+      "key_passes": 1,
+      "tackles": 0,
+      "minutes": 24,
+      "matches": 1
+    },
+    "haris tabakovic": {
+      "display_name": "Haris Tabaković",
+      "team": "Bosnia-Herzegovina",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 15,
+      "matches": 1
+    },
+    "marc pubill": {
+      "display_name": "Marc Pubill",
+      "team": "Spain",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "noah okafor": {
+      "display_name": "Noah Okafor",
+      "team": "Switzerland",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 2,
+      "minutes": 19,
+      "matches": 1
+    },
+    "kai trewin": {
+      "display_name": "Kai Trewin",
+      "team": "Australia",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 1,
+      "tackles": 0,
+      "minutes": 75,
+      "matches": 1
+    },
+    "awer mabil": {
+      "display_name": "Awer Mabil",
+      "team": "Australia",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 30,
+      "matches": 1
+    },
+    "mathew ryan": {
+      "display_name": "Mathew Ryan",
+      "team": "Australia",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "haissem hassan": {
+      "display_name": "Haissem Hassan",
+      "team": "Egypt",
+      "goals": 0,
+      "assists": 1,
+      "shots_on": 0,
+      "key_passes": 1,
+      "tackles": 1,
+      "minutes": 126,
+      "matches": 2
+    },
+    "alidu seidu": {
+      "display_name": "Alidu Seidu",
+      "team": "Ghana",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 1,
+      "minutes": 77,
+      "matches": 1
+    },
+    "jayden nelson": {
+      "display_name": "Jayden Nelson",
+      "team": "Canada",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 13,
+      "matches": 1
+    },
+    "marwane saadane": {
+      "display_name": "Marwane Saadane",
+      "team": "Morocco",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 13,
+      "matches": 1
+    },
+    "dan burn": {
+      "display_name": "Dan Burn",
+      "team": "England",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 28,
+      "matches": 1
+    },
+    "borja iglesias": {
+      "display_name": "Borja Iglesias",
+      "team": "Spain",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "maximilian arfsten": {
+      "display_name": "Maximilian Arfsten",
+      "team": "USA",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "axel witsel": {
+      "display_name": "Axel Witsel",
+      "team": "Belgium",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
+      "matches": 1
+    },
+    "yerry mina": {
+      "display_name": "Yerry Mina",
+      "team": "Colombia",
+      "goals": 0,
+      "assists": 0,
+      "shots_on": 0,
+      "key_passes": 0,
+      "tackles": 0,
+      "minutes": 1,
       "matches": 1
     }
   }
