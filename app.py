@@ -433,6 +433,13 @@ with tab1:
     # Styler.background_gradient (it uses .apply, which requires a unique index).
     disp = view[display_cols].rename(columns=COL_MAP).reset_index(drop=True)
 
+    # Hide reach-% columns for rounds everyone shown has already reached (all 100%)
+    # — e.g. R16%/QF% once the field is down to the quarter-finalists. Round-agnostic:
+    # if eliminated players are shown (they read 0%), the column stays informative.
+    for _qc in ["R16%", "QF%", "SF%"]:
+        if _qc in disp.columns and len(disp) and (disp[_qc] >= 0.999).all():
+            disp = disp.drop(columns=_qc)
+
     per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
     per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
     per90_wc   = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
