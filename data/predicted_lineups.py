@@ -29,7 +29,7 @@ PREDICTED_XI: dict[str, list[str]] = {
     ],
     "ESP": [
         "Unai Simón",
-        "Marcos Llorente", "Pau Cubarsí", "Aymeric Laporte", "Marc Cucurella",
+        "Pedro Porro", "Pau Cubarsí", "Aymeric Laporte", "Marc Cucurella",
         "Pedri", "Rodri", "Dani Olmo",
         "Lamine Yamal", "Mikel Oyarzabal", "Álex Baena",
     ],
