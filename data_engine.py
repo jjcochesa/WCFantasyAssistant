@@ -970,16 +970,22 @@ def _assign_minutes(players: list) -> None:
     teams_with_wc = {p.team_code for p in players if (getattr(p, "wc_games", 0) or 0) > 0}
 
     for p in players:
-        # 1. Pre-tournament baseline (predicted XI, else starter_rate).
+        # 1. Manager-supplied XI is AUTHORITATIVE: in the XI -> STARTER_MINUTES,
+        #    everyone else on that team -> BENCH_MINUTES. No blending with past WC
+        #    minutes — the whole point of hand-feeding a lineup is to override the
+        #    rotation history (injuries, tactical switches we know about).
         keys = xi_keys.get(p.team_code)
         if keys is not None:
             in_xi = _match_key(p.name) in keys
-            base_min = float(STARTER_MINUTES) if in_xi else float(BENCH_MINUTES)
-        else:
-            sr = max(0.0, min(1.0, p.starter_rate if p.starter_rate is not None else 1.0))
-            base_min = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
+            p.projected_minutes = float(STARTER_MINUTES) if in_xi else float(BENCH_MINUTES)
+            p.predicted_starter = in_xi
+            continue
 
-        # 2. Overlay real WC minutes when the team has played.
+        # 2. No XI for this team: starter_rate baseline.
+        sr = max(0.0, min(1.0, p.starter_rate if p.starter_rate is not None else 1.0))
+        base_min = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
+
+        # 3. Overlay real WC minutes when the team has played.
         wc_games = getattr(p, "wc_games", 0) or 0
         wc_min   = getattr(p, "wc_minutes", 0) or 0
         if wc_games > 0:

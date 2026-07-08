@@ -1,200 +1,69 @@
 """
-Predicted starting XIs for WC 2026, keyed by 3-letter team code.
+Predicted starting XIs for the WC 2026 QUARTER-FINALS, keyed by 3-letter team code.
 
-Names match the FIFA Fantasy feed (data/fifa_players.json). Used to assign
-projected minutes: a player in the XI is projected ~STARTER_MINUTES, everyone
-else on a team WITH a defined XI gets ~BENCH_MINUTES. Teams not listed here
-fall back to each player's starter_rate from the stats pipeline.
+Names must match the FIFA Fantasy feed (data/fifa_players.json) after
+normalisation — use the exact roster spellings. These XIs are AUTHORITATIVE:
+a player in the XI is projected STARTER_MINUTES, everyone else on a listed team
+gets BENCH_MINUTES (no blending with past WC minutes — the manager's call wins).
+Teams not listed fall back to the stats pipeline (starter_rate + WC minutes).
 
-Add more teams over time — partial coverage is fine.
+User-supplied lineups for MD6 (QF), 08.07.26.
 """
 
-STARTER_MINUTES = 70   # projected minutes for a predicted starter
+STARTER_MINUTES = 80   # projected minutes for a predicted starter
 BENCH_MINUTES   = 20   # projected minutes for a non-starter on a team with a known XI
 
 PREDICTED_XI: dict[str, list[str]] = {
-    "ARG": [
-        "Emiliano Martínez", "Nahuel Molina", "Cristian Romero",
-        "Lisandro Martínez", "Nicolás Tagliafico", "Leandro Paredes",
-        "Enzo Fernández", "Alexis Mac Allister", "Lionel Messi",
-        "Thiago Almada", "Julián Alvarez",
-    ],
-    "ESP": [
-        "Unai Simón", "Marcos Llorente", "Pau Cubarsí", "Aymeric Laporte",
-        "Marc Cucurella", "Rodri", "Pedri", "Fabián Ruiz",
-        "Lamine Yamal", "Nico Williams", "Mikel Oyarzabal",
-    ],
-    "BRA": [
-        "Alisson Becker", "Danilo", "Marquinhos", "Gabriel Magalhães",
-        "Douglas Santos", "Casemiro", "Bruno Guimarães", "Matheus Cunha",
-        "Raphinha", "Vinícius Júnior", "Endrick",
-    ],
-    "GER": [
-        "Manuel Neuer", "Joshua Kimmich", "Jonathan Tah", "Nico Schlotterbeck",
-        "David Raum", "Aleksandar Pavlovic", "Angelo Stiller", "Jamal Musiala",
-        "Leroy Sané", "Florian Wirtz", "Kai Havertz",
-    ],
-    "ENG": [
-        "Jordan Pickford", "Reece James", "Marc Guéhi", "Ezri Konsa",
-        "Nico O'Reilly", "Elliot Anderson", "Declan Rice", "Jude Bellingham",
-        "Bukayo Saka", "Anthony Gordon", "Harry Kane",
-    ],
     "FRA": [
-        "Mike Maignan", "Jules Koundé", "William Saliba", "Dayot Upamecano",
-        "Theo Hernández", "Aurélien Tchouaméni", "N'Golo Kanté", "Rayan Cherki",
-        "Michael Olise", "Ousmane Dembélé", "Kylian Mbappé",
-    ],
-    "NED": [
-        "Bart Verbruggen", "Denzel Dumfries", "Virgil van Dijk",
-        "Micky van de Ven", "Frenkie de Jong", "Ryan Gravenberch",
-        "Tijjani Reijnders", "Donyell Malen", "Cody Gakpo", "Memphis Depay",
-    ],
-    "POR": [
-        "Diogo Costa", "João Cancelo", "Rúben Dias", "Gonçalo Inácio",
-        "Nuno Mendes", "João Neves", "Vitinha", "Bruno Fernandes",
-        "Bernardo Silva", "João Félix", "Cristiano Ronaldo",
+        "Mike Maignan",
+        "Jules Koundé", "Dayot Upamecano", "William Saliba", "Lucas Digne",
+        "Manu Koné", "Adrien Rabiot",
+        "Michael Olise", "Ousmane Dembélé", "Bradley Barcola",
+        "Kylian Mbappé",
     ],
     "MAR": [
-        "Yassine Bounou", "Achraf Hakimi", "Issa Diop", "Nayef Aguerd",
-        "Noussair Mazraoui", "Neil El Aynaoui", "Ismael Saibari", "Bilal El Khannouss",
-        "Brahim Díaz", "Abde Ezzalzouli", "Ayoub El Kaabi",
+        "Yassine Bounou",
+        "Achraf Hakimi", "Issa Diop", "Chadi Riad", "Noussair Mazraoui",
+        "Azzedine Ounahi", "Ayyoub Bouaddi", "Neil El Aynaoui",
+        "Bilal El Khannouss", "Brahim Díaz", "Ismael Saibari",
     ],
-    "COL": [
-        "Camilo Vargas", "Daniel Muñoz", "Dávinson Sánchez", "Jhon Lucumí",
-        "Johan Mojica", "Jefferson Lerma", "James Rodríguez", "Richard Ríos",
-        "Jhon Arias", "Luis Díaz", "Luis Suárez",
-    ],
-    "NOR": [
-        "Ørjan Nyland", "Julian Ryerson", "Kristoffer Ajer", "Torbjørn Heggem",
-        "David Møller Wolfe", "Oscar Bobb", "Sander Berge", "Martin Ødegaard",
-        "Erling Haaland", "Antonio Nusa", "Alexander Sørloth",
-    ],
-    "TUR": [
-        "Ugurcan Çakir", "Zeki Çelik", "Merih Demiral", "Abdülkerim Bardakci",
-        "Ferdi Kadioglu", "Hakan Çalhanoglu", "Ismail Yüksek", "Arda Güler",
-        "Kenan Yildiz", "Baris Alper Yilmaz", "Kerem Aktürkoglu",
+    "ESP": [
+        "Unai Simón",
+        "Marcos Llorente", "Pau Cubarsí", "Aymeric Laporte", "Marc Cucurella",
+        "Pedri", "Rodri", "Dani Olmo",
+        "Lamine Yamal", "Mikel Oyarzabal", "Álex Baena",
     ],
     "BEL": [
-        # 12-man: De Ketelaere competes with Trossard — both project at starter minutes
-        "Thibaut Courtois", "Thomas Meunier", "Brandon Mechele", "Zeno Debast",
-        "Maxim De Cuyper", "Youri Tielemans", "Amadou Onana", "Kevin De Bruyne",
-        "Leandro Trossard", "Charles De Ketelaere", "Romelu Lukaku", "Jérémy Doku",
+        "Thibaut Courtois",
+        "Timothy Castagne", "Brandon Mechele", "Nathan Ngoy", "Maxim De Cuyper",
+        "Youri Tielemans", "Kevin De Bruyne", "Hans Vanaken",
+        "Jérémy Doku", "Charles De Ketelaere", "Leandro Trossard",
     ],
-    "AUT": [
-        "Alexander Schlager", "Konrad Laimer", "Kevin Danso", "David Alaba",
-        "Phillipp Mwene", "Xaver Schlager", "Nicolas Seiwald", "Marcel Sabitzer",
-        "Marko Arnautovic", "Patrick Wimmer",
+    "ENG": [
+        "Jordan Pickford",
+        "Djed Spence", "Ezri Konsa", "Marc Guéhi", "Nico O'Reilly",
+        "Elliot Anderson", "Declan Rice", "Jude Bellingham",
+        "Bukayo Saka", "Harry Kane", "Anthony Gordon",
+    ],
+    "NOR": [
+        # Only 10 names supplied for the QF — 11th starter TBC.
+        "Ørjan Nyland",
+        "Julian Ryerson", "Kristoffer Ajer", "Torbjørn Heggem",
+        "Patrick Berg", "Sander Berge",
+        "Martin Ødegaard", "Oscar Bobb",
+        "Erling Haaland", "Antonio Nusa",
+    ],
+    "ARG": [
+        "Emiliano Martínez",
+        "Nahuel Molina", "Cristian Romero", "Lisandro Martínez", "Nicolás Tagliafico",
+        "Leandro Paredes", "Rodrigo De Paul", "Alexis Mac Allister", "Enzo Fernández",
+        "Lionel Messi", "Julián Alvarez",
     ],
     "SUI": [
-        "Gregor Kobel", "Silvan Widmer", "Nico Elvedi", "Manuel Akanji",
-        "Ricardo Rodríguez", "Granit Xhaka", "Dan Ndoye", "Breel Embolo",
-        "Remo Freuler", "Rubén Vargas", "Noah Okafor",
-    ],
-    "SCO": [
-        # 14-man: high uncertainty in attack/midfield selection
-        "Angus Gunn", "Nathan Patterson", "Grant Hanley", "Scott McKenna",
-        "Andy Robertson", "Lewis Ferguson", "Scott McTominay",
-        "John McGinn", "Ben Gannon-Doak", "Ryan Christie",
-        "Lyndon Dykes", "Ché Adams", "Lawrence Shankland",
-    ],
-    "URU": [
-        "Sergio Rochet", "Guillermo Varela", "Ronald Araujo", "José María Giménez",
-        "Mathías Olivera", "Agustín Canobbio", "Federico Valverde", "Manuel Ugarte",
-        "Maxi Araújo", "Giorgian de Arrascaeta", "Federico Viñas",
-    ],
-    "ECU": [
-        "Hernán Galíndez", "Ángelo Preciado", "Piero Hincapié", "Willian Pacho", "Pervis Estupiñán",
-        "Moisés Caicedo", "John Yeboah", "Kendry Páez",
-        "Gonzalo Plata", "Nilson Angulo", "Enner Valencia",
-    ],
-    "CZE": [
-        "Tomas Kovar",
-        "Vladimir Coufal", "Ladislav Krejci", "Tomas Holes", "Robin Hranac", "Jan Zeleny",
-        "Tomas Soucek", "Lukas Provod",
-        "Tomas Sulc", "Tomas Chory", "Patrik Schick",
-    ],
-    "RSA": [
-        "Ronwen Williams",
-        "Sifiso Modiba", "Granwald Scott", "Nkosinathi Sibisi", "Khuliso Mudau",
-        "Bathusi Sithole", "Teboho Mokoena",
-        "Lyle Foster", "Elias Mokwana", "Iqraam Rayners", "Themba Zwane",
-    ],
-    "KOR": [
-        "Jo Hyeon-woo",
-        "Lee Han-beom", "Kim Min-jae",
-        "Jens Castrop", "Hwang In-beom", "Lee Jae-sung", "Seol Young-woo",
-        "Son Heung-min", "Oh Hyeon-gyu", "Lee Kang-in",
-    ],
-    "MEX": [
-        "Luis Malagon",
-        "Jesus Gallardo", "Johan Vasquez", "Cesar Montes", "Jorge Sanchez",
-        "Edson Alvarez", "Luis Romo", "Roberto Alvarado",
-        "Uriel Antuna", "Raul Jimenez", "Chucky Lozano",
-    ],
-    "EGY": [
-        "Shobeir",
-        "Karim Hafez", "Rami Abdelmonem", "Omar Ibrahim", "Ahmed Hany",
-        "Fathy", "Amr Attia",
-        "Trezeguet", "Zizo",
-        "Mohamed Salah", "Omar Marmoush",
-    ],
-    "SWE": [
-        "Nordfeldt",
-        "Gudmundsson", "Victor Lindelöf", "Isak Hien", "Lagerbielke",
-        "Bernhardsson", "Jesper Karlström", "Williot Ayari",
-        "Nygren",
-        "Alexander Isak", "Viktor Gyökeres",
-    ],
-    "USA": [
-        "Freese",
-        "Antonee Robinson", "Tim Ream", "Chris Richards", "Freeman", "Sergiño Dest",
-        "Weston McKennie", "Tyler Adams",
-        "Christian Pulisic",
-        "Folarin Balogun", "Timothy Weah",
-    ],
-    "SEN": [
-        "Édouard Mendy",
-        "Diouf", "Kalidou Koulibaly", "Niakhité", "Krepin Diatta",
-        "Lamine Diarra", "Pape Gueye", "Idrissa Gueye",
-        "Sadio Mané", "Nicolas Jackson", "Iliman Ndiaye",
-    ],
-    "CAN": [
-        "Maxime Crépeau",
-        "Lareya", "De Fougerolles", "Derek Cornelius", "Alistair Johnston",
-        "Liam Millar", "Manu Estaquio", "Koné", "Tajon Buchanan",
-        "Jonathan David", "Cyle Larin",
-    ],
-    "CRO": [
-        # 12-man: Musa and Budimir compete for the striker slot
-        "Dominik Livaković",
-        "Stanicic", "Josip Šutalo", "Joško Gvardiol", "Mario Vušković",
-        "Luka Modrić", "Mateo Kovačić", "Petar Sučić", "Martin Baturina", "Luka Sučić",
-        "Petar Musa", "Ante Budimir",
-    ],
-    "CIV": [
-        "Yahia Fofana",
-        "Ghislain Konan", "Evan Ndicka", "Ousmane Diomandé", "Wilfried Singo",
-        "Franck Kessié", "Ibrahim Sangaré", "Seko Fofana",
-        "Simon Adingra", "Yan Bonny", "Amad Diallo",
-    ],
-    "JPN": [
-        "Zion Suzuki",
-        "Takehiro Tomiyasu", "Ko Itakura", "Hiroki Ito", "Ritsu Doan",
-        "Daizen Maeda", "Daichi Kamada", "Kaishu Sano",
-        "Junya Ito", "Ayase Ueda", "Takefusa Kubo",
-    ],
-    "ALG": [
-        "Zidane",
-        "Rayan Aït-Nouri", "Ramy Bensebaini", "Aïssa Mandi", "Belghali",
-        "Ramiz Zerrouki", "Adam Boudaoui",
-        "Farès Chaïbi", "Maza", "Riyad Mahrez",
-        "Amine Gouiri",
-    ],
-    "GHA": [
-        "Lawrence Ati-Zigi",
-        "Gideon Mensah", "Peprah Oppong", "Alidu Seidu",
-        "Thomas Partey", "Sibo",
-        "Antoine Semenyo", "Abdul Fatawu",
-        "Jordan Ayew", "Iñaki Williams",
+        "Gregor Kobel",
+        "Denis Zakaria", "Manuel Akanji", "Nico Elvedi", "Ricardo Rodríguez",
+        "Remo Freuler", "Granit Xhaka",
+        "Rubén Vargas", "Johan Manzambi",
+        "Breel Embolo", "Dan Ndoye",
     ],
 }
