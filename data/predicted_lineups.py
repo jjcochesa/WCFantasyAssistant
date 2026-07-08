@@ -46,9 +46,8 @@ PREDICTED_XI: dict[str, list[str]] = {
         "Bukayo Saka", "Harry Kane", "Anthony Gordon",
     ],
     "NOR": [
-        # Only 10 names supplied for the QF — 11th starter TBC.
         "Ørjan Nyland",
-        "Julian Ryerson", "Kristoffer Ajer", "Torbjørn Heggem",
+        "Julian Ryerson", "Kristoffer Ajer", "Torbjørn Heggem", "David Møller Wolfe",
         "Patrick Berg", "Sander Berge",
         "Martin Ødegaard", "Oscar Bobb",
         "Erling Haaland", "Antonio Nusa",
