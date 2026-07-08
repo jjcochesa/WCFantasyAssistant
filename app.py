@@ -8,7 +8,8 @@ import data_engine as _de
 from data_engine import load_data, fetch_live_player_data, _norm_name, _match_key
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
-    MAX_PER_COUNTRY_GROUP, SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
+    MAX_PER_COUNTRY_GROUP, MAX_PER_COUNTRY_KNOCKOUT,
+    SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
 )
 from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
@@ -71,7 +72,7 @@ with st.sidebar:
     st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
     st.divider()
     budget = st.number_input("Your budget ($m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
-    country_cap = st.slider("Max players per country", 1, 5, MAX_PER_COUNTRY_GROUP)
+    country_cap = st.slider("Max players per country", 1, 10, MAX_PER_COUNTRY_KNOCKOUT)
 
     load_btn = st.button("Load / Refresh Data", type="primary", use_container_width=True)
 
@@ -641,7 +642,7 @@ with tab4:
 
     b1, b2, b3 = st.columns(3)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
-    build_cap     = b2.slider("Max per country", 1, 5, country_cap, key="build_cap")
+    build_cap     = b2.slider("Max per country", 1, 10, country_cap, key="build_cap")
     exclude_mex   = b3.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):
