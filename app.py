@@ -636,7 +636,8 @@ CS probability from FPLJoe bookie markets overrides historical CS rate in the mo
 with tab4:
     st.subheader("Build Your Best Squad")
 
-    st.caption(f"Optimised for the upcoming round ({CURRENT_ROUND}).")
+    st.caption(f"Optimised for the upcoming round ({CURRENT_ROUND}). "
+               "Pool = predicted starters on teams still in the tournament.")
 
     b1, b2, b3 = st.columns(3)
     build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
@@ -644,7 +645,16 @@ with tab4:
     exclude_mex   = b3.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):
-        build_df = df[df["team_code"] != "MEX"].copy() if exclude_mex else df.copy()
+        # Only pick from viable players: teams still in the tournament (eliminated
+        # teams score 0 and were being grabbed as cheap fillers) and predicted
+        # starters (bench players sit at 20' — don't build a squad around them).
+        build_df = df.copy()
+        if "in_round" in build_df.columns:
+            build_df = build_df[build_df["in_round"]]
+        if "predicted_starter" in build_df.columns:
+            build_df = build_df[build_df["predicted_starter"]]
+        if exclude_mex:
+            build_df = build_df[build_df["team_code"] != "MEX"]
         squad = _greedy_squad(build_df, build_budget, "xPts_GS", build_cap)
         if squad is None or squad.empty:
             st.error("Could not fill squad within budget. Try increasing budget or country cap.")
