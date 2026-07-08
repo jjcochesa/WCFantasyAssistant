@@ -324,6 +324,11 @@ def _get(endpoint: str, params: dict, cache: dict, key: str, headers: dict,
                 print(f"  Rate-limited — waiting {w}s..."); time.sleep(w); continue
             r.raise_for_status()
             data = r.json()
+            # HTTP 200 can still carry account errors (quota/plan/key) with an
+            # empty response list — surface them instead of failing silently.
+            errs = data.get("errors")
+            if errs:
+                print(f"  [API errors] {errs}")
             _REQS += 1
             cache[key] = data
             _save_cache(cache)

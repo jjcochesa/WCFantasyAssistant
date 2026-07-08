@@ -91,6 +91,12 @@ def _get(endpoint: str, params: dict, cache: dict, key: str, headers: dict,
                 continue
             r.raise_for_status()
             data = r.json()
+            # API-Football signals account problems (daily quota, plan, bad key)
+            # with HTTP 200 + an "errors" payload and an empty response list —
+            # surface it, otherwise the run just looks mysteriously empty.
+            errs = data.get("errors")
+            if errs:
+                print(f"  [API errors] {errs}")
             _REQUESTS_MADE += 1
             cache[key] = data
             _save_cache(cache)
