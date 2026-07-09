@@ -20,7 +20,7 @@ Sources:
 # Label for the round currently being projected (display only)
 # Quarter-finals (MD6). All 4 QF matches are set — 8 teams left, no pending games.
 CURRENT_ROUND = "QF"
-CURRENT_ROUND_DATE = "08.07.26"
+CURRENT_ROUND_DATE = "09.07.26"
 
 # Group assignments
 GROUPS = {
