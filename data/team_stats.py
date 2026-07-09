@@ -62,16 +62,16 @@ FIXTURES = {
     "ARG": "SUI", "SUI": "ARG",   # Sun 12.07
 }
 
-# Projected goals for the QF match — FPLJoe MD6 (08.07.26). The 8 QF teams.
+# Projected goals for the QF match — FPLJoe MD6 (09.07.26, deadline refresh). 8 QF teams.
 PROJ_GOALS = {
-    "FRA": 1.97, "MAR": 0.91, "ESP": 2.06, "BEL": 0.98,
-    "NOR": 1.26, "ENG": 1.93, "ARG": 1.71, "SUI": 0.88,
+    "FRA": 1.93, "MAR": 0.88, "ESP": 2.03, "BEL": 1.03,
+    "NOR": 1.24, "ENG": 1.92, "ARG": 1.76, "SUI": 0.83,
 }
 
 # Clean sheet probability for the QF match — FPLJoe MD6.
 CS_PCT = {
-    "FRA": 0.42, "MAR": 0.13, "ESP": 0.39, "BEL": 0.12,
-    "NOR": 0.15, "ENG": 0.3, "ARG": 0.42, "SUI": 0.17,
+    "FRA": 0.43, "MAR": 0.13, "ESP": 0.37, "BEL": 0.12,
+    "NOR": 0.15, "ENG": 0.31, "ARG": 0.45, "SUI": 0.16,
 }
 
 # FDR for the QF match (1=easiest, 5=hardest).
@@ -103,22 +103,22 @@ GROUP_BALANCE = {
 # qf=1.0). QF matches use MD6 odds; SF + Final use the calibrated Elo
 # (KO_VARIANCE_K). See EXP_GAMES for expected remaining matches.
 QUAL_PROBS: dict[str, dict] = {
-    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.7266, "f": 0.3903},
-    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.2734, "f": 0.0934},
-    "ESP": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.725, "f": 0.3971},
-    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.275, "f": 0.1191},
-    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.3579, "f": 0.1226},
-    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.6421, "f": 0.3031},
-    "ARG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.6886, "f": 0.4388},
-    "SUI": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.3114, "f": 0.1354},
+    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.7262, "f": 0.3908},
+    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.2738, "f": 0.0946},
+    "ESP": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.71, "f": 0.3896},
+    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.29, "f": 0.125},
+    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.3567, "f": 0.1199},
+    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.6433, "f": 0.3006},
+    "ARG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.7104, "f": 0.4536},
+    "SUI": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.2897, "f": 0.1259},
 }
 
 # Expected REMAINING matches per team from the same Monte-Carlo (next guaranteed
 # game + every round they're simulated to advance to). Used for tournament_xpts
 # instead of summing QUAL_PROBS, so already-played rounds aren't double-counted.
 EXP_GAMES: dict[str, float] = {
-    "FRA": 2.117, "MAR": 1.367, "ESP": 2.122, "BEL": 1.394,
-    "NOR": 1.481, "ENG": 1.945, "ARG": 2.127, "SUI": 1.447,
+    "FRA": 2.117, "MAR": 1.368, "ESP": 2.1, "BEL": 1.415,
+    "NOR": 1.477, "ENG": 1.944, "ARG": 2.164, "SUI": 1.416,
 }
 
 import math as _math
