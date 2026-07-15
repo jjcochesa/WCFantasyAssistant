@@ -32,7 +32,7 @@ import requests
 
 BASE  = "https://v3.football.api-sports.io"
 DELAY = 2.2          # seconds between calls (free tier: 30 req/min)
-WC_LEAGUE_ID = 1     # FIFA World Cup 2026
+WC_LEAGUE_ID = 1     # FIFA World Cup (default; --league 2 = Champions League)
 WC_SEASON    = 2026
 
 # API-Football team names → our canonical names (data/team_stats.py TEAM_NAMES)
@@ -113,11 +113,11 @@ def _get(endpoint: str, params: dict, cache: dict, key: str, headers: dict,
 
 # ── Step 1: list finished WC fixtures ────────────────────────────────────────
 
-def get_finished_fixtures(cache: dict, headers: dict) -> list[dict]:
-    """Fetch the full WC fixture list fresh each run (so newly-finished games show up)."""
-    print("Step 1/2 — Fetching WC 2026 fixtures...")
-    data = _get("fixtures", {"league": WC_LEAGUE_ID, "season": WC_SEASON},
-                cache, "wc_fixtures_live", headers, allow_cache=False)
+def get_finished_fixtures(cache: dict, headers: dict, league: int, season: int) -> list[dict]:
+    """Fetch the full fixture list fresh each run (so newly-finished games show up)."""
+    print(f"Step 1/2 — Fetching league {league} season {season} fixtures...")
+    data = _get("fixtures", {"league": league, "season": season},
+                cache, f"fixtures_live_{league}_{season}", headers, allow_cache=False)
     finished = []
     for fix in data.get("response", []):
         fixture = fix.get("fixture", {})
@@ -181,12 +181,25 @@ def main():
                         help="Re-pull player stats for ALL finished fixtures, bypassing the "
                              "per-fixture cache. Use once per round to correct any fixtures "
                              "that were cached before the API finished updating minutes.")
+    parser.add_argument("--league", type=int, default=WC_LEAGUE_ID,
+                        help="API-Football league id (1 = World Cup, 2 = Champions League)")
+    parser.add_argument("--season", type=int, default=WC_SEASON,
+                        help="Season year (UCL 2026-27 = 2026)")
+    parser.add_argument("--out", default=None,
+                        help="Output JSON path (default: data/wc_stats.json for league 1, "
+                             "data/ucl_stats.json for league 2)")
     args = parser.parse_args()
+
+    global OUTPUT
+    if args.out:
+        OUTPUT = args.out
+    elif args.league == 2:
+        OUTPUT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "data", "ucl_stats.json"))
 
     headers = {"x-apisports-key": args.key}
     cache   = _load_cache()
 
-    fixtures = get_finished_fixtures(cache, headers)
+    fixtures = get_finished_fixtures(cache, headers, args.league, args.season)
     if not fixtures:
         print("No finished WC fixtures yet — nothing to do.")
         sys.exit(0)

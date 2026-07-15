@@ -1,4 +1,4 @@
-"""FIFA World Cup Fantasy 2026 Assistant — Streamlit App"""
+"""UCL Fantasy Assistant — Streamlit App (WC 2026 mode active until the final)"""
 import os
 import datetime
 import streamlit as st
@@ -18,7 +18,7 @@ from data.team_stats import (
 )
 
 st.set_page_config(
-    page_title="WC Fantasy 2026",
+    page_title="UCL Fantasy Assistant",
     page_icon="⚽",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -37,8 +37,8 @@ except Exception:
 
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.title("⚽ WC Fantasy 2026")
-    st.caption("Official FIFA World Cup Fantasy assistant")
+    st.title("⚽ UCL Fantasy Assistant")
+    st.caption("UEFA Champions League Fantasy — WC 2026 mode until the final")
 
     # Player list always loads from the maintained wc_squads.json (instant).
     # Live prices + ownership are overlaid from the FIFA Fantasy API separately.
