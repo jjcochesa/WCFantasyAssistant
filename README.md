@@ -57,9 +57,10 @@ one-round-at-a-time cadence this tool already uses.
 - [ ] `data/team_stats.py` → UCL teams after the league-phase draw (late August)
 - [ ] League-phase qualification model: P(top-8), P(9–24 playoff), P(25+ out)
       from a league-table Monte-Carlo over the 8 fixtures
-- [ ] UEFA scoring rules in `scoring_rules.py` (points per goal/assist/CS by
-      position, plus UCL-specific boosters)
-- [ ] Squad rules: budget, per-club cap, transfer allowances between MDs
+- [x] UEFA scoring rules in `scoring_rules.py` (goal 6/6/5/4, assist 3,
+      CS 4/4/1, −1 per 2 conceded, recoveries via tackles proxy)
+- [x] Squad rules: €105m budget, per-club cap by stage (3 league → 11 final);
+      transfer allowances TBC from the in-game rules when 26-27 opens
 - [ ] Rename repo → `UCLFantasyAssistant` (GitHub Settings → General → Rename;
       old URLs auto-redirect, then `git remote set-url origin
       https://github.com/jjcochesa/UCLFantasyAssistant.git`)
