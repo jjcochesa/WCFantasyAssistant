@@ -1,4 +1,4 @@
-"""UCL Fantasy Assistant — Streamlit App (WC 2026 mode active until the final)"""
+"""UCL Fantasy Assistant — Streamlit App"""
 import os
 import datetime
 import streamlit as st
@@ -14,7 +14,7 @@ from scoring_rules import (
 from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
     get_team_fdr, get_next_opponent, get_team_xg, get_team_cs,
-    get_qual_probs,
+    get_qual_probs, has_round_data as _ts_has_round_data,
 )
 
 st.set_page_config(
@@ -38,7 +38,7 @@ except Exception:
 # ── Sidebar ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.title("⚽ UCL Fantasy Assistant")
-    st.caption("UEFA Champions League Fantasy — WC 2026 mode until the final")
+    st.caption("Official UEFA Champions League Fantasy assistant")
 
     # Player list always loads from the maintained wc_squads.json (instant).
     # Live prices + ownership are overlaid from the FIFA Fantasy API separately.
@@ -71,8 +71,8 @@ with st.sidebar:
     st.divider()
     st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
     st.divider()
-    budget = st.number_input("Your budget ($m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
-    country_cap = st.slider("Max players per country", 1, 10, MAX_PER_COUNTRY_KNOCKOUT)
+    budget = st.number_input("Your budget (€m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
+    country_cap = st.slider("Max players per club", 1, 11, MAX_PER_COUNTRY_GROUP)
 
     load_btn = st.button("Load / Refresh Data", type="primary", use_container_width=True)
 
@@ -162,6 +162,14 @@ if df is None or df.empty:
     st.info("👈 Click **Load / Refresh Data** to get started.")
     st.stop()
 
+# Awaiting-draw banner: team data for the upcoming round isn't loaded yet.
+if not _ts_has_round_data():
+    st.warning(
+        f"**Awaiting {CURRENT_ROUND} team data.** The league-phase draw / fixture "
+        "board hasn't been wired into `data/team_stats.py` yet, so projections "
+        "read zero. Player pool, prices and per-90 stats still load normally."
+    )
+
 # Sidebar live data status badge
 with live_status_placeholder:
     if st.session_state.live_refreshed_at:
@@ -176,10 +184,10 @@ st.divider()
 
 # ── Helper for display ────────────────────────────────────────────────────────
 SORT_LABELS = {
-    "xPts group stage total": "xPts_GS",
+    "Projected points (this round)": "xPts_GS",
     "xPts per game": "xPts/game",
     "Value (xPts/$m)": "value",
-    "Tournament xPts (all rounds)": "tournament_xpts",
+    "Tournament xPts (all remaining rounds)": "tournament_xpts",
     "Ownership %": "own_%",
     "Price": "price",
 }
@@ -401,6 +409,8 @@ with tab1:
         "xPts_GS":          "Proj Pts",
         "adj_total":        "Adj Pts",
         "tournament_xpts":  "Tourn xPts",
+        "top8_pct":         "Top8%",
+        "po_pct":           "PO%",
         "r16_pct":          "R16%",
         "qf_pct":           "QF%",
         "sf_pct":           "SF%",
@@ -437,7 +447,7 @@ with tab1:
     # Hide reach-% columns for rounds everyone shown has already reached (all 100%)
     # — e.g. R16%/QF% once the field is down to the quarter-finalists. Round-agnostic:
     # if eliminated players are shown (they read 0%), the column stays informative.
-    for _qc in ["R16%", "QF%", "SF%"]:
+    for _qc in ["Top8%", "PO%", "R16%", "QF%", "SF%"]:
         if _qc in disp.columns and len(disp) and (disp[_qc] >= 0.999).all():
             disp = disp.drop(columns=_qc)
 
@@ -454,7 +464,8 @@ with tab1:
     pct_cols   = [c for c in ["CS%"] if c in disp.columns]
     xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
 
-    qual_pct_cols = [c for c in ["R16%", "QF%", "SF%", "Final%"] if c in disp.columns]
+    qual_pct_cols = [c for c in ["Top8%", "PO%", "R16%", "QF%", "SF%", "Final%"]
+                     if c in disp.columns]
     qual_xpts_cols = [c for c in ["Tourn xPts"] if c in disp.columns]
 
     fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'",
@@ -641,8 +652,8 @@ with tab4:
                "Pool = predicted starters on teams still in the tournament.")
 
     b1, b2, b3 = st.columns(3)
-    build_budget  = b1.number_input("Budget ($m)", 50.0, 120.0, budget, 0.5, key="build_b")
-    build_cap     = b2.slider("Max per country", 1, 10, country_cap, key="build_cap")
+    build_budget  = b1.number_input("Budget (€m)", 50.0, 120.0, budget, 0.5, key="build_b")
+    build_cap     = b2.slider("Max per club", 1, 11, country_cap, key="build_cap")
     exclude_mex   = b3.toggle("Exclude MEX", value=True, key="build_excl_mex")
 
     if st.button("Build Optimal Squad", type="primary"):

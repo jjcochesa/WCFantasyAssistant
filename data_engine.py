@@ -1106,7 +1106,6 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
         proj_xg  = round(getattr(p, "_proj_xg", 0.0), 3)
 
         qp = get_qual_probs(p.team_code)
-        xpts_r32 = round(p.xpts_group_stage * qp["r32"], 3)
         exp_games = get_expected_games(p.team_code)
         tournament_xpts = round(p.xpts_per_match * exp_games, 2)
 
@@ -1125,14 +1124,14 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "xPts_GS": p.xpts_group_stage,
             "value": p.value,
             "scout": p.scout_flag,
-            # Qualification probabilities
-            "r32_pct": round(qp["r32"], 3),
-            "r16_pct": round(qp["r16"], 3),
-            "qf_pct":  round(qp["qf"],  3),
-            "sf_pct":  round(qp["sf"],  3),
-            "f_pct":   round(qp["f"],   3),
+            # Qualification probabilities (UCL: top-8 skips the playoff)
+            "top8_pct": round(qp["top8"], 3),
+            "po_pct":   round(qp["po"],   3),
+            "r16_pct":  round(qp["r16"],  3),
+            "qf_pct":   round(qp["qf"],   3),
+            "sf_pct":   round(qp["sf"],   3),
+            "f_pct":    round(qp["f"],    3),
             "exp_games":      exp_games,
-            "xPts_R32":       xpts_r32,
             "tournament_xpts": tournament_xpts,
             # Upcoming-match display columns
             "proj_xg":     proj_xg,

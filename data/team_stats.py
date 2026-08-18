@@ -1,125 +1,125 @@
 """
-Hardcoded team-level data for WC 2026 — SINGLE upcoming match at a time.
+Team-level data for the UEFA Champions League Fantasy assistant.
 
-From the group stage MD2 onward the model projects only the next round for each
-team, then we wipe and refresh for the following round (MD2 → MD3 → R32 → R16 →
-QF → SF → Final). Each round you send fresh CS% / xG and we swap the single
-value per team below.
+One round at a time: we fill the dicts below for the upcoming matchday, the app
+projects it, then we wipe and refresh for the next one
+(MD1 … MD8 → PO → R16 → QF → SF → Final).
 
 Sources:
-  - Projected goals & CS% (R32): FPLJoe.com via SBOBET & Betfair Exchange markets
-    (the 32 qualified teams direct — no Poisson derivation)
-  - FDR (1=easiest, 5=hardest): derived from opponent threat = avg(opp_xGF, opp_CS%)
-    banded into 5 tiers, consistent with FPLJoe PELE colour bands
-  - QUAL_PROBS: 200k Monte-Carlo of the locked bracket. R32 advance prob is exact
-    (Poisson on the two FPLJoe lambdas per match); R16+ use a bookmaker-derived
-    attack/defence proxy. INTERIM — replace with the Elo-based build_r32.py output.
-  - Fixtures from the official WC 2026 Round-of-32 bracket
+  - Projected goals & CS%: bookmaker-derived boards (FPLJoe-style) or
+    scripts/build_r32.py (odds → de-vig → Poisson lambdas)
+  - FDR (1=easiest, 5=hardest): opponent threat = avg(opp_xGF, opp_CS%),
+    banded into 5 tiers
+  - QUAL_PROBS: Monte-Carlo — scripts/build_league_phase.py for the league
+    phase, bracket sim for the knockouts
+  - Fixtures from the official UEFA calendar
+
+STATUS: awaiting the 2026-27 league-phase draw (late August). The team dicts are
+intentionally empty — the app shows an "awaiting draw" state until they're
+filled. Nothing here is World Cup data any more; that lives in git history.
 """
 
+# ── Competition calendar ──────────────────────────────────────────────────────
+
 # Label for the round currently being projected (display only)
-# Quarter-finals (MD6). All 4 QF matches are set — 8 teams left, no pending games.
-CURRENT_ROUND = "QF"
-CURRENT_ROUND_DATE = "09.07.26"
+CURRENT_ROUND = "MD1"
+CURRENT_ROUND_DATE = "TBC"
 
-# Group assignments
-GROUPS = {
-    "A": ["MEX", "KOR", "CZE", "RSA"],
-    "B": ["SUI", "CAN", "QAT", "BIH"],
-    "C": ["BRA", "MAR", "SCO", "HAI"],
-    "D": ["USA", "TUR", "AUS", "PAR"],
-    "E": ["GER", "ECU", "CIV", "CUW"],
-    "F": ["NED", "JPN", "SWE", "TUN"],
-    "G": ["BEL", "IRN", "EGY", "NZL"],
-    "H": ["ESP", "URU", "KSA", "CPV"],
-    "I": ["FRA", "SEN", "NOR", "IRQ"],
-    "J": ["ARG", "AUT", "ALG", "JOR"],
-    "K": ["POR", "COL", "COD", "UZB"],
-    "L": ["ENG", "CRO", "GHA", "PAN"],
-}
+LEAGUE_MATCHDAYS = 8          # single 36-team league table, 8 games each
+LEAGUE_TEAMS = 36
 
-# Full team name mapping
+# Every stage in order. The league phase is a single table; from PO onward it's
+# a bracket.
+STAGES = ["MD1", "MD2", "MD3", "MD4", "MD5", "MD6", "MD7", "MD8",
+          "PO", "R16", "QF", "SF", "F"]
+
+# Two-legged ties — each is TWO fantasy matchdays, which doubles the scoring
+# opportunities for teams that reach them (matters for EXP_GAMES / Tourn xPts).
+TWO_LEGGED = {"PO", "R16", "QF", "SF"}
+
+# League-phase finishing positions → what they earn
+QUALIFY_DIRECT_R16 = (1, 8)    # positions 1-8 skip the playoff
+QUALIFY_PLAYOFF    = (9, 24)   # positions 9-24 play the two-legged playoff
+ELIMINATED_FROM    = 25        # 25-36 are out
+
+
+def stage_legs(stage: str) -> int:
+    """How many matches a team plays in this stage (2 for two-legged ties)."""
+    return 2 if stage in TWO_LEGGED else 1
+
+
+def is_league_phase(stage: str = None) -> bool:
+    return (stage or CURRENT_ROUND).startswith("MD")
+
+
+# ── Clubs ─────────────────────────────────────────────────────────────────────
+
+# Reference pool of club codes → names. This is a superset of likely
+# participants so the codes are stable across seasons; prune to the actual 36
+# once the draw is made.
 TEAM_NAMES = {
-    "ESP": "Spain", "GER": "Germany", "BRA": "Brazil", "FRA": "France",
-    "POR": "Portugal", "ENG": "England", "ARG": "Argentina", "BEL": "Belgium",
-    "SUI": "Switzerland", "NED": "Netherlands", "MEX": "Mexico", "NOR": "Norway",
-    "URU": "Uruguay", "COL": "Colombia", "AUT": "Austria", "USA": "USA",
-    "CAN": "Canada", "ECU": "Ecuador", "MAR": "Morocco", "CRO": "Croatia",
-    "TUR": "Turkey", "CIV": "Ivory Coast", "JPN": "Japan", "EGY": "Egypt",
-    "SEN": "Senegal", "SCO": "Scotland", "CZE": "Czech Republic", "KOR": "South Korea",
-    "SWE": "Sweden", "ALG": "Algeria", "PAR": "Paraguay", "IRN": "Iran",
-    "BIH": "Bosnia-Herzegovina", "GHA": "Ghana", "AUS": "Australia", "RSA": "South Africa",
-    "TUN": "Tunisia", "COD": "DR Congo", "UZB": "Uzbekistan", "PAN": "Panama",
-    "KSA": "Saudi Arabia", "NZL": "New Zealand", "CPV": "Cape Verde",
-    "QAT": "Qatar", "JOR": "Jordan", "HAI": "Haiti", "IRQ": "Iraq", "CUW": "Curacao",
+    # England
+    "MCI": "Manchester City", "LIV": "Liverpool", "ARS": "Arsenal",
+    "CHE": "Chelsea", "TOT": "Tottenham", "NEW": "Newcastle", "AVL": "Aston Villa",
+    # Spain
+    "RMA": "Real Madrid", "BAR": "Barcelona", "ATM": "Atlético Madrid",
+    "ATH": "Athletic Club", "VIL": "Villarreal", "BET": "Real Betis",
+    # Germany
+    "BAY": "Bayern München", "DOR": "Borussia Dortmund", "LEV": "Bayer Leverkusen",
+    "RBL": "RB Leipzig", "STU": "Stuttgart", "FRA": "Eintracht Frankfurt",
+    # Italy
+    "INT": "Inter", "MIL": "AC Milan", "JUV": "Juventus", "NAP": "Napoli",
+    "ATA": "Atalanta", "ROM": "Roma",
+    # France
+    "PSG": "Paris Saint-Germain", "MON": "Monaco", "MAR": "Marseille",
+    "LIL": "Lille", "LYO": "Lyon",
+    # Portugal / Netherlands / Belgium
+    "BEN": "Benfica", "POR": "Porto", "SPO": "Sporting CP",
+    "AJA": "Ajax", "PSV": "PSV", "FEY": "Feyenoord", "CLB": "Club Brugge",
+    # Rest of Europe
+    "CEL": "Celtic", "GAL": "Galatasaray", "FEN": "Fenerbahçe",
+    "RBS": "RB Salzburg", "SHK": "Shakhtar Donetsk", "SLP": "Slavia Praha",
+    "DZG": "Dinamo Zagreb", "OLY": "Olympiacos", "STE": "Sturm Graz",
+    "BSC": "Young Boys", "COP": "Copenhagen", "BOD": "Bodø/Glimt",
 }
 
-# Next opponent (3-letter code) — Quarter-finals (the 4 locked matches).
-FIXTURES = {
-    "FRA": "MAR", "MAR": "FRA",   # Thu 09.07
-    "ESP": "BEL", "BEL": "ESP",   # Fri 10.07
-    "NOR": "ENG", "ENG": "NOR",   # Sat 11.07
-    "ARG": "SUI", "SUI": "ARG",   # Sun 12.07
-}
+# Draw pots (1-4). Filled at the draw — used for the "pot" label in the UI and
+# as a coarse strength prior before any results exist.
+POTS: dict[int, list[str]] = {1: [], 2: [], 3: [], 4: []}
 
-# Projected goals for the QF match — FPLJoe MD6 (09.07.26, deadline refresh). 8 QF teams.
-PROJ_GOALS = {
-    "FRA": 1.93, "MAR": 0.88, "ESP": 2.03, "BEL": 1.03,
-    "NOR": 1.24, "ENG": 1.92, "ARG": 1.76, "SUI": 0.83,
-}
 
-# Clean sheet probability for the QF match — FPLJoe MD6.
-CS_PCT = {
-    "FRA": 0.43, "MAR": 0.13, "ESP": 0.37, "BEL": 0.12,
-    "NOR": 0.15, "ENG": 0.31, "ARG": 0.45, "SUI": 0.16,
-}
+# ── Per-round data (filled each matchday) ─────────────────────────────────────
 
-# FDR for the QF match (1=easiest, 5=hardest).
+# Next opponent (club code) for the upcoming round
+FIXTURES: dict[str, str] = {}
+
+# Projected goals for the upcoming match
+PROJ_GOALS: dict[str, float] = {}
+
+# Clean sheet probability for the upcoming match
+CS_PCT: dict[str, float] = {}
+
+# FDR for the upcoming match (1=easiest, 5=hardest)
 # Banded by opponent threat = avg(opp_xGF, opp_CS%):
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
-FDR = {
-    "FRA": 2, "MAR": 4, "ESP": 2, "BEL": 5,
-    "NOR": 4, "ENG": 3, "ARG": 2, "SUI": 4,
-}
+FDR: dict[str, int] = {}
 
-# Group balance classification (from FIFA ranking analysis)
-GROUP_BALANCE = {
-    "D": "Most balanced",   # USA, Turkey, Australia, Paraguay
-    "A": "Balanced",        # Mexico, South Korea, Czech Republic, South Africa
-    "B": "Balanced",        # Switzerland, Canada, Qatar, Bosnia-Herzegovina
-    "F": "Balanced",        # Netherlands, Japan, Sweden, Tunisia
-    "K": "Medium",          # Portugal, Colombia, DR Congo, Uzbekistan
-    "E": "Medium",          # Germany, Ecuador, Ivory Coast, Curacao
-    "G": "Medium",          # Belgium, Iran, Egypt, New Zealand
-    "I": "Medium",          # France, Senegal, Norway, Iraq
-    "J": "Unbalanced",      # Argentina, Austria, Algeria, Jordan
-    "L": "Unbalanced",      # England, Croatia, Panama, Ghana
-    "C": "Unbalanced",      # Brazil, Morocco, Scotland, Haiti
-    "H": "Most unbalanced", # Spain, Uruguay, Saudi Arabia, Cape Verde
-}
+# Reach-probabilities per club (0.0–1.0):
+#   top8 = finish 1-8 (direct to R16)   po = finish 9-24 (playoff)
+#   r16 / qf / sf / f = reach that round
+QUAL_PROBS: dict[str, dict] = {}
 
-# Tournament qualification probabilities (0.0–1.0) — reach-probabilities from a
-# 400k Monte-Carlo of the QF→Final bracket. All 8 teams are in the QF (r32=r16=
-# qf=1.0). QF matches use MD6 odds; SF + Final use the calibrated Elo
-# (KO_VARIANCE_K). See EXP_GAMES for expected remaining matches.
-QUAL_PROBS: dict[str, dict] = {
-    "FRA": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.7262, "f": 0.3908},
-    "MAR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.2738, "f": 0.0946},
-    "ESP": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.71, "f": 0.3896},
-    "BEL": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.29, "f": 0.125},
-    "NOR": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.3567, "f": 0.1199},
-    "ENG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.6433, "f": 0.3006},
-    "ARG": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.7104, "f": 0.4536},
-    "SUI": {"r32": 1.0, "r16": 1.0, "qf": 1.0, "sf": 0.2897, "f": 0.1259},
-}
+# Expected REMAINING matches per club, from the same Monte-Carlo. Counts both
+# legs of two-legged ties, so it is NOT just the sum of the reach-probabilities.
+EXP_GAMES: dict[str, float] = {}
 
-# Expected REMAINING matches per team from the same Monte-Carlo (next guaranteed
-# game + every round they're simulated to advance to). Used for tournament_xpts
-# instead of summing QUAL_PROBS, so already-played rounds aren't double-counted.
-EXP_GAMES: dict[str, float] = {
-    "FRA": 2.117, "MAR": 1.368, "ESP": 2.1, "BEL": 1.415,
-    "NOR": 1.477, "ENG": 1.944, "ARG": 2.164, "SUI": 1.416,
-}
+_EMPTY_QUAL = {"top8": 0.0, "po": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0}
+
+
+def has_round_data() -> bool:
+    """True once the upcoming round's team data has been loaded."""
+    return bool(PROJ_GOALS) and bool(FIXTURES)
+
 
 import math as _math
 
@@ -152,28 +152,30 @@ def get_next_opponent(team_code: str) -> str:
     return FIXTURES.get(team_code, "?")
 
 
-def get_team_group(team_code: str) -> str:
-    for grp, teams in GROUPS.items():
+def get_team_pot(team_code: str) -> int:
+    for pot, teams in POTS.items():
         if team_code in teams:
-            return grp
-    return "?"
+            return pot
+    return 0
 
 
 def get_group_balance(team_code: str) -> str:
-    grp = get_team_group(team_code)
-    return GROUP_BALANCE.get(grp, "Unknown")
+    """Draw pot label — the UCL analogue of the WC group-strength tag.
+    (Name kept for engine compatibility.)"""
+    pot = get_team_pot(team_code)
+    return f"Pot {pot}" if pot else "Unknown"
 
 
 def get_qual_probs(team_code: str) -> dict:
-    """Returns {r32, r16, qf, sf, f} qualification probabilities (0.0–1.0)."""
-    return QUAL_PROBS.get(team_code, {"r32": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0})
+    """Returns {top8, po, r16, qf, sf, f} reach-probabilities (0.0–1.0)."""
+    return QUAL_PROBS.get(team_code, dict(_EMPTY_QUAL))
 
 
 def get_expected_games(team_code: str) -> float:
-    """Expected number of REMAINING matches (next guaranteed game + rounds the team
-    is projected to advance to). Prefers the Monte-Carlo EXP_GAMES; falls back to
-    summing reach-probabilities for any team not in that table."""
+    """Expected number of REMAINING matches (both legs counted for two-legged
+    ties). Prefers the Monte-Carlo EXP_GAMES; falls back to a leg-weighted sum
+    of the reach-probabilities for any club not in that table."""
     if team_code in EXP_GAMES:
         return EXP_GAMES[team_code]
     p = get_qual_probs(team_code)
-    return round(p["r32"] + p["r16"] + p["qf"] + p["sf"] + p["f"], 3)
+    return round(p["po"] * 2 + p["r16"] * 2 + p["qf"] * 2 + p["sf"] * 2 + p["f"], 3)

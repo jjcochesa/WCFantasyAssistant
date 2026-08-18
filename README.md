@@ -4,10 +4,9 @@ Fantasy assistant for the **official UEFA Champions League Fantasy** game
 (gaming.uefa.com) — projections, player rankings, FDR, qualification odds and a
 squad builder. Streamlit app + local data pipeline.
 
-> **Transition note:** this project began life as the WC 2026 Fantasy Assistant.
-> The World Cup mode stays fully functional until the WC final; the UCL 2026-27
-> machinery is being built alongside it and takes over for the league phase in
-> September. Same engine, new tournament.
+> This project began life as the WC 2026 Fantasy Assistant. It is now fully in
+> Champions League mode — the World Cup data and scoring have been replaced
+> (they remain in git history). Awaiting the 2026-27 league-phase draw.
 
 ## Competition format (UCL 2026-27)
 
@@ -32,9 +31,14 @@ one-round-at-a-time cadence this tool already uses.
 - `data/predicted_lineups.py` — manager-supplied XIs (authoritative 80'/20').
 - `scripts/` — local fetchers (API keys are IP-locked to the owner's machine):
   - `fetch_wc_stats.py` — accumulated per-player stats from API-Football
-    (now takes `--league/--season`, so `--league 2` pulls Champions League).
-  - `build_r32.py` — odds → de-vig → Poisson lambdas → goals/CS%/FDR + bracket
-    Monte-Carlo for advancement probabilities.
+    (`--league 2 --season 2026` pulls Champions League → `data/ucl_stats.json`).
+  - `build_league_phase.py` — **the UCL core**: Monte-Carlo of the 36-team
+    league table + seeded knockout bracket → P(top-8) / P(playoff) / reach
+    probabilities and expected remaining matches (both legs counted).
+    `--self-test` validates the math with no files needed.
+  - `build_r32.py` — odds → de-vig → Poisson lambdas → goals/CS%/FDR for a
+    single round (kept; works for any round with a bookmaker board).
+  - `matchday_refresh.sh` — one command: stats + Elo + league sim.
   - `fetch_clubelo.py` — club Elo ratings from api.clubelo.com (free) for the
     knockout Monte-Carlo (replaces national-team eloratings.net).
   - `fetch_ucl_feed.py` — official UEFA Fantasy player feed (prices, positions,
@@ -54,9 +58,15 @@ one-round-at-a-time cadence this tool already uses.
 - [x] Generalize stats fetcher to any league/season
 - [x] ClubElo fetcher
 - [x] UEFA fantasy feed fetcher (endpoint verified once the 26-27 game opens)
-- [ ] `data/team_stats.py` → UCL teams after the league-phase draw (late August)
-- [ ] League-phase qualification model: P(top-8), P(9–24 playoff), P(25+ out)
-      from a league-table Monte-Carlo over the 8 fixtures
+- [x] `data/team_stats.py` restructured for UCL (stages MD1–8 → PO → R16 → QF
+      → SF → F, two-legged tie handling, pots, `top8`/`po` qualification keys).
+      Team dicts empty until the draw — the app shows an "awaiting draw" banner.
+- [x] League-phase qualification model (`build_league_phase.py`): P(top-8),
+      P(9–24 playoff), P(out), reach probabilities and expected remaining
+      matches from a league-table + seeded-bracket Monte-Carlo
+- [ ] Fill the 36 clubs, pots and 144 fixtures after the draw (late August)
+- [ ] Swap the player pool from the FIFA feed to the UEFA feed in `data_engine`
+      (needs one real `fetch_ucl_feed.py` pull to confirm the JSON shape)
 - [x] UEFA scoring rules in `scoring_rules.py` (goal 6/6/5/4, assist 3,
       CS 4/4/1, −1 per 2 conceded, recoveries via tackles proxy)
 - [x] Squad rules: €105m budget, per-club cap by stage (3 league → 11 final);
@@ -67,8 +77,8 @@ one-round-at-a-time cadence this tool already uses.
 
 ## Workflow each matchday (unchanged)
 
-1. Owner runs the fetchers locally (API key is IP-restricted) and pushes the
-   JSON outputs.
+1. Owner runs `./scripts/matchday_refresh.sh KEY [FROM_MD]` locally (API key is
+   IP-restricted) and pushes the JSON outputs.
 2. FDR / goals / CS% board (FPLJoe or equivalent) lands as a screenshot and is
    wired into `data/team_stats.py`.
 3. Manager supplies predicted XIs → authoritative 80'/20' minutes.
