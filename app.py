@@ -345,7 +345,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "🏗️ Squad Builder",
     "🔍 Scouts & Value",
     "📊 Fixtures & FDR",
-    "🌐 WC Stats",
+    "🌐 UCL Stats",
 ])
 
 # ── Shared filter helper ──────────────────────────────────────────────────────
@@ -613,10 +613,10 @@ with tab3:
     )
     with st.expander("ℹ️ About International Form data"):
         st.markdown("""
-**Source**: API-Football, international competitions:
-- WC 2026 (live from June 11)
-- UEFA Nations League 2024/25
-- WC Qualifying (all confederations, 2024–2025)
+**Source**: API-Football, club + international competitions:
+- UEFA Champions League 2026/27 (live from MD1)
+- Domestic league form (club per-90 baseline)
+- International appearances (Nations League / qualifiers)
 
 **NT weight**: `65% NT` = 5+ international appearances → NT data is trusted.
 `35% NT` = fewer than 5 apps → club form is the primary signal.
@@ -800,15 +800,15 @@ with tab6:
     st.dataframe(styler, use_container_width=True, height=640)
 
 
-# ── TAB 7: WC Stats ───────────────────────────────────────────────────────────
+# ── TAB 7: Competition stats ──────────────────────────────────────────────────
 with tab7:
-    st.subheader("🌐 Real World Cup Stats (accumulated)")
+    st.subheader("🌐 Real Champions League Stats (accumulated)")
     st.caption(
-        "Actual tournament per-90 stats from API-Football, refreshed each round "
-        "(run `scripts/fetch_wc_stats.py` locally). Blended into projections via "
-        "empirical-Bayes shrinkage toward each player's pre-tournament baseline "
+        "Actual per-90 stats from API-Football, refreshed each matchday "
+        "(run `scripts/matchday_refresh.sh` locally). Blended into projections via "
+        "empirical-Bayes shrinkage toward each player's pre-competition baseline "
         f"(prior strength {int(__import__('config').WC_FORM_PRIOR_GAMES)} games) — "
-        "so one match nudges, while more WC minutes increasingly take over."
+        "so one match nudges, while more UCL minutes increasingly take over."
     )
 
     wc_df = df[df["wc_min"] > 0].copy()
