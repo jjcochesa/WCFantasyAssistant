@@ -71,11 +71,9 @@ one-round-at-a-time cadence this tool already uses.
       CS 4/4/1, −1 per 2 conceded, recoveries via tackles proxy)
 - [x] Squad rules: €105m budget, per-club cap by stage (3 league → 11 final);
       transfer allowances TBC from the in-game rules when 26-27 opens
-- [ ] Rename repo → `UCLFantasyAssistant` (GitHub Settings → General → Rename;
-      old URLs auto-redirect, then `git remote set-url origin
-      https://github.com/jjcochesa/UCLFantasyAssistant.git`)
+- [x] Rename repo → `UCLFantasyAssistant` (done; old URLs auto-redirect)
 
-## Workflow each matchday (unchanged)
+## Workflow each matchday
 
 1. Owner runs `./scripts/matchday_refresh.sh KEY [FROM_MD]` locally (API key is
    IP-restricted) and pushes the JSON outputs.
