@@ -651,10 +651,36 @@ with tab4:
     st.caption(f"Optimised for the upcoming round ({CURRENT_ROUND}). "
                "Pool = predicted starters on teams still in the tournament.")
 
-    b1, b2, b3 = st.columns(3)
+    b1, b2 = st.columns(2)
     build_budget  = b1.number_input("Budget (€m)", 50.0, 120.0, budget, 0.5, key="build_b")
     build_cap     = b2.slider("Max per club", 1, 11, country_cap, key="build_cap")
-    exclude_mex   = b3.toggle("Exclude MEX", value=True, key="build_excl_mex")
+
+    # Horizon: optimise the squad over a RANGE of matchdays, not just the next
+    # one. This is what a Wildcard is for — e.g. MD1-MD3 for the opening squad,
+    # then MD4-MD7 after playing the chip.
+    _md_cols = sorted(
+        int(c.replace("xPts_md", "")) for c in df.columns if c.startswith("xPts_md")
+    )
+    if _md_cols:
+        lo, hi = min(_md_cols), max(_md_cols)
+        if lo == hi:
+            horizon = [lo]
+            st.caption(f"Horizon: MD{lo} (only matchday with data loaded).")
+        else:
+            first, last = st.slider(
+                "Matchdays to optimise for", lo, hi, (lo, min(lo + 2, hi)),
+                key="build_horizon",
+            )
+            horizon = list(range(first, last + 1))
+        _hcols = [f"xPts_md{m}" for m in horizon if f"xPts_md{m}" in df.columns]
+        st.caption(
+            f"Optimising total points across **MD{horizon[0]}–MD{horizon[-1]}** "
+            f"({len(_hcols)} matchdays). Wildcard tip: build MD1–MD3 now, then "
+            "re-run for MD4–MD7 when you play the chip."
+        )
+    else:
+        horizon, _hcols = [], []
+        st.caption("No per-matchday data loaded yet — using the upcoming round only.")
 
     if st.button("Build Optimal Squad", type="primary"):
         # Only pick from viable players: teams still in the tournament (eliminated
@@ -665,41 +691,61 @@ with tab4:
             build_df = build_df[build_df["in_round"]]
         if "predicted_starter" in build_df.columns:
             build_df = build_df[build_df["predicted_starter"]]
-        if exclude_mex:
-            build_df = build_df[build_df["team_code"] != "MEX"]
-        squad = _greedy_squad(build_df, build_budget, "xPts_GS", build_cap)
+        # Objective: total points over the chosen horizon, else the next round.
+        if _hcols:
+            build_df["xPts_H"] = build_df[_hcols].sum(axis=1).round(2)
+            obj = "xPts_H"
+        else:
+            obj = "xPts_GS"
+        squad = _greedy_squad(build_df, build_budget, obj, build_cap)
         if squad is None or squad.empty:
-            st.error("Could not fill squad within budget. Try increasing budget or country cap.")
+            st.error("Could not fill squad within budget. Try increasing budget or the per-club cap.")
         else:
             cost       = squad["price"].sum()
-            total_xpts = squad["xPts_GS"].sum()
+            total_xpts = squad[obj].sum()
+            span = (f"MD{horizon[0]}–MD{horizon[-1]}"
+                    if obj == "xPts_H" and horizon else CURRENT_ROUND)
 
             sc1, sc2, sc3 = st.columns(3)
-            sc1.metric("Total cost", f"${cost:.1f}m")
-            sc2.metric("Remaining",  f"${build_budget - cost:.1f}m")
-            sc3.metric(f"{CURRENT_ROUND} xPts", f"{total_xpts:.1f}")
+            sc1.metric("Total cost", f"€{cost:.1f}m")
+            sc2.metric("Remaining",  f"€{build_budget - cost:.1f}m")
+            sc3.metric(f"{span} xPts", f"{total_xpts:.1f}")
 
-            captain = squad.sort_values("xPts/game", ascending=False).iloc[0]
-            vice    = squad.sort_values("xPts/game", ascending=False).iloc[1]
-            st.success(f"⭐ Captain: **{captain['name']}**  |  👑 Vice: **{vice['name']}**")
+            # Captain doubles a single matchday, so pick on the best SINGLE
+            # matchday in the horizon, not the horizon total.
+            cap_col = f"xPts_md{horizon[0]}" if (obj == "xPts_H" and horizon
+                                                 and f"xPts_md{horizon[0]}" in squad.columns) \
+                      else "xPts/game"
+            ranked  = squad.sort_values(cap_col, ascending=False)
+            captain, vice = ranked.iloc[0], ranked.iloc[1]
+            st.success(
+                f"⭐ Captain: **{captain['name']}**  |  👑 Vice: **{vice['name']}**  "
+                f"_(best single matchday: {cap_col.replace('xPts_md', 'MD')})_"
+            )
 
-            sq_cols = ["name", "team_code", "pos", "price", "own_%", "opp", "xPts_GS"]
+            sq_cols = ["name", "team_code", "pos", "price", "own_%", "opp"]
+            sq_cols += [f"xPts_md{m}" for m in horizon if f"xPts_md{m}" in squad.columns]
+            sq_cols += [c for c in (obj, "xPts_GS") if c in squad.columns and c not in sq_cols]
             sq_cols = [c for c in sq_cols if c in squad.columns]
+            rename = {"name": "Name", "team_code": "Club", "pos": "Pos",
+                      "price": "Price", "own_%": "Own%", "opp": "Opp",
+                      "xPts_GS": "Next Rd", "xPts_H": "Total"}
+            rename.update({f"xPts_md{m}": f"MD{m}" for m in horizon})
+            disp_sq = _pin_name(squad[sq_cols].rename(columns=rename), "Name", "Club")
+            numfmt = {"Price": "€{:.1f}m", "Own%": "{:.1f}%"}
+            numfmt.update({v: "{:.1f}" for k, v in rename.items()
+                           if k.startswith("xPts") and v in disp_sq.columns})
             st.dataframe(
-                _pin_name(squad[sq_cols].rename(columns={
-                    "name": "Name", "team_code": "Nation", "pos": "Pos",
-                    "price": "Price", "own_%": "Own%",
-                    "opp": "Opp", "xPts_GS": "Proj Pts",
-                }), "Name", "Nation").style.format({
-                    "Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Pts": "{:.1f}",
-                }, na_rep="—"),
+                disp_sq.style.format(
+                    {k: v for k, v in numfmt.items() if k in disp_sq.columns}, na_rep="—"
+                ),
                 use_container_width=True,
             )
 
             for pos in ["GK", "DEF", "MID", "FWD"]:
                 sub = squad[squad["pos"] == pos]
                 line = "  |  ".join(
-                    f"{r['name']} ${r['price']:.1f}m ({r['xPts_GS']:.1f})"
+                    f"{r['name']} €{r['price']:.1f}m ({r[obj]:.1f})"
                     for _, r in sub.iterrows()
                 )
                 st.markdown(f"**{pos}:** {line}")

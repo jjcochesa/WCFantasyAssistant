@@ -28,6 +28,7 @@ from data.team_stats import (
     get_team_fdr, get_group_balance, get_next_opponent,
     get_team_proj, get_opponent_xg, get_team_xg, get_team_cs,
     get_qual_probs, get_expected_games,
+    available_matchdays, get_md_fixture, get_md_proj, get_md_opponent_xg, get_md_fdr,
 )
 try:
     from data.set_pieces import SET_PIECES
@@ -308,6 +309,8 @@ class Player:
     # Computed by engine
     xpts_per_match: float = 0.0
     xpts_group_stage: float = 0.0
+    # matchday number -> projected points that matchday (league phase horizon)
+    xpts_by_md: dict = field(default_factory=dict)
     value: float = 0.0
     scout_flag: bool = False
     starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
@@ -898,17 +901,26 @@ def _player_xa(p: Player, team_xg: float, avg_xa: dict) -> float:
     return base * share
 
 
-def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
-    """Project points for the upcoming match, scaled by projected minutes.
-    Returns (pts, player_xg)."""
+def _project(p: Player, avg_xg: dict, avg_xa: dict,
+             team_xg: float = None, cs_pct: float = None,
+             opp_xg: float = None) -> tuple:
+    """Project points for ONE match, scaled by projected minutes.
+
+    With no overrides this projects the upcoming round. Pass explicit team
+    numbers to project a specific matchday (see _project_matchday), which is how
+    the multi-matchday horizon is built.
+
+    Returns (pts, player_xg).
+    """
     pos = p.position
-    # In knockouts only the teams with an upcoming fixture are still alive. A team
-    # absent from FIXTURES is eliminated — no projection (don't fall through to the
-    # generic 1.0-goal default and pollute the rankings).
-    if p.team_code not in FIXTURES:
-        return 0.0, 0.0
-    team_xg, cs_pct = get_team_proj(p.team_code)
-    opp_xg = get_opponent_xg(p.team_code)
+    if team_xg is None:
+        # Upcoming round. A club absent from FIXTURES isn't playing (eliminated,
+        # or no data yet) — no projection, rather than falling through to the
+        # generic 1.0-goal default and polluting the rankings.
+        if p.team_code not in FIXTURES:
+            return 0.0, 0.0
+        team_xg, cs_pct = get_team_proj(p.team_code)
+        opp_xg = get_opponent_xg(p.team_code)
 
     # Minutes scaling: returns accrue per minute on the pitch; clean sheets need
     # 60+ minutes; appearance is 2 pts for 60+ min, else 1 pt.
@@ -933,16 +945,29 @@ def _project(p: Player, avg_xg: dict, avg_xa: dict) -> tuple:
     if pos in ("GK", "DEF"):
         pts += max(0.0, opp_xg - 1.0) * SCORING["goals_conceded_add"][pos] * mf
 
-    gk_saves = (opp_xg * 3.5 * p.save_rate) / 3 * mf if pos == "GK" else 0.0
-    pts += gk_saves
+    if pos == "GK":
+        pts += (opp_xg * 3.5 * p.save_rate) / 3 * SCORING["saves_per_3"][pos] * mf
 
-    if pos == "MID":
-        pts += (p.tackles90 / 3 + p.kp90 / 2) * mf
-
-    if pos == "FWD":
-        pts += p.sot90 / 2 * mf
+    # Secondary per-90 bonuses, driven by the scoring table so they follow the
+    # competition's rules instead of being hardcoded. In UCL, recoveries (our
+    # tackles proxy) score for EVERY position and the WC-only chances-created /
+    # shots-on-target bonuses are zero, so those terms vanish on their own.
+    pts += (p.tackles90 / 3) * SCORING["tackles_per_3"][pos] * mf
+    pts += (p.kp90 / 2) * SCORING["chances_per_2"][pos] * mf
+    pts += (p.sot90 / 2) * SCORING["shots_on_target_per_2"][pos] * mf
 
     return max(0.0, pts), pxg
+
+
+def _project_matchday(p: Player, avg_xg: dict, avg_xa: dict, md: int) -> float:
+    """Projected points for this player on a specific league matchday.
+    Returns 0.0 if their club isn't playing that matchday or it has no data."""
+    if not get_md_fixture(md, p.team_code):
+        return 0.0
+    team_xg, cs_pct = get_md_proj(md, p.team_code)
+    pts, _ = _project(p, avg_xg, avg_xa, team_xg=team_xg, cs_pct=cs_pct,
+                      opp_xg=get_md_opponent_xg(md, p.team_code))
+    return round(pts, 3)
 
 
 
@@ -1072,9 +1097,12 @@ def _assign_set_pieces(players: list) -> None:
 
 def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     """
-    Compute per-90 blended stats, then project points for the SINGLE upcoming
-    match (group MD2 onward; one round at a time through the final).
-    The `matchdays` argument is accepted for backward compatibility but ignored.
+    Compute per-90 blended stats, then project points for the upcoming round AND
+    for every league matchday that has data loaded.
+
+    The per-matchday points land on `p.xpts_by_md` and become xPts_md1..md8
+    columns, so the app can sum any horizon (e.g. "best squad for MD1-MD3")
+    instantly without re-running the model.
     """
     for p in players:
         _compute_per90(p)
@@ -1083,20 +1111,23 @@ def build_projections(players: list, matchdays: list = None) -> pd.DataFrame:
     _assign_set_pieces(players)  # flag PK/FK/CK takers from data/set_pieces.py
 
     avg_xg, avg_xa = _pos_averages(players)
+    mds = matchdays if matchdays is not None else available_matchdays()
 
     for p in players:
         pts, pxg = _project(p, avg_xg, avg_xa)
         p.xpts_per_match   = round(pts, 3)
         p.xpts_group_stage = round(pts, 2)
         p._proj_xg  = pxg
+        p.xpts_by_md = {md: _project_matchday(p, avg_xg, avg_xa, md) for md in mds}
         if p.price > 0:
             p.value = round(p.xpts_group_stage / p.price, 3)
         p.scout_flag = p.xpts_per_match > SCOUT_POINTS_THRESHOLD and p.is_differential
 
-    return _to_dataframe(players)
+    return _to_dataframe(players, mds)
 
 
 def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
+    mds = matchdays if matchdays is not None else available_matchdays()
     rows = []
     for p in players:
         fdr      = get_team_fdr(p.team_code)
@@ -1133,6 +1164,10 @@ def _to_dataframe(players: list, matchdays: list = None) -> pd.DataFrame:
             "f_pct":    round(qp["f"],    3),
             "exp_games":      exp_games,
             "tournament_xpts": tournament_xpts,
+            # Per-matchday projected points — sum any subset for a horizon
+            **{f"xPts_md{md}": (getattr(p, "xpts_by_md", {}) or {}).get(md, 0.0)
+               for md in mds},
+            **{f"fdr_md{md}": get_md_fdr(md, p.team_code) for md in mds},
             # Upcoming-match display columns
             "proj_xg":     proj_xg,
             "opp":         opp,

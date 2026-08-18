@@ -1,9 +1,11 @@
 """
 Team-level data for the UEFA Champions League Fantasy assistant.
 
-One round at a time: we fill the dicts below for the upcoming matchday, the app
-projects it, then we wipe and refresh for the next one
-(MD1 … MD8 → PO → R16 → QF → SF → Final).
+Data is keyed BY MATCHDAY so squads can be optimised over a horizon (e.g. "best
+team for MD1-MD3" before a Wildcard) rather than one round at a time. The
+single-round dicts the engine imports (FIXTURES / PROJ_GOALS / CS_PCT / FDR) are
+derived views of CURRENT_MD, so there is one source of truth.
+Stages: MD1 … MD8 → PO → R16 → QF → SF → Final.
 
 Sources:
   - Projected goals & CS%: bookmaker-derived boards (FPLJoe-style) or
@@ -18,6 +20,8 @@ STATUS: awaiting the 2026-27 league-phase draw (late August). The team dicts are
 intentionally empty — the app shows an "awaiting draw" state until they're
 filled. Nothing here is World Cup data any more; that lives in git history.
 """
+
+import math as _math
 
 # ── Competition calendar ──────────────────────────────────────────────────────
 
@@ -88,21 +92,69 @@ TEAM_NAMES = {
 POTS: dict[int, list[str]] = {1: [], 2: [], 3: [], 4: []}
 
 
-# ── Per-round data (filled each matchday) ─────────────────────────────────────
+# ── Per-matchday data ─────────────────────────────────────────────────────────
+#
+# The league phase is planned over a HORIZON (e.g. "best squad for MD1-MD3"),
+# not one round at a time, so everything is keyed by matchday number. The
+# single-round dicts further down are derived views of the current matchday, so
+# there is one source of truth.
+#
+#   SCHEDULE[md][club]        -> opponent club code
+#   HOME[md]                  -> set of clubs playing at home that matchday
+#   PROJ_GOALS_BY_MD[md][club], CS_PCT_BY_MD[md][club], FDR_BY_MD[md][club]
 
-# Next opponent (club code) for the upcoming round
-FIXTURES: dict[str, str] = {}
+CURRENT_MD = 1   # which league matchday CURRENT_ROUND refers to
 
-# Projected goals for the upcoming match
-PROJ_GOALS: dict[str, float] = {}
-
-# Clean sheet probability for the upcoming match
-CS_PCT: dict[str, float] = {}
-
-# FDR for the upcoming match (1=easiest, 5=hardest)
-# Banded by opponent threat = avg(opp_xGF, opp_CS%):
+SCHEDULE: dict[int, dict[str, str]] = {}
+HOME: dict[int, set] = {}
+PROJ_GOALS_BY_MD: dict[int, dict[str, float]] = {}
+CS_PCT_BY_MD: dict[int, dict[str, float]] = {}
+# FDR banded by opponent threat = avg(opp_xGF, opp_CS%):
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
-FDR: dict[str, int] = {}
+FDR_BY_MD: dict[int, dict[str, int]] = {}
+
+
+def available_matchdays() -> list:
+    """Matchdays that have both a schedule and projections loaded."""
+    return sorted(md for md in SCHEDULE
+                  if SCHEDULE.get(md) and PROJ_GOALS_BY_MD.get(md))
+
+
+def has_md_data(md: int) -> bool:
+    return bool(SCHEDULE.get(md)) and bool(PROJ_GOALS_BY_MD.get(md))
+
+
+def get_md_fixture(md: int, team_code: str) -> str:
+    """Opponent for this club on this matchday, or '' if it isn't playing."""
+    return SCHEDULE.get(md, {}).get(team_code, "")
+
+
+def get_md_proj(md: int, team_code: str) -> tuple:
+    """(team_xg, cs_pct) for this club on this matchday."""
+    return (PROJ_GOALS_BY_MD.get(md, {}).get(team_code, 1.0),
+            CS_PCT_BY_MD.get(md, {}).get(team_code, 0.3))
+
+
+def get_md_opponent_xg(md: int, team_code: str) -> float:
+    """Opponent xG implied by this club's clean-sheet odds: λ = -ln(CS%)."""
+    cs = CS_PCT_BY_MD.get(md, {}).get(team_code, 0.3)
+    return -_math.log(max(cs, 0.01))
+
+
+def get_md_fdr(md: int, team_code: str) -> int:
+    return FDR_BY_MD.get(md, {}).get(team_code, 3)
+
+
+def is_home(md: int, team_code: str) -> bool:
+    return team_code in HOME.get(md, set())
+
+
+# ── Single-round views (derived from CURRENT_MD; the engine imports these) ─────
+
+FIXTURES: dict[str, str] = dict(SCHEDULE.get(CURRENT_MD, {}))
+PROJ_GOALS: dict[str, float] = dict(PROJ_GOALS_BY_MD.get(CURRENT_MD, {}))
+CS_PCT: dict[str, float] = dict(CS_PCT_BY_MD.get(CURRENT_MD, {}))
+FDR: dict[str, int] = dict(FDR_BY_MD.get(CURRENT_MD, {}))
 
 # Reach-probabilities per club (0.0–1.0):
 #   top8 = finish 1-8 (direct to R16)   po = finish 9-24 (playoff)
@@ -119,9 +171,6 @@ _EMPTY_QUAL = {"top8": 0.0, "po": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.
 def has_round_data() -> bool:
     """True once the upcoming round's team data has been loaded."""
     return bool(PROJ_GOALS) and bool(FIXTURES)
-
-
-import math as _math
 
 
 def get_team_proj(team_code: str) -> tuple:
