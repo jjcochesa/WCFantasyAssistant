@@ -1424,6 +1424,174 @@ def load_from_fifa_feed() -> list:
     return players
 
 
+UCL_FEED_FILE = "data/ucl_players.json"   # output of scripts/fetch_ucl_feed.py
+
+# UEFA spells clubs its own way; map what the feed says onto our 3-letter codes.
+UCL_NAME_ALIASES = {
+    "paris": "PSG", "paris saint germain": "PSG", "paris sg": "PSG",
+    "bayern": "BAY", "bayern munchen": "BAY", "bayern munich": "BAY",
+    "real madrid": "RMA", "liverpool": "LIV", "inter": "INT", "internazionale": "INT",
+    "man city": "MCI", "manchester city": "MCI", "arsenal": "ARS",
+    "barcelona": "BAR", "fc barcelona": "BAR",
+    "atleti": "ATM", "atletico": "ATM", "atletico madrid": "ATM",
+    "dortmund": "DOR", "b dortmund": "DOR", "borussia dortmund": "DOR",
+    "roma": "ROM", "as roma": "ROM", "sporting cp": "SPO", "sporting": "SPO",
+    "aston villa": "AVL", "porto": "POR", "fc porto": "POR",
+    "man utd": "MUN", "man united": "MUN", "manchester united": "MUN",
+    "club brugge": "CLB", "brugge": "CLB",
+    "real betis": "BET", "betis": "BET", "psv": "PSV", "psv eindhoven": "PSV",
+    "feyenoord": "FEY", "lille": "LIL", "losc lille": "LIL",
+    "bodo glimt": "BOD", "bodo/glimt": "BOD", "bodoglimt": "BOD",
+    "napoli": "NAP", "leipzig": "RBL", "rb leipzig": "RBL",
+    "villarreal": "VIL", "fenerbahce": "FEN", "shakhtar": "SHK",
+    "shakhtar donetsk": "SHK", "galatasaray": "GAL",
+    "slavia praha": "SLA", "slavia prague": "SLA",
+    "slovan bratislava": "SLB", "s bratislava": "SLB",
+    "stuttgart": "STU", "vfb stuttgart": "STU",
+    "aek athens": "AEK", "aek": "AEK", "lask": "LSK", "como": "COM",
+    "lens": "LEN", "rc lens": "LEN", "viking": "VIK", "viking fk": "VIK",
+    "sabah": "SAB",
+}
+
+# UEFA encodes position as "skill": 1=GK 2=DEF 3=MID 4=FWD
+_UCL_SKILL_TO_POS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
+
+
+def _pick(d: dict, *names, default=None):
+    """Case-insensitive lookup across several possible field names."""
+    low = {str(k).lower(): v for k, v in d.items()}
+    for n in names:
+        v = low.get(n.lower())
+        if v not in (None, "", []):
+            return v
+    return default
+
+
+def _ucl_team_code(entry: dict, id_map: dict) -> str:
+    """Resolve a feed record's club to our 3-letter code, by code, name, or id."""
+    raw = _pick(entry, "tCode", "teamCode", "cCode", "clubCode")
+    if raw and str(raw).upper() in TEAM_NAMES:
+        return str(raw).upper()
+    name = _pick(entry, "tName", "teamName", "clubName", "team", "club")
+    if name:
+        key = _norm_name(str(name)).replace("/", " ").replace("-", " ")
+        key = " ".join(key.split())
+        if key in UCL_NAME_ALIASES:
+            return UCL_NAME_ALIASES[key]
+        for code, disp in TEAM_NAMES.items():
+            if _norm_name(disp) == _norm_name(str(name)):
+                return code
+    tid = _pick(entry, "tId", "teamId", "clubId", "squadId")
+    if tid is not None and str(tid) in id_map:
+        return id_map[str(tid)]
+    return ""
+
+
+def load_from_ucl_feed() -> list:
+    """
+    Build the player pool from the official UEFA Fantasy feed
+    (data/ucl_players.json, produced by scripts/fetch_ucl_feed.py).
+
+    UEFA renames fields between seasons, so every lookup tries the known
+    variants rather than assuming one schema. Anything that can't be mapped is
+    reported with a sample so the aliases can be extended quickly.
+    """
+    if not os.path.exists(UCL_FEED_FILE):
+        return []
+    try:
+        feed = json.load(open(UCL_FEED_FILE))
+    except Exception as e:
+        print(f"[UCL feed] Could not load {UCL_FEED_FILE}: {e}")
+        return []
+    if isinstance(feed, dict):
+        # UEFA wraps the list differently each season (e.g. data.value.playerList),
+        # so search the payload for the biggest list of dicts rather than assume.
+        def _deepest_list(node, depth=0):
+            best = None
+            if isinstance(node, list):
+                if [x for x in node if isinstance(x, dict)]:
+                    best = node
+                for it in node[:50]:
+                    c = _deepest_list(it, depth + 1)
+                    if c and (best is None or len(c) > len(best)):
+                        best = c
+            elif isinstance(node, dict) and depth < 8:
+                for v in node.values():
+                    c = _deepest_list(v, depth + 1)
+                    if c and (best is None or len(c) > len(best)):
+                        best = c
+            return best
+        feed = _deepest_list(feed) or []
+
+    # Learn team-id -> code from any record that carries both id and name.
+    id_map = {}
+    for e in feed:
+        if not isinstance(e, dict):
+            continue
+        tid = _pick(e, "tId", "teamId", "clubId", "squadId")
+        if tid is None or str(tid) in id_map:
+            continue
+        code = _ucl_team_code({k: v for k, v in e.items()
+                               if str(k).lower() not in ("tid", "teamid", "clubid", "squadid")},
+                              {})
+        if code:
+            id_map[str(tid)] = code
+
+    players, seen, unmapped = [], set(), {}
+    for e in feed:
+        if not isinstance(e, dict):
+            continue
+        code = _ucl_team_code(e, id_map)
+        if not code:
+            key = str(_pick(e, "tName", "teamName", "tId", "teamId", default="?"))
+            unmapped[key] = unmapped.get(key, 0) + 1
+            continue
+        name = (_pick(e, "pDName", "displayName", "knownName", "playerName", "name")
+                or " ".join(str(x) for x in
+                            (_pick(e, "pFName", "firstName", default=""),
+                             _pick(e, "pLName", "lastName", "surname", default="")) if x).strip())
+        if not name:
+            continue
+        pid = str(_pick(e, "id", "playerId", "pId", default=name))
+        if pid in seen:
+            continue
+        seen.add(pid)
+
+        skill = _pick(e, "skill", "position", "pos", "positionId")
+        if isinstance(skill, str) and skill.upper() in ("GK", "DEF", "MID", "FWD"):
+            pos = skill.upper()
+        else:
+            try:
+                pos = _UCL_SKILL_TO_POS.get(int(skill), "MID")
+            except (TypeError, ValueError):
+                pos = "MID"
+
+        try:
+            price = float(_pick(e, "value", "price", "cost", default=0) or 0)
+        except (TypeError, ValueError):
+            price = 0.0
+        try:
+            own = float(_pick(e, "selected", "ownership", "percentSelected",
+                              "selectedBy", default=0) or 0)
+        except (TypeError, ValueError):
+            own = 0.0
+
+        players.append(Player(
+            id=pid, name=str(name), position=pos, team_code=code,
+            club=TEAM_NAMES.get(code, ""),
+            price=price or _DEFAULT_PRICE.get(pos, 6.0),
+            ownership_pct=own,
+        ))
+
+    by_pos = {p: sum(1 for x in players if x.position == p) for p in ("GK", "DEF", "MID", "FWD")}
+    print(f"[UCL feed] Loaded {len(players)} players from {len(id_map) or '?'} mapped clubs — {by_pos}")
+    if unmapped:
+        top = sorted(unmapped.items(), key=lambda kv: -kv[1])[:8]
+        print(f"[UCL feed] {sum(unmapped.values())} records with unmapped clubs: {top}")
+        print("           -> add these to UCL_NAME_ALIASES in data_engine.py")
+    return players
+
+
 def load_from_wc_squads() -> list:
     """
     Load real player pool from data/wc_squads.json (generated by fetch_wc_data.py).
@@ -1501,14 +1669,19 @@ def load_data(
         PLAYER_SOURCE = "demo"
         players = get_demo_players()
     elif use_squads:
-        # Prefer the real FIFA feed (authoritative roster + real prices/ownership);
-        # fall back to the older wc_squads.json, then demo.
-        players = load_from_fifa_feed()
+        # Prefer the official UEFA Fantasy feed (authoritative roster + real
+        # prices/ownership). Fall back to the legacy FIFA/WC sources, then demo,
+        # so the app still runs before the UCL pool has been pulled.
+        players = load_from_ucl_feed()
         if players:
-            PLAYER_SOURCE = "fifa_feed"
+            PLAYER_SOURCE = "ucl_feed"
         else:
-            PLAYER_SOURCE = "squads"
-            players = load_from_wc_squads() or get_demo_players()
+            players = load_from_fifa_feed()
+            if players:
+                PLAYER_SOURCE = "fifa_feed"
+            else:
+                PLAYER_SOURCE = "squads"
+                players = load_from_wc_squads() or get_demo_players()
     elif players_file:
         PLAYER_SOURCE = "local"
         players = load_players_from_json(players_file)
