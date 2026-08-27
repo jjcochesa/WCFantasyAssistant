@@ -28,7 +28,7 @@ import math as _math
 
 # Label for the round currently being projected (display only)
 CURRENT_ROUND = "MD1"
-CURRENT_ROUND_DATE = "08-10.09.26"
+CURRENT_ROUND_DATE = "08.09.26"   # MD1 deadline 18:45 CET (constraints_90.json)
 
 LEAGUE_MATCHDAYS = 8          # single 36-team league table, 8 games each
 LEAGUE_TEAMS = 36

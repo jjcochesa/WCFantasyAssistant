@@ -48,13 +48,14 @@ POSITIONS = ["GK", "DEF", "MID", "FWD"]
 
 # ── Squad rules ────────────────────────────────────────────────────────────────
 SQUAD_SLOTS = {"GK": 2, "DEF": 5, "MID": 5, "FWD": 3}   # 15-man squad
-BUDGET_GROUP = 105.0      # league phase budget (€m)
-BUDGET_KNOCKOUT = 105.0   # unchanged through the knockouts
+BUDGET_GROUP = 100.0      # league phase budget (€m) — confirmed from the
+                          # game feed: constraints_90.json maxTeamValue = "100"
+BUDGET_KNOCKOUT = 100.0   # assume unchanged; re-check the feed at the playoff round
 
 # Per-CLUB cap by stage. League phase: 3 per club; the cap relaxes each knockout
 # round as clubs drop out. VERIFY against the in-game rules when 26-27 opens.
 MAX_PER_CLUB_BY_STAGE = {
-    "league": 3,   # MD1–MD8
+    "league": 3,   # MD1–MD8 — confirmed: constraints_90.json maxTeamPlayers = 3
     "PO": 4,       # knockout playoff (16 clubs)
     "R16": 5,
     "QF": 6,

@@ -311,6 +311,10 @@ class Player:
     xpts_group_stage: float = 0.0
     # matchday number -> projected points that matchday (league phase horizon)
     xpts_by_md: dict = field(default_factory=dict)
+    # Last-season UCL totals straight from the UEFA feed (goals, assists,
+    # minutes, clean sheets, saves, ball recoveries) — the most relevant
+    # per-90 source for this competition.
+    ucl_hist: dict = field(default_factory=dict)
     value: float = 0.0
     scout_flag: bool = False
     starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
@@ -841,6 +845,23 @@ def _compute_per90(p: Player) -> None:
     if p.position == "GK":
         shots_faced = nt.saves + nt.goals_conceded
         p.save_rate = (nt.saves / shots_faced) if shots_faced > 0 else 0.7
+
+    # Real Champions League history beats club/international proxies for a club
+    # competition — and the UEFA feed carries it for every player in the pool,
+    # where the club/NT stats cover only a fraction. Blend toward it with the
+    # usual shrinkage so small samples don't produce spiky rates.
+    hist = getattr(p, "ucl_hist", None) or {}
+    hm = hist.get("minutes", 0) or 0
+    if hm >= 180:
+        n90 = hm / 90.0
+        w = min(1.0, n90 / (n90 + 4.0))       # 4 full games of prior
+        p.xg90      = (1 - w) * p.xg90      + w * (hist.get("goals", 0) / n90)
+        p.xa90      = (1 - w) * p.xa90      + w * (hist.get("assists", 0) / n90)
+        p.tackles90 = (1 - w) * p.tackles90 + w * (hist.get("recoveries", 0) / n90)
+        p._sample_minutes = max(getattr(p, "_sample_minutes", 0.0), hm)
+        if p.position == "GK" and hist.get("saves", 0) > 0:
+            sv90 = hist["saves"] / n90
+            p.save_rate = max(0.55, min(0.85, sv90 / (sv90 + 1.3)))
 
 
 # ── Projection formula ────────────────────────────────────────────────────────
@@ -1453,6 +1474,9 @@ UCL_NAME_ALIASES = {
     "sabah": "SAB",
 }
 
+# UEFA's own club short-codes (cCode) that differ from our 3-letter codes.
+UCL_CODE_ALIASES = {"BVB": "DOR", "BRU": "CLB"}
+
 # UEFA encodes position as "skill": 1=GK 2=DEF 3=MID 4=FWD
 _UCL_SKILL_TO_POS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}
 
@@ -1470,8 +1494,10 @@ def _pick(d: dict, *names, default=None):
 def _ucl_team_code(entry: dict, id_map: dict) -> str:
     """Resolve a feed record's club to our 3-letter code, by code, name, or id."""
     raw = _pick(entry, "tCode", "teamCode", "cCode", "clubCode")
-    if raw and str(raw).upper() in TEAM_NAMES:
-        return str(raw).upper()
+    if raw:
+        code = UCL_CODE_ALIASES.get(str(raw).upper(), str(raw).upper())
+        if code in TEAM_NAMES:
+            return code
     name = _pick(entry, "tName", "teamName", "clubName", "team", "club")
     if name:
         key = _norm_name(str(name)).replace("/", " ").replace("-", " ")
@@ -1546,7 +1572,8 @@ def load_from_ucl_feed() -> list:
             key = str(_pick(e, "tName", "teamName", "tId", "teamId", default="?"))
             unmapped[key] = unmapped.get(key, 0) + 1
             continue
-        name = (_pick(e, "pDName", "displayName", "knownName", "playerName", "name")
+        name = (_pick(e, "pFName", "latinName", "pDName", "displayName",
+                       "knownName", "playerName", "name")
                 or " ".join(str(x) for x in
                             (_pick(e, "pFName", "firstName", default=""),
                              _pick(e, "pLName", "lastName", "surname", default="")) if x).strip())
@@ -1571,17 +1598,33 @@ def load_from_ucl_feed() -> list:
         except (TypeError, ValueError):
             price = 0.0
         try:
-            own = float(_pick(e, "selected", "ownership", "percentSelected",
-                              "selectedBy", default=0) or 0)
+            own = float(_pick(e, "selPer", "selected", "ownership",
+                              "percentSelected", "selectedBy", default=0) or 0)
         except (TypeError, ValueError):
             own = 0.0
 
-        players.append(Player(
+        def _num(*keys):
+            try:
+                return float(_pick(e, *keys, default=0) or 0)
+            except (TypeError, ValueError):
+                return 0.0
+
+        pl = Player(
             id=pid, name=str(name), position=pos, team_code=code,
             club=TEAM_NAMES.get(code, ""),
             price=price or _DEFAULT_PRICE.get(pos, 6.0),
             ownership_pct=own,
-        ))
+        )
+        pl.ucl_hist = {
+            "minutes":    _num("minsPlyd", "minutesPlayed"),
+            "goals":      _num("gS", "goals"),
+            "assists":    _num("assist", "assists"),
+            "clean_sheets": _num("cS", "cleanSheets"),
+            "saves":      _num("saves"),
+            "recoveries": _num("bR", "ballRecoveries"),
+            "points":     _num("totPts", "totalPoints"),
+        }
+        players.append(pl)
 
     by_pos = {p: sum(1 for x in players if x.position == p) for p in ("GK", "DEF", "MID", "FWD")}
     print(f"[UCL feed] Loaded {len(players)} players from {len(id_map) or '?'} mapped clubs — {by_pos}")
