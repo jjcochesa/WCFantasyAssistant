@@ -126,9 +126,18 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--url", help="Exact feed URL copied from browser DevTools")
     ap.add_argument("--file", help="Local JSON saved from the browser (Copy as cURL > raw.json)")
+    ap.add_argument("--probe", action="store_true",
+                    help="Try the guessed URL patterns (usually just hangs)")
     ap.add_argument("--timeout", type=int, default=45, help="Per-request timeout (default 45s)")
     ap.add_argument("--out", default=OUTPUT)
     args = ap.parse_args()
+
+    if not (args.file or args.url or args.probe):
+        print(__doc__.strip())
+        print("\nNOTE: UEFA tarpits non-browser requests — every URL guess hangs for the\n"
+              "full timeout even when the path is right, so probing is off by default.\n"
+              "Use --file (recommended) or --url. Pass --probe to try the guesses anyway.")
+        sys.exit(1)
 
     data = None
     if args.file:
