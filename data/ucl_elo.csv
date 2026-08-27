@@ -1,0 +1,43 @@
+# Club ratings for the UCL 2026-27 league-phase sim.
+# Football-sensible priors, minimally corrected so they exactly reproduce
+# football-md.com's published strength-of-schedule chart given the real
+# 144-fixture matrix. The chart alone is rank-deficient (32/36), so priors
+# pin down the remaining 4 degrees of freedom.
+# REPLACE with a real pull when possible: python3 scripts/fetch_clubelo.py
+# Format: CODE,Elo
+PSG,2009.3
+BAY,2008.7
+ARS,2003.9
+BAR,2002.8
+MCI,1995.6
+RMA,1987.6
+LIV,1962.3
+INT,1922.5
+ATM,1907.4
+MUN,1849.2
+NAP,1839.2
+RBL,1819.6
+VIL,1810.6
+AVL,1805.1
+ROM,1797.9
+DOR,1784.7
+CLB,1782.9
+BOD,1779.0
+SPO,1773.9
+BET,1769.1
+POR,1747.0
+LIL,1733.9
+LEN,1712.1
+COM,1711.7
+FEN,1710.4
+GAL,1704.2
+STU,1693.1
+PSV,1690.3
+SLA,1634.5
+FEY,1629.9
+VIK,1606.6
+AEK,1603.6
+SHK,1603.2
+LSK,1530.6
+SAB,1493.9
+SLB,1463.7

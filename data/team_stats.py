@@ -16,9 +16,10 @@ Sources:
     phase, bracket sim for the knockouts
   - Fixtures from the official UEFA calendar
 
-STATUS: awaiting the 2026-27 league-phase draw (late August). The team dicts are
-intentionally empty — the app shows an "awaiting draw" state until they're
-filled. Nothing here is World Cup data any more; that lives in git history.
+STATUS: league-phase draw is in (27.08.26) — 36 clubs, pots, 144 fixtures and
+qualification probabilities are loaded. Still awaiting UEFA's matchday calendar,
+so the per-matchday SCHEDULE/goals/CS%/FDR dicts stay empty and the app shows an
+'awaiting data' banner for the upcoming round.
 """
 
 import math as _math
@@ -27,7 +28,7 @@ import math as _math
 
 # Label for the round currently being projected (display only)
 CURRENT_ROUND = "MD1"
-CURRENT_ROUND_DATE = "TBC"
+CURRENT_ROUND_DATE = "08-10.09.26"
 
 LEAGUE_MATCHDAYS = 8          # single 36-team league table, 8 games each
 LEAGUE_TEAMS = 36
@@ -58,38 +59,22 @@ def is_league_phase(stage: str = None) -> bool:
 
 # ── Clubs ─────────────────────────────────────────────────────────────────────
 
-# Reference pool of club codes → names. This is a superset of likely
-# participants so the codes are stable across seasons; prune to the actual 36
-# once the draw is made.
+# The 36 clubs in the 2026-27 league phase, grouped by draw pot.
 TEAM_NAMES = {
-    # England
-    "MCI": "Manchester City", "LIV": "Liverpool", "ARS": "Arsenal",
-    "CHE": "Chelsea", "TOT": "Tottenham", "NEW": "Newcastle", "AVL": "Aston Villa",
-    # Spain
-    "RMA": "Real Madrid", "BAR": "Barcelona", "ATM": "Atlético Madrid",
-    "ATH": "Athletic Club", "VIL": "Villarreal", "BET": "Real Betis",
-    # Germany
-    "BAY": "Bayern München", "DOR": "Borussia Dortmund", "LEV": "Bayer Leverkusen",
-    "RBL": "RB Leipzig", "STU": "Stuttgart", "FRA": "Eintracht Frankfurt",
-    # Italy
-    "INT": "Inter", "MIL": "AC Milan", "JUV": "Juventus", "NAP": "Napoli",
-    "ATA": "Atalanta", "ROM": "Roma",
-    # France
-    "PSG": "Paris Saint-Germain", "MON": "Monaco", "MAR": "Marseille",
-    "LIL": "Lille", "LYO": "Lyon",
-    # Portugal / Netherlands / Belgium
-    "BEN": "Benfica", "POR": "Porto", "SPO": "Sporting CP",
-    "AJA": "Ajax", "PSV": "PSV", "FEY": "Feyenoord", "CLB": "Club Brugge",
-    # Rest of Europe
-    "CEL": "Celtic", "GAL": "Galatasaray", "FEN": "Fenerbahçe",
-    "RBS": "RB Salzburg", "SHK": "Shakhtar Donetsk", "SLP": "Slavia Praha",
-    "DZG": "Dinamo Zagreb", "OLY": "Olympiacos", "STE": "Sturm Graz",
-    "BSC": "Young Boys", "COP": "Copenhagen", "BOD": "Bodø/Glimt",
+    "PSG": "Paris Saint-Germain", "BAY": "Bayern München", "RMA": "Real Madrid", "LIV": "Liverpool", "INT": "Inter", "MCI": "Manchester City", "ARS": "Arsenal", "BAR": "Barcelona", "ATM": "Atlético Madrid",
+    "DOR": "Borussia Dortmund", "ROM": "Roma", "SPO": "Sporting CP", "AVL": "Aston Villa", "POR": "Porto", "MUN": "Manchester United", "CLB": "Club Brugge", "BET": "Real Betis", "PSV": "PSV",
+    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Bodø/Glimt", "NAP": "Napoli", "RBL": "RB Leipzig", "VIL": "Villarreal", "FEN": "Fenerbahçe", "SHK": "Shakhtar Donetsk", "GAL": "Galatasaray",
+    "SLA": "Slavia Praha", "SLB": "Slovan Bratislava", "STU": "VfB Stuttgart", "AEK": "AEK Athens", "LSK": "LASK", "COM": "Como", "LEN": "Lens", "VIK": "Viking", "SAB": "Sabah",
 }
 
 # Draw pots (1-4). Filled at the draw — used for the "pot" label in the UI and
 # as a coarse strength prior before any results exist.
-POTS: dict[int, list[str]] = {1: [], 2: [], 3: [], 4: []}
+POTS: dict[int, list[str]] = {
+    1: ["PSG", "BAY", "RMA", "LIV", "INT", "MCI", "ARS", "BAR", "ATM"],
+    2: ["DOR", "ROM", "SPO", "AVL", "POR", "MUN", "CLB", "BET", "PSV"],
+    3: ["FEY", "LIL", "BOD", "NAP", "RBL", "VIL", "FEN", "SHK", "GAL"],
+    4: ["SLA", "SLB", "STU", "AEK", "LSK", "COM", "LEN", "VIK", "SAB"],
+}
 
 
 # ── Per-matchday data ─────────────────────────────────────────────────────────
@@ -159,11 +144,85 @@ FDR: dict[str, int] = dict(FDR_BY_MD.get(CURRENT_MD, {}))
 # Reach-probabilities per club (0.0–1.0):
 #   top8 = finish 1-8 (direct to R16)   po = finish 9-24 (playoff)
 #   r16 / qf / sf / f = reach that round
-QUAL_PROBS: dict[str, dict] = {}
+QUAL_PROBS: dict[str, dict] = {
+    "BAR": {"top8": 0.7836, "po": 0.2141, "r16": 0.9738, "qf": 0.7506, "sf": 0.4701, "f": 0.2679},
+    "RMA": {"top8": 0.7812, "po": 0.2164, "r16": 0.9714, "qf": 0.723, "sf": 0.4269, "f": 0.2309},
+    "BAY": {"top8": 0.7546, "po": 0.2412, "r16": 0.9705, "qf": 0.7525, "sf": 0.4769, "f": 0.2794},
+    "ARS": {"top8": 0.7104, "po": 0.2851, "r16": 0.9631, "qf": 0.7344, "sf": 0.4597, "f": 0.266},
+    "PSG": {"top8": 0.6979, "po": 0.296, "r16": 0.9624, "qf": 0.7369, "sf": 0.4675, "f": 0.2765},
+    "LIV": {"top8": 0.6838, "po": 0.309, "r16": 0.9417, "qf": 0.646, "sf": 0.3467, "f": 0.1678},
+    "MCI": {"top8": 0.6265, "po": 0.3635, "r16": 0.9434, "qf": 0.6889, "sf": 0.4261, "f": 0.238},
+    "INT": {"top8": 0.6226, "po": 0.3683, "r16": 0.9123, "qf": 0.5576, "sf": 0.2554, "f": 0.1014},
+    "ATM": {"top8": 0.4086, "po": 0.5515, "r16": 0.8231, "qf": 0.4398, "sf": 0.1925, "f": 0.0739},
+    "NAP": {"top8": 0.2257, "po": 0.671, "r16": 0.6353, "qf": 0.2368, "sf": 0.0701, "f": 0.017},
+    "MUN": {"top8": 0.2095, "po": 0.6651, "r16": 0.628, "qf": 0.2497, "sf": 0.0814, "f": 0.0219},
+    "RBL": {"top8": 0.19, "po": 0.6821, "r16": 0.5842, "qf": 0.1941, "sf": 0.0536, "f": 0.0125},
+    "AVL": {"top8": 0.1516, "po": 0.6775, "r16": 0.5211, "qf": 0.1555, "sf": 0.0394, "f": 0.0081},
+    "ROM": {"top8": 0.1443, "po": 0.6973, "r16": 0.5144, "qf": 0.1466, "sf": 0.036, "f": 0.0071},
+    "VIL": {"top8": 0.137, "po": 0.6771, "r16": 0.5111, "qf": 0.1591, "sf": 0.0413, "f": 0.008},
+    "DOR": {"top8": 0.1158, "po": 0.6756, "r16": 0.4489, "qf": 0.1197, "sf": 0.0266, "f": 0.0043},
+    "BET": {"top8": 0.1151, "po": 0.6803, "r16": 0.4357, "qf": 0.1032, "sf": 0.0219, "f": 0.0032},
+    "SPO": {"top8": 0.0968, "po": 0.6659, "r16": 0.4068, "qf": 0.1016, "sf": 0.021, "f": 0.0034},
+    "POR": {"top8": 0.0884, "po": 0.6556, "r16": 0.3616, "qf": 0.0749, "sf": 0.0137, "f": 0.0021},
+    "BOD": {"top8": 0.0883, "po": 0.646, "r16": 0.3963, "qf": 0.0977, "sf": 0.0206, "f": 0.0037},
+    "CLB": {"top8": 0.0871, "po": 0.6147, "r16": 0.3849, "qf": 0.094, "sf": 0.0218, "f": 0.0037},
+    "STU": {"top8": 0.0602, "po": 0.5943, "r16": 0.2427, "qf": 0.0342, "sf": 0.0038, "f": 0.0003},
+    "FEN": {"top8": 0.0514, "po": 0.568, "r16": 0.24, "qf": 0.0386, "sf": 0.0053, "f": 0.0006},
+    "LIL": {"top8": 0.0438, "po": 0.5906, "r16": 0.2662, "qf": 0.0468, "sf": 0.0073, "f": 0.0007},
+    "PSV": {"top8": 0.0284, "po": 0.4852, "r16": 0.1724, "qf": 0.0214, "sf": 0.0026, "f": 0.0002},
+    "GAL": {"top8": 0.0275, "po": 0.4991, "r16": 0.1875, "qf": 0.0277, "sf": 0.0039, "f": 0.0003},
+    "COM": {"top8": 0.0247, "po": 0.4587, "r16": 0.1738, "qf": 0.0275, "sf": 0.0035, "f": 0.0003},
+    "LEN": {"top8": 0.0202, "po": 0.4258, "r16": 0.1584, "qf": 0.0236, "sf": 0.0032, "f": 0.0005},
+    "SHK": {"top8": 0.0059, "po": 0.2919, "r16": 0.0516, "qf": 0.0029, "sf": 0.0002, "f": 0.0},
+    "SLA": {"top8": 0.0052, "po": 0.2692, "r16": 0.0579, "qf": 0.0046, "sf": 0.0003, "f": 0.0},
+    "FEY": {"top8": 0.0049, "po": 0.2572, "r16": 0.0556, "qf": 0.0048, "sf": 0.0003, "f": 0.0},
+    "AEK": {"top8": 0.0042, "po": 0.2551, "r16": 0.0434, "qf": 0.0029, "sf": 0.0001, "f": 0.0},
+    "VIK": {"top8": 0.0038, "po": 0.2702, "r16": 0.047, "qf": 0.0023, "sf": 0.0002, "f": 0.0},
+    "LSK": {"top8": 0.0009, "po": 0.1201, "r16": 0.0108, "qf": 0.0002, "sf": 0.0, "f": 0.0},
+    "SLB": {"top8": 0.0001, "po": 0.0418, "r16": 0.0017, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "SAB": {"top8": 0.0, "po": 0.0195, "r16": 0.0009, "qf": 0.0, "sf": 0.0, "f": 0.0},
+}
 
 # Expected REMAINING matches per club, from the same Monte-Carlo. Counts both
 # legs of two-legged ties, so it is NOT just the sum of the reach-probabilities.
-EXP_GAMES: dict[str, float] = {}
+EXP_GAMES: dict[str, float] = {
+    "PSG": 13.202,
+    "BAY": 13.162,
+    "ARS": 13.151,
+    "BAR": 13.085,
+    "MCI": 13.082,
+    "RMA": 12.906,
+    "LIV": 12.654,
+    "INT": 12.288,
+    "ATM": 12.088,
+    "MUN": 11.27,
+    "NAP": 11.243,
+    "RBL": 11.041,
+    "ROM": 10.796,
+    "AVL": 10.795,
+    "VIL": 10.785,
+    "DOR": 10.546,
+    "BET": 10.486,
+    "SPO": 10.394,
+    "BOD": 10.325,
+    "CLB": 10.234,
+    "POR": 10.214,
+    "LIL": 9.823,
+    "STU": 9.75,
+    "FEN": 9.704,
+    "GAL": 9.437,
+    "PSV": 9.363,
+    "COM": 9.327,
+    "LEN": 9.222,
+    "SHK": 8.693,
+    "SLA": 8.664,
+    "VIK": 8.639,
+    "FEY": 8.636,
+    "AEK": 8.603,
+    "LSK": 8.262,
+    "SLB": 8.087,
+    "SAB": 8.041,
+}
 
 _EMPTY_QUAL = {"top8": 0.0, "po": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0}
 
