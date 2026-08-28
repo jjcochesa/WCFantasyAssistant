@@ -1,0 +1,250 @@
+#!/usr/bin/env python3
+"""
+Pull 2025-26 player stats across ALL competitions for every club in the UCL
+league phase, from API-Football, and aggregate them per player.
+
+    python3 scripts/fetch_ucl_player_stats.py --key YOUR_KEY
+    python3 scripts/fetch_ucl_player_stats.py --key YOUR_KEY --season 2025
+    python3 scripts/fetch_ucl_player_stats.py --clubs RMA,BAY   # just a couple
+
+Why all competitions: a player's Champions League record is 8-13 games at best
+and missing entirely for anyone whose club didn't qualify last season. Domestic
+league + cup minutes cover the whole pool with a far larger sample, which is
+what the per-90 model actually wants.
+
+API-Football returns one statistics block per competition per player, so each
+player's blocks are summed into a single season total.
+
+Output: data/ucl_player_stats.json, keyed by normalised name:
+    {"kylian mbappe": {"team": "RMA", "minutes": 3210, "goals": 41, ...}}
+
+Budget: ~2-4 calls per club (paginated), so roughly 100-150 calls for 36 clubs.
+Team ids are resolved once and cached in data/apif_ucl_team_ids.json.
+
+Run LOCALLY — the API key is IP-restricted to the owner's machine.
+"""
+import argparse
+import json
+import os
+import sys
+import time
+import unicodedata
+
+import requests
+
+BASE = "https://v3.football.api-sports.io"
+DELAY = 2.2
+
+HERE = os.path.dirname(__file__)
+DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
+OUTPUT = os.path.join(DATA, "ucl_player_stats.json")
+TEAM_ID_CACHE = os.path.join(DATA, "apif_ucl_team_ids.json")
+
+sys.path.insert(0, os.path.normpath(os.path.join(HERE, "..")))
+from data.ucl_draw import CLUBS  # noqa: E402
+
+# What to type into API-Football's team search for each of our club codes.
+SEARCH_NAMES = {
+    "PSG": "Paris Saint Germain", "BAY": "Bayern Munich", "RMA": "Real Madrid",
+    "LIV": "Liverpool", "INT": "Inter", "MCI": "Manchester City",
+    "ARS": "Arsenal", "BAR": "Barcelona", "ATM": "Atletico Madrid",
+    "DOR": "Borussia Dortmund", "ROM": "AS Roma", "SPO": "Sporting CP",
+    "AVL": "Aston Villa", "POR": "FC Porto", "MUN": "Manchester United",
+    "CLB": "Club Brugge KV", "BET": "Real Betis", "PSV": "PSV Eindhoven",
+    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Bodo/Glimt", "NAP": "Napoli",
+    "RBL": "RB Leipzig", "VIL": "Villarreal", "FEN": "Fenerbahce",
+    "SHK": "Shakhtar Donetsk", "GAL": "Galatasaray", "SLA": "Slavia Praha",
+    "SLB": "Slovan Bratislava", "STU": "VfB Stuttgart", "AEK": "AEK Athens",
+    "LSK": "LASK", "COM": "Como", "LEN": "RC Lens", "VIK": "Viking",
+    "SAB": "Sabah FK",
+}
+
+_REQS = 0
+
+
+def _norm(name: str) -> str:
+    n = (name or "").lower().replace("ı", "i").replace("ø", "o").replace("æ", "ae").replace("ß", "ss")
+    n = unicodedata.normalize("NFKD", n).encode("ascii", "ignore").decode()
+    return " ".join(n.replace("-", " ").replace(".", "").replace("'", "").split())
+
+
+def _get(endpoint: str, params: dict, headers: dict) -> dict:
+    global _REQS
+    time.sleep(DELAY)
+    for attempt in range(4):
+        try:
+            r = requests.get(f"{BASE}/{endpoint}", headers=headers, params=params, timeout=30)
+            if r.status_code == 429:
+                wait = 60 * (attempt + 1)
+                print(f"    rate-limited, waiting {wait}s")
+                time.sleep(wait)
+                continue
+            r.raise_for_status()
+            data = r.json()
+            if data.get("errors"):
+                print(f"    [API errors] {data['errors']}")
+            _REQS += 1
+            return data
+        except Exception as e:
+            wait = 3 * (attempt + 1)
+            print(f"    [retry {attempt+1}/4] {endpoint} {params}: {e} — waiting {wait}s")
+            time.sleep(wait)
+    print(f"    [ERR] gave up on {endpoint} {params}")
+    return {}
+
+
+def resolve_team_ids(codes: list, headers: dict) -> dict:
+    """code -> API-Football team id, cached so this costs nothing on re-runs."""
+    cache = {}
+    if os.path.exists(TEAM_ID_CACHE):
+        try:
+            cache = json.load(open(TEAM_ID_CACHE))
+        except Exception:
+            cache = {}
+    missing = [c for c in codes if c not in cache]
+    if missing:
+        print(f"Resolving {len(missing)} team id(s)...")
+    for code in missing:
+        term = SEARCH_NAMES.get(code, CLUBS.get(code, code))
+        data = _get("teams", {"search": term}, headers)
+        resp = data.get("response") or []
+        if not resp:
+            print(f"  [WARN] no API-Football team found for {code} ({term!r})")
+            continue
+        # Prefer an exact-ish name match, else the first hit.
+        best = resp[0]
+        for item in resp:
+            if _norm(item.get("team", {}).get("name", "")) == _norm(term):
+                best = item
+                break
+        tid = best.get("team", {}).get("id")
+        if tid:
+            cache[code] = tid
+            print(f"  {code:4s} -> {tid}  ({best['team'].get('name')})")
+    json.dump(cache, open(TEAM_ID_CACHE, "w"), indent=2)
+    return cache
+
+
+def _add(dst: dict, block: dict) -> None:
+    """Fold one competition's statistics block into a player's running totals."""
+    g = block.get("games") or {}
+    goals = block.get("goals") or {}
+    shots = block.get("shots") or {}
+    passes = block.get("passes") or {}
+    tackles = block.get("tackles") or {}
+    duels = block.get("duels") or {}
+    cards = block.get("cards") or {}
+    pen = block.get("penalty") or {}
+
+    def n(v):
+        return float(v or 0)
+
+    dst["appearances"] += n(g.get("appearences"))
+    dst["lineups"]     += n(g.get("lineups"))
+    dst["minutes"]     += n(g.get("minutes"))
+    dst["goals"]       += n(goals.get("total"))
+    dst["assists"]     += n(goals.get("assists"))
+    dst["conceded"]    += n(goals.get("conceded"))
+    dst["saves"]       += n(goals.get("saves"))
+    dst["shots"]       += n(shots.get("total"))
+    dst["shots_on"]    += n(shots.get("on"))
+    dst["key_passes"]  += n(passes.get("key"))
+    dst["tackles"]     += n(tackles.get("total"))
+    dst["interceptions"] += n(tackles.get("interceptions"))
+    dst["duels_won"]   += n(duels.get("won"))
+    dst["yellow"]      += n(cards.get("yellow"))
+    dst["red"]         += n(cards.get("red"))
+    dst["pens_scored"] += n(pen.get("scored"))
+    dst["pens_missed"] += n(pen.get("missed"))
+    dst["competitions"] += 1
+    if g.get("rating"):
+        try:
+            dst["_rating_sum"] += float(g["rating"]) * max(n(g.get("appearences")), 1)
+            dst["_rating_apps"] += max(n(g.get("appearences")), 1)
+        except (TypeError, ValueError):
+            pass
+
+
+def fetch_club(code: str, tid: int, season: int, headers: dict) -> dict:
+    out, page, total_pages = {}, 1, 1
+    while page <= total_pages:
+        data = _get("players", {"team": tid, "season": season, "page": page}, headers)
+        paging = data.get("paging") or {}
+        total_pages = int(paging.get("total") or 1)
+        for entry in data.get("response") or []:
+            pl = entry.get("player") or {}
+            name = pl.get("name") or ""
+            if not name:
+                continue
+            key = _norm(name)
+            rec = out.setdefault(key, {
+                "display_name": name, "team": code, "player_id": pl.get("id"),
+                "appearances": 0.0, "lineups": 0.0, "minutes": 0.0, "goals": 0.0,
+                "assists": 0.0, "conceded": 0.0, "saves": 0.0, "shots": 0.0,
+                "shots_on": 0.0, "key_passes": 0.0, "tackles": 0.0,
+                "interceptions": 0.0, "duels_won": 0.0, "yellow": 0.0, "red": 0.0,
+                "pens_scored": 0.0, "pens_missed": 0.0, "competitions": 0,
+                "_rating_sum": 0.0, "_rating_apps": 0.0,
+            })
+            for block in entry.get("statistics") or []:
+                _add(rec, block)
+        page += 1
+    return out
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--key", required=True, help="API-Football key")
+    ap.add_argument("--season", type=int, default=2025,
+                    help="Season start year — 2025 means 2025/26 (default)")
+    ap.add_argument("--clubs", help="Comma-separated club codes (default: all 36)")
+    ap.add_argument("--out", default=OUTPUT)
+    args = ap.parse_args()
+
+    headers = {"x-apisports-key": args.key}
+    codes = ([c.strip().upper() for c in args.clubs.split(",")]
+             if args.clubs else sorted(CLUBS))
+    unknown = [c for c in codes if c not in CLUBS]
+    if unknown:
+        sys.exit(f"Unknown club code(s): {unknown}")
+
+    ids = resolve_team_ids(codes, headers)
+    all_players, per_club = {}, {}
+    print(f"\nPulling {args.season}/{str(args.season+1)[-2:]} stats "
+          f"(all competitions) for {len(codes)} club(s)...")
+    for i, code in enumerate(codes, 1):
+        tid = ids.get(code)
+        if not tid:
+            print(f"  [{i:2d}/{len(codes)}] {code}: no team id, skipped")
+            continue
+        club = fetch_club(code, tid, args.season, headers)
+        per_club[code] = len(club)
+        print(f"  [{i:2d}/{len(codes)}] {code}: {len(club)} players")
+        for k, v in club.items():
+            if k in all_players and all_players[k]["minutes"] >= v["minutes"]:
+                continue          # keep the club where they played more
+            all_players[k] = v
+
+    for rec in all_players.values():
+        apps = rec.pop("_rating_apps", 0.0)
+        rsum = rec.pop("_rating_sum", 0.0)
+        rec["rating"] = round(rsum / apps, 2) if apps else 0.0
+        # UEFA counts "ball recoveries"; tackles + interceptions is the closest
+        # thing API-Football exposes.
+        rec["recoveries"] = rec["tackles"] + rec["interceptions"]
+
+    payload = {
+        "season": args.season,
+        "clubs": per_club,
+        "api_requests": _REQS,
+        "players": all_players,
+    }
+    json.dump(payload, open(args.out, "w"), indent=2, ensure_ascii=False)
+    with_mins = sum(1 for v in all_players.values() if v["minutes"] > 0)
+    print(f"\nSaved {len(all_players)} players ({with_mins} with minutes) -> {args.out}")
+    print(f"API requests used: {_REQS}")
+    print("\nNext: commit data/ucl_player_stats.json and push.")
+
+
+if __name__ == "__main__":
+    main()

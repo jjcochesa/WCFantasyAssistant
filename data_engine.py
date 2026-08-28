@@ -850,18 +850,46 @@ def _compute_per90(p: Player) -> None:
     # competition — and the UEFA feed carries it for every player in the pool,
     # where the club/NT stats cover only a fraction. Blend toward it with the
     # usual shrinkage so small samples don't produce spiky rates.
+    # Recent real football, POOLED. Two sources describe the same player: last
+    # season across all competitions (wide) and last season's Champions League
+    # record from the game feed (narrow but directly relevant). Combine them by
+    # MINUTES rather than blending one after the other — applied sequentially,
+    # the smaller sample ends up dominating the result.
+    _load_ucl_player_stats()
+    season = _ucl_season_stats(p) or {}
     hist = getattr(p, "ucl_hist", None) or {}
-    hm = hist.get("minutes", 0) or 0
-    if hm >= 180:
-        n90 = hm / 90.0
-        w = min(1.0, n90 / (n90 + 4.0))       # 4 full games of prior
-        p.xg90      = (1 - w) * p.xg90      + w * (hist.get("goals", 0) / n90)
-        p.xa90      = (1 - w) * p.xa90      + w * (hist.get("assists", 0) / n90)
-        p.tackles90 = (1 - w) * p.tackles90 + w * (hist.get("recoveries", 0) / n90)
-        p._sample_minutes = max(getattr(p, "_sample_minutes", 0.0), hm)
-        if p.position == "GK" and hist.get("saves", 0) > 0:
-            sv90 = hist["saves"] / n90
-            p.save_rate = max(0.55, min(0.85, sv90 / (sv90 + 1.3)))
+    s_min = season.get("minutes") or 0
+    h_min = hist.get("minutes") or 0
+    tot_min = s_min + h_min
+    if tot_min >= 270:
+        n90 = tot_min / 90.0
+        w = min(1.0, n90 / (n90 + 6.0))       # 6 full games of prior
+
+        def _pooled(key: str) -> float:
+            return ((season.get(key) or 0) + (hist.get(key) or 0)) / n90
+
+        p.xg90      = (1 - w) * p.xg90      + w * _pooled("goals")
+        p.xa90      = (1 - w) * p.xa90      + w * _pooled("assists")
+        p.tackles90 = (1 - w) * p.tackles90 + w * _pooled("recoveries")
+        p._sample_minutes = max(getattr(p, "_sample_minutes", 0.0), tot_min)
+
+        # Shots on target, key passes and starts only exist in the season
+        # source, so they are rated over that sample alone.
+        if s_min >= 270:
+            s90 = s_min / 90.0
+            sw = min(1.0, s90 / (s90 + 6.0))
+            p.sot90 = (1 - sw) * p.sot90 + sw * ((season.get("shots_on") or 0) / s90)
+            p.kp90  = (1 - sw) * p.kp90  + sw * ((season.get("key_passes") or 0) / s90)
+            apps = season.get("appearances") or 0
+            if apps:
+                p.starter_rate = max(0.0, min(1.0, (season.get("lineups") or 0) / apps))
+
+        # Save rate over every shot faced across both samples.
+        if p.position == "GK":
+            saves = (season.get("saves") or 0) + (hist.get("saves") or 0)
+            faced = saves + (season.get("conceded") or 0) + (hist.get("conceded") or 0)
+            if saves > 0 and faced > 0:
+                p.save_rate = max(0.55, min(0.85, saves / faced))
 
 
 # ── Projection formula ────────────────────────────────────────────────────────
@@ -1446,6 +1474,40 @@ def load_from_fifa_feed() -> list:
 
 
 UCL_FEED_FILE = "data/ucl_players.json"   # output of scripts/fetch_ucl_feed.py
+UCL_STATS_FILE = "data/ucl_player_stats.json"  # output of scripts/fetch_ucl_player_stats.py
+
+_UCL_STATS: dict = {}
+
+
+def _load_ucl_player_stats() -> None:
+    """Last full season across ALL competitions (league, domestic cups, Europe).
+
+    This is the widest per-90 sample available for the pool: the UEFA feed only
+    carries Champions League history, which is a handful of games and missing
+    entirely for clubs that weren't in it.
+    """
+    global _UCL_STATS
+    if _UCL_STATS or not os.path.exists(UCL_STATS_FILE):
+        return
+    try:
+        blob = json.load(open(UCL_STATS_FILE))
+    except Exception as e:
+        print(f"[UCL stats] Could not load {UCL_STATS_FILE}: {e}")
+        return
+    _UCL_STATS = blob.get("players", {}) or {}
+    if _UCL_STATS:
+        played = sum(1 for v in _UCL_STATS.values() if (v.get("minutes") or 0) > 0)
+        print(f"[UCL stats] Loaded {len(_UCL_STATS)} players "
+              f"({played} with minutes) from season {blob.get('season','?')}/"
+              f"{str(int(blob.get('season', 0)) + 1)[-2:]}, all competitions")
+
+
+def _ucl_season_stats(p) -> dict:
+    """That season's totals for this player, matched by name."""
+    if not _UCL_STATS:
+        return {}
+    return (_UCL_STATS.get(_norm_name(p.name))
+            or _UCL_STATS.get(_match_key(p.name)) or {})
 
 # UEFA spells clubs its own way; map what the feed says onto our 3-letter codes.
 UCL_NAME_ALIASES = {
@@ -1621,6 +1683,7 @@ def load_from_ucl_feed() -> list:
             "assists":    _num("assist", "assists"),
             "clean_sheets": _num("cS", "cleanSheets"),
             "saves":      _num("saves"),
+            "conceded":   _num("gC", "goalsConceded"),
             "recoveries": _num("bR", "ballRecoveries"),
             "points":     _num("totPts", "totalPoints"),
         }
