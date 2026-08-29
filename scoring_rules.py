@@ -1,19 +1,39 @@
 """
 Official UEFA Champions League Fantasy scoring rules (gaming.uefa.com).
 
-Values from the 24-25/25-26 editions of the game — UEFA keeps scoring stable
-year to year, but re-verify against the in-game rules page when the 2026-27
-game opens in August (especially the per-club caps and transfer allowances).
+VERIFICATION STATUS — read before trusting a number.
+
+  CONFIRMED for 2026-27 (UEFA rules article + press coverage, Aug 2026):
+    appearance 1, +1 more at 60 minutes
+    goal: FWD 4, MID 5, DEF 6, GK 6
+    goal from OUTSIDE THE BOX: +1 on top
+    penalty WON: +2 (not when the penalty is for handball)
+    ball recoveries: +1 per 3, all positions
+    Player of the Match: +3
+    clean sheet needs 60+ minutes, and is unaffected if the player is already
+      off when the goal goes in
+
+  NOT YET CONFIRMED — carried over from 24-25/25-26 and still to be checked
+  against the in-game Rules page:
+    assist value, clean-sheet value by position, goals-conceded penalty,
+    saves, penalty save, penalty miss, yellow/red card, own goal
+
+The unconfirmed ones are the defensive side, which is exactly where the cheap
+picks live, so they are worth checking before locking a squad.
 
 Engine notes:
   - data_engine reads SCORING keys directly (goal / assist / clean_sheet_60 /
     goals_conceded_add), so these values retune all projections.
   - UCL deducts -1 per EVERY 2 goals conceded (GK/DEF). The engine applies its
     value per expected goal beyond the first, so we encode -0.5 per goal.
-  - UCL awards 1pt per 3 BALL RECOVERIES (all positions). Our stats pipeline
-    tracks tackles, a conservative proxy — encoded under tackles_per_3.
-  - Player of the Match (+3) is not predictable per-player pre-match; it is
-    intentionally NOT modelled (would just add noise).
+  - UCL awards 1pt per 3 BALL RECOVERIES (all positions), now fed by real
+    recovery data (tackles + interceptions) rather than a tackles-only proxy.
+  - Player of the Match (+3), goals from outside the box (+1) and penalties won
+    (+2) are real scoring events we do NOT model: nothing in the data predicts
+    them per player before a match, so including them would add noise rather
+    than signal. They are listed below for completeness and are a reason a
+    long-range shooter or a penalty-winning dribbler is worth slightly more
+    than the projection shows.
 """
 
 # Points by position — official UCL Fantasy match scoring
@@ -29,8 +49,7 @@ SCORING = {
     "saves_per_3":         {"GK": 1, "DEF": 0, "MID": 0, "FWD": 0},
     "penalty_save":        {"GK": 5, "DEF": 0, "MID": 0, "FWD": 0},
     "penalty_miss":        {"GK": -2, "DEF": -2, "MID": -2, "FWD": -2},
-    # Ball recoveries: 1pt per 3, ALL positions in UCL. Tackles are our proxy
-    # (undercounts for GKs/forwards; closest signal we track per-90).
+    # Ball recoveries: 1pt per 3, ALL positions in UCL. CONFIRMED.
     "tackles_per_3":       {"GK": 1, "DEF": 1, "MID": 1, "FWD": 1},
     # Not part of UCL scoring (were WC-specific) — zeroed so the engine's terms vanish.
     "chances_per_2":       {"GK": 0, "DEF": 0, "MID": 0, "FWD": 0},
@@ -38,10 +57,11 @@ SCORING = {
     "yellow_card":         {"GK": -1, "DEF": -1, "MID": -1, "FWD": -1},
     "red_card":            {"GK": -3, "DEF": -3, "MID": -3, "FWD": -3},
     "own_goal":            {"GK": -2, "DEF": -2, "MID": -2, "FWD": -2},
-    # Player of the Match: +3 in the real game — deliberately unmodelled (see above).
+    # Real scoring events, listed for completeness but deliberately unmodelled —
+    # nothing in the data predicts them per player before a match.
     "player_of_match":     {"GK": 3, "DEF": 3, "MID": 3, "FWD": 3},
-    # App-level scout bonus (our feature, not UEFA's): low-owned high-scorers.
-    "scout_bonus":         {"GK": 2, "DEF": 2, "MID": 2, "FWD": 2},
+    "goal_outside_box":    {"GK": 1, "DEF": 1, "MID": 1, "FWD": 1},   # on top of the goal
+    "penalty_won":         {"GK": 2, "DEF": 2, "MID": 2, "FWD": 2},   # not for handball
 }
 
 POSITIONS = ["GK", "DEF", "MID", "FWD"]
@@ -74,5 +94,8 @@ MAX_PER_COUNTRY_KNOCKOUT = MAX_PER_CLUB_BY_STAGE["R16"]
 # - Transfers between MDs + Wildcard/boosters: allowances vary by stage and
 #   edition — pull exact numbers from the in-game rules page when 26-27 opens.
 
-SCOUT_OWNERSHIP_THRESHOLD = 4.5
-SCOUT_POINTS_THRESHOLD = 4.0
+# There is no scout bonus in UCL Fantasy — it was a World Cup game feature.
+# These thresholds remain only so older imports don't break; nothing scores off
+# them any more.
+SCOUT_OWNERSHIP_THRESHOLD = 0.0
+SCOUT_POINTS_THRESHOLD = float("inf")

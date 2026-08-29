@@ -9,7 +9,6 @@ from data_engine import load_data, fetch_live_player_data, _norm_name, _match_ke
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
     MAX_PER_COUNTRY_GROUP, MAX_PER_COUNTRY_KNOCKOUT,
-    SCOUT_OWNERSHIP_THRESHOLD, SCOUT_POINTS_THRESHOLD
 )
 from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
@@ -129,7 +128,6 @@ def _apply_live_data(df: pd.DataFrame, live: dict) -> pd.DataFrame:
 
     # Recompute value and scout with real prices/ownership
     df["value"] = (df["xPts_GS"] / df["price"].replace(0, float("nan"))).round(3)
-    df["scout"] = (df["own_%"] < SCOUT_OWNERSHIP_THRESHOLD) & (df["xPts/game"] > SCOUT_POINTS_THRESHOLD)
     return df
 
 
@@ -235,13 +233,22 @@ def fmt(sub: pd.DataFrame):
     return s.format({k: v for k, v in fmt_map.items() if k in sub.columns}, na_rep="—")
 
 
-# ── Scout bonus (display-only, +2 if own%<4.5 AND projected pts≥4) ────────────
-def _with_scout_bonus(view: pd.DataFrame) -> pd.DataFrame:
+# ── Window totals ─────────────────────────────────────────────────────────────
+# UCL Fantasy has no scout/differential bonus — that was a World Cup game
+# feature — so there is no "adjusted" points figure. What matters instead is
+# the total across the matchdays a squad has to cover.
+def _window_total(view: pd.DataFrame, mds: list) -> pd.DataFrame:
     v = view.copy()
-    low_own = v["own_%"] < 4.5
-    v["scout_bonus"] = ((low_own) & (v["xPts_GS"] >= 4.0)).astype(int) * 2
-    v["adj_total"]   = v["xPts_GS"] + v["scout_bonus"]
+    cols = [f"xPts_md{m}" for m in mds if f"xPts_md{m}" in v.columns]
+    v["win_total"] = v[cols].sum(axis=1).round(2) if cols else v["xPts_GS"]
+    v["win_value"] = (v["win_total"] / v["price"].replace(0, float("nan"))).round(2)
     return v
+
+
+def _default_window(frame: pd.DataFrame) -> list:
+    mds = sorted(int(c.replace("xPts_md", "")) for c in frame.columns
+                 if c.startswith("xPts_md"))
+    return mds[:3] if mds else []
 
 
 # ── Greedy squad builder (must be defined before tabs) ───────────────────────
@@ -344,7 +351,7 @@ tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
     "⚽ Club Form",
     "🌍 International Form",
     "🏗️ Squad Builder",
-    "🔍 Scouts & Value",
+    "🔍 Value Picks",
     "📊 Fixtures & FDR",
     "🌐 UCL Stats",
 ])
@@ -546,12 +553,17 @@ with tab1:
 
     st.divider()
     k1, k2, k3, k4, k5 = st.columns(5)
+    _kw = _default_window(df)
+    _kdf = _window_total(df[df["in_round"]] if "in_round" in df.columns else df, _kw)
     k1.metric("Players", len(df))
-    k2.metric("Countries", df["country"].nunique())
-    k3.metric("Scout candidates", int(df["scout"].sum()))
-    best = df.iloc[0]
-    k4.metric("Top xPts/game", f"{best['xPts/game']:.2f}  —  {best['name']}")
-    k5.metric("Best value", f"{df.sort_values('value', ascending=False).iloc[0]['name']}")
+    k2.metric("Clubs", df["team_code"].nunique())
+    k3.metric("Matchdays loaded", len(_default_window(df)) and
+              len([c for c in df.columns if c.startswith("xPts_md")]))
+    _top = _kdf.nlargest(1, "win_total").iloc[0]
+    _val = _kdf[_kdf["price"] >= 4.0].nlargest(1, "win_value").iloc[0]
+    k4.metric(f"Top MD{_kw[0]}–{_kw[-1]}" if _kw else "Top",
+              f"{_top['win_total']:.1f} — {_top['name']}")
+    k5.metric("Best value", f"{_val['win_value']:.2f}/€m — {_val['name']}")
 
 
 # ── TAB 2: Club Form ──────────────────────────────────────────────────────────
@@ -758,61 +770,58 @@ with tab5:
     c1, c2 = st.columns(2)
 
     with c1:
-        st.subheader(f"🔍 Scout Picks  (<{SCOUT_OWNERSHIP_THRESHOLD}% owned, ≥{SCOUT_POINTS_THRESHOLD} pts/game)")
-        scouts = _with_scout_bonus(df[df["scout"]].sort_values("xPts/game", ascending=False).copy())
+        _w5 = _default_window(df)
+        _span5 = f"MD{_w5[0]}–MD{_w5[-1]}" if _w5 else CURRENT_ROUND
+        st.subheader(f"🔍 Budget picks  (≤€6.0m, best over {_span5})")
+        scouts = _window_total(
+            df[(df["price"] <= 6.0) & (df["in_round"] if "in_round" in df.columns else True)],
+            _w5).sort_values("win_total", ascending=False).copy()
         pos_s = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="scout_pos")
         if pos_s != "All":
             scouts = scouts[scouts["pos"] == pos_s]
         scouts = scouts.reset_index(drop=True)
         scouts.index = range(1, len(scouts) + 1)
 
-        s_cols = ["name", "team_code", "pos", "price", "own_%",
-                  "opp", "team_cs_pct", "team_xg",
-                  "xPts_GS", "scout_bonus", "adj_total", "value"]
+        s_cols = ["name", "team_code", "pos", "price",
+                  "team_cs_pct", "team_xg", "win_total", "win_value"]
         s_cols = [c for c in s_cols if c in scouts.columns]
         s_disp = scouts[s_cols].rename(columns={
-            "name": "Name", "team_code": "Nation", "pos": "Pos",
-            "price": "Price", "own_%": "Own%",
-            "opp": "Opp", "team_cs_pct": "CS%", "team_xg": "Team xG",
-            "xPts_GS": "Proj Pts", "scout_bonus": "Scout+", "adj_total": "Adj Pts",
-            "value": "Value",
+            "name": "Name", "team_code": "Club", "pos": "Pos", "price": "Price",
+            "team_cs_pct": "CS%", "team_xg": "Team xG",
+            "win_total": f"Total {_span5}", "win_value": "Pts/€m",
         }).reset_index(drop=True)
 
-        s_fmt = {"Price": "${:.1f}m", "Own%": "{:.1f}%",
-                 "CS%": "{:.0%}", "Team xG": "{:.2f}",
-                 "Proj Pts": "{:.1f}", "Scout+": "{:.0f}", "Adj Pts": "{:.1f}",
-                 "Value": "{:.3f}"}
-        s_grad = [c for c in ["Proj Pts", "Adj Pts"] if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
-        s_disp_idx = _pin_name(s_disp, "Name", "Nation")
+        s_fmt = {"Price": "€{:.1f}m", "CS%": "{:.0%}", "Team xG": "{:.2f}",
+                 f"Total {_span5}": "{:.1f}", "Pts/€m": "{:.2f}"}
+        s_grad = [c for c in [f"Total {_span5}", "Pts/€m"]
+                  if c in s_disp.columns and s_disp[c].dropna().nunique() >= 2]
+        s_disp_idx = _pin_name(s_disp, "Name", "Club")
         s_styler = s_disp_idx.style.format({k: v for k, v in s_fmt.items() if k in s_disp_idx.columns}, na_rep="—")
         if s_grad:
             s_styler = s_styler.background_gradient(subset=s_grad, cmap="Greens")
         st.dataframe(s_styler, use_container_width=True, height=480)
 
     with c2:
-        st.subheader("💰 Best Value (Adj Pts / $m)")
+        st.subheader("💰 Best value (points per €m)")
         pos_v  = st.selectbox("Position", ["All", "GK", "DEF", "MID", "FWD"], key="val_pos")
         max_pv = st.number_input("Max price", 4.0, 15.0, 12.0, 0.5, key="val_price")
-        val_view = _with_scout_bonus(df[df["price"] <= max_pv].copy())
+        val_view = _window_total(df[df["price"] <= max_pv].copy(), _default_window(df))
         if pos_v != "All":
             val_view = val_view[val_view["pos"] == pos_v]
-        val_view["adj_value"] = (val_view["adj_total"] / val_view["price"].replace(0, float("nan"))).round(3)
-        val_view = val_view.sort_values("adj_value", ascending=False).head(20).reset_index(drop=True)
+        val_view = val_view.sort_values("win_value", ascending=False).head(20).reset_index(drop=True)
         val_view.index += 1
 
-        v_cols = ["name", "team_code", "price", "adj_total", "adj_value",
-                  "opp", "xPts_GS"]
+        v_cols = ["name", "team_code", "price", "win_total", "win_value", "opp"]
         v_cols = [c for c in v_cols if c in val_view.columns]
         v_disp = val_view[v_cols].rename(columns={
-            "name": "Name", "team_code": "Nation",
-            "price": "Price", "adj_total": "Adj Pts", "adj_value": "Value",
-            "opp": "Opp", "xPts_GS": "Proj Pts",
+            "name": "Name", "team_code": "Club", "price": "Price",
+            "win_total": "Total", "win_value": "Pts/€m", "opp": "Opp",
         }).reset_index(drop=True)
 
-        v_fmt = {"Price": "${:.1f}m", "Adj Pts": "{:.1f}", "Value": "{:.3f}",
-                 "Proj Pts": "{:.1f}"}
-        v_grad = [c for c in ["Adj Pts", "Value"] if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
-        v_disp_idx = _pin_name(v_disp, "Name", "Nation")
+        v_fmt = {"Price": "€{:.1f}m", "Total": "{:.1f}", "Pts/€m": "{:.2f}"}
+        v_grad = [c for c in ["Total", "Pts/€m"]
+                  if c in v_disp.columns and v_disp[c].dropna().nunique() >= 2]
+        v_disp_idx = _pin_name(v_disp, "Name", "Club")
         v_styler = v_disp_idx.style.format({k: v for k, v in v_fmt.items() if k in v_disp_idx.columns}, na_rep="—")
         if v_grad:
             v_styler = v_styler.background_gradient(subset=v_grad, cmap="Blues")
