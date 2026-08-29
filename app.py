@@ -14,6 +14,7 @@ from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
     get_team_fdr, get_next_opponent, get_team_xg, get_team_cs,
     get_qual_probs, has_round_data as _ts_has_round_data,
+    get_md_fixture, get_md_fdr, is_home,
 )
 
 st.set_page_config(
@@ -417,6 +418,16 @@ with tab1:
 
     if _hcols:
         view = view.copy()
+        # One opponent column per matchday in the window. The fixture run is the
+        # reason to pick a player over the window, so it belongs beside the
+        # points rather than collapsed into a single "next opponent".
+        if "team_code" in view.columns:
+            for _m in t1_horizon:
+                view[f"opp_md{_m}"] = [
+                    (f"{get_md_fixture(_m, c)} ({'H' if is_home(_m, c) else 'A'})"
+                     if get_md_fixture(_m, c) else "—")
+                    for c in view["team_code"]
+                ]
         view["md_total"] = view[_hcols].sum(axis=1).round(2)
         view["md_value"] = (view["md_total"] / view["price"].replace(0, float("nan"))).round(2)
         view = view.sort_values("md_total", ascending=False).reset_index(drop=True)
@@ -440,11 +451,14 @@ with tab1:
         "team_code":        "Club",
         "pos":              "Pos",
         "price":            "Price",
-        "opp":              "Opp",
+        # Opponent per matchday, coloured by that matchday's FDR. Falls back to
+        # the single next opponent when no matchday window is loaded.
+        **({f"opp_md{m}": f"MD{m} Opp" for m in t1_horizon} if t1_horizon
+           else {"opp": "Opp"}),
         # Points per matchday across the chosen window, then the total. There is
         # no separate "adjusted" figure: the old +2 scout bonus keyed off
         # ownership, which isn't part of how we pick here.
-        **{f"xPts_md{m}": f"MD{m}" for m in t1_horizon},
+        **{f"xPts_md{m}": f"MD{m} Pts" for m in t1_horizon},
         "md_total":         f"Total {_span}",
         "md_value":         "Pts/€m",
         "tournament_xpts":  "Tourn xPts",
@@ -474,7 +488,7 @@ with tab1:
         if _qc in disp.columns and len(disp) and (disp[_qc] >= 0.999).all():
             disp = disp.drop(columns=_qc)
 
-    md_cols  = [f"MD{m}" for m in t1_horizon if f"MD{m}" in disp.columns]
+    md_cols  = [f"MD{m} Pts" for m in t1_horizon if f"MD{m} Pts" in disp.columns]
     tot_col  = [c for c in [f"Total {_span}"] if c in disp.columns]
     pts_cols = md_cols + tot_col
     pct_cols = [c for c in ["CS%"] if c in disp.columns]
@@ -525,17 +539,27 @@ with tab1:
         return styles
 
     def _opp_fdr_style(row):
+        """Colour each opponent cell by that club's FDR for that matchday.
+
+        Keyed on the club code, which lives in the "Club" column — an earlier
+        revision looked for a "Nation" column left over from the World Cup
+        layout, so every cell silently fell back to the neutral default of 3.
+        """
         styles = [""] * len(row)
         idx = list(row.index)
-        nation = row.get("Nation", "")
-        fdr_val = get_team_fdr(nation)
-        if "Opp" in idx:
-            styles[idx.index("Opp")] = _fdr_color(fdr_val)
+        club = row.get("Club", "")
+        if t1_horizon:
+            for m in t1_horizon:
+                col = f"MD{m} Opp"
+                if col in idx:
+                    styles[idx.index(col)] = _fdr_color(get_md_fdr(m, club))
+        elif "Opp" in idx:
+            styles[idx.index("Opp")] = _fdr_color(get_team_fdr(club))
         return styles
 
     # Name as index → Streamlit pins the index column, making Name sticky.
     # _pin_name deduplicates (required: pandas Styler.apply needs unique index).
-    disp_idx = _pin_name(disp, "Name", "Nation")
+    disp_idx = _pin_name(disp, "Name", "Club")
     styler = (
         disp_idx.style
         .format({k: v for k, v in fmt_map.items() if k in disp_idx.columns}, na_rep="—")
