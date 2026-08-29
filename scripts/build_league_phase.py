@@ -45,7 +45,12 @@ OUTPUT = os.path.join(DATA, "ucl_league_output.json")
 
 # ── Model constants (tunable) ─────────────────────────────────────────────────
 HOME_ADV_ELO       = 60.0    # home edge, in Elo points
-SUPREMACY_PER_ELO  = 0.006   # goal supremacy per Elo point of difference
+SUPREMACY_PER_ELO  = 0.0037  # goal supremacy per Elo point of difference.
+                             # Calibrated so a big home favourite lands where the
+                             # market puts it: a ~370-point edge (Barcelona at
+                             # home to Feyenoord) gives 2.3-0.7 and a 50% clean
+                             # sheet. At 0.006 the same tie read 2.8-0.2 and 82%,
+                             # which no bookmaker would price.
 BASE_TOTAL_GOALS   = 3.0     # expected combined goals in a neutral UCL tie
 MIN_LAMBDA, MAX_LAMBDA = 0.15, 5.0
 # Knockout variance: a one-off tie is closer to a coin flip than raw strength

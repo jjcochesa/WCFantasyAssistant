@@ -16,13 +16,15 @@ Sources:
     phase, bracket sim for the knockouts
   - Fixtures from the official UEFA calendar
 
-STATUS: league-phase draw is in (27.08.26) — 36 clubs, pots, 144 fixtures and
-qualification probabilities are loaded. Still awaiting UEFA's matchday calendar,
-so the per-matchday SCHEDULE/goals/CS%/FDR dicts stay empty and the app shows an
-'awaiting data' banner for the upcoming round.
+STATUS: draw (27.08.26) and matchday calendar are both loaded — 36 clubs, pots,
+144 dated fixtures, per-matchday goals/CS%/FDR and qualification probabilities.
+The per-matchday numbers are Elo-derived until a bookmaker board is supplied;
+rebuild them with scripts/build_md_projections.py --board <file>.
 """
 
+import json as _json
 import math as _math
+import os as _os
 
 # ── Competition calendar ──────────────────────────────────────────────────────
 
@@ -94,9 +96,48 @@ SCHEDULE: dict[int, dict[str, str]] = {}
 HOME: dict[int, set] = {}
 PROJ_GOALS_BY_MD: dict[int, dict[str, float]] = {}
 CS_PCT_BY_MD: dict[int, dict[str, float]] = {}
+MD_DATES: dict[int, list] = {}
+MD_SOURCE: dict[int, str] = {}   # "model" (Elo-derived) or "board" (bookmaker)
 # FDR banded by opponent threat = avg(opp_xGF, opp_CS%):
 #   1 → threat <0.45   2 → 0.45–0.62   3 → 0.62–0.85   4 → 0.85–1.20   5 → >1.20
 FDR_BY_MD: dict[int, dict[str, int]] = {}
+
+
+_MD_FILE = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                         "ucl_md_projections.json")
+
+
+def _load_md_projections() -> None:
+    """Fill the per-matchday dicts from data/ucl_md_projections.json.
+
+    Built by scripts/build_md_projections.py — Elo-derived by default, or from a
+    bookmaker board where one was supplied. Absent file just leaves the dicts
+    empty and the app shows its awaiting-data banner.
+    """
+    if not _os.path.exists(_MD_FILE):
+        return
+    try:
+        with open(_MD_FILE, encoding="utf-8") as f:
+            blob = _json.load(f)
+    except Exception:
+        return
+    for md_s, opp in (blob.get("schedule") or {}).items():
+        SCHEDULE[int(md_s)] = dict(opp)
+    for md_s, clubs in (blob.get("home") or {}).items():
+        HOME[int(md_s)] = set(clubs)
+    for md_s, vals in (blob.get("proj_goals") or {}).items():
+        PROJ_GOALS_BY_MD[int(md_s)] = {k: float(v) for k, v in vals.items()}
+    for md_s, vals in (blob.get("cs_pct") or {}).items():
+        CS_PCT_BY_MD[int(md_s)] = {k: float(v) for k, v in vals.items()}
+    for md_s, vals in (blob.get("fdr") or {}).items():
+        FDR_BY_MD[int(md_s)] = {k: int(v) for k, v in vals.items()}
+    for md_s, d in (blob.get("dates") or {}).items():
+        MD_DATES[int(md_s)] = list(d)
+    for md_s, src in (blob.get("source") or {}).items():
+        MD_SOURCE[int(md_s)] = str(src)
+
+
+_load_md_projections()
 
 
 def available_matchdays() -> list:
@@ -141,87 +182,99 @@ PROJ_GOALS: dict[str, float] = dict(PROJ_GOALS_BY_MD.get(CURRENT_MD, {}))
 CS_PCT: dict[str, float] = dict(CS_PCT_BY_MD.get(CURRENT_MD, {}))
 FDR: dict[str, int] = dict(FDR_BY_MD.get(CURRENT_MD, {}))
 
+
+def set_current_matchday(md: int) -> None:
+    """Point the single-round views at a different league matchday."""
+    global CURRENT_MD, CURRENT_ROUND, CURRENT_ROUND_DATE
+    CURRENT_MD = md
+    CURRENT_ROUND = f"MD{md}"
+    CURRENT_ROUND_DATE = (MD_DATES.get(md) or [""])[0]
+    for target, src in ((FIXTURES, SCHEDULE), (PROJ_GOALS, PROJ_GOALS_BY_MD),
+                        (CS_PCT, CS_PCT_BY_MD), (FDR, FDR_BY_MD)):
+        target.clear()
+        target.update(src.get(md, {}))
+
 # Reach-probabilities per club (0.0–1.0):
 #   top8 = finish 1-8 (direct to R16)   po = finish 9-24 (playoff)
 #   r16 / qf / sf / f = reach that round
 QUAL_PROBS: dict[str, dict] = {
-    "BAR": {"top8": 0.7836, "po": 0.2141, "r16": 0.9738, "qf": 0.7506, "sf": 0.4701, "f": 0.2679},
-    "RMA": {"top8": 0.7812, "po": 0.2164, "r16": 0.9714, "qf": 0.723, "sf": 0.4269, "f": 0.2309},
-    "BAY": {"top8": 0.7546, "po": 0.2412, "r16": 0.9705, "qf": 0.7525, "sf": 0.4769, "f": 0.2794},
-    "ARS": {"top8": 0.7104, "po": 0.2851, "r16": 0.9631, "qf": 0.7344, "sf": 0.4597, "f": 0.266},
-    "PSG": {"top8": 0.6979, "po": 0.296, "r16": 0.9624, "qf": 0.7369, "sf": 0.4675, "f": 0.2765},
-    "LIV": {"top8": 0.6838, "po": 0.309, "r16": 0.9417, "qf": 0.646, "sf": 0.3467, "f": 0.1678},
-    "MCI": {"top8": 0.6265, "po": 0.3635, "r16": 0.9434, "qf": 0.6889, "sf": 0.4261, "f": 0.238},
-    "INT": {"top8": 0.6226, "po": 0.3683, "r16": 0.9123, "qf": 0.5576, "sf": 0.2554, "f": 0.1014},
-    "ATM": {"top8": 0.4086, "po": 0.5515, "r16": 0.8231, "qf": 0.4398, "sf": 0.1925, "f": 0.0739},
-    "NAP": {"top8": 0.2257, "po": 0.671, "r16": 0.6353, "qf": 0.2368, "sf": 0.0701, "f": 0.017},
-    "MUN": {"top8": 0.2095, "po": 0.6651, "r16": 0.628, "qf": 0.2497, "sf": 0.0814, "f": 0.0219},
-    "RBL": {"top8": 0.19, "po": 0.6821, "r16": 0.5842, "qf": 0.1941, "sf": 0.0536, "f": 0.0125},
-    "AVL": {"top8": 0.1516, "po": 0.6775, "r16": 0.5211, "qf": 0.1555, "sf": 0.0394, "f": 0.0081},
-    "ROM": {"top8": 0.1443, "po": 0.6973, "r16": 0.5144, "qf": 0.1466, "sf": 0.036, "f": 0.0071},
-    "VIL": {"top8": 0.137, "po": 0.6771, "r16": 0.5111, "qf": 0.1591, "sf": 0.0413, "f": 0.008},
-    "DOR": {"top8": 0.1158, "po": 0.6756, "r16": 0.4489, "qf": 0.1197, "sf": 0.0266, "f": 0.0043},
-    "BET": {"top8": 0.1151, "po": 0.6803, "r16": 0.4357, "qf": 0.1032, "sf": 0.0219, "f": 0.0032},
-    "SPO": {"top8": 0.0968, "po": 0.6659, "r16": 0.4068, "qf": 0.1016, "sf": 0.021, "f": 0.0034},
-    "POR": {"top8": 0.0884, "po": 0.6556, "r16": 0.3616, "qf": 0.0749, "sf": 0.0137, "f": 0.0021},
-    "BOD": {"top8": 0.0883, "po": 0.646, "r16": 0.3963, "qf": 0.0977, "sf": 0.0206, "f": 0.0037},
-    "CLB": {"top8": 0.0871, "po": 0.6147, "r16": 0.3849, "qf": 0.094, "sf": 0.0218, "f": 0.0037},
-    "STU": {"top8": 0.0602, "po": 0.5943, "r16": 0.2427, "qf": 0.0342, "sf": 0.0038, "f": 0.0003},
-    "FEN": {"top8": 0.0514, "po": 0.568, "r16": 0.24, "qf": 0.0386, "sf": 0.0053, "f": 0.0006},
-    "LIL": {"top8": 0.0438, "po": 0.5906, "r16": 0.2662, "qf": 0.0468, "sf": 0.0073, "f": 0.0007},
-    "PSV": {"top8": 0.0284, "po": 0.4852, "r16": 0.1724, "qf": 0.0214, "sf": 0.0026, "f": 0.0002},
-    "GAL": {"top8": 0.0275, "po": 0.4991, "r16": 0.1875, "qf": 0.0277, "sf": 0.0039, "f": 0.0003},
-    "COM": {"top8": 0.0247, "po": 0.4587, "r16": 0.1738, "qf": 0.0275, "sf": 0.0035, "f": 0.0003},
-    "LEN": {"top8": 0.0202, "po": 0.4258, "r16": 0.1584, "qf": 0.0236, "sf": 0.0032, "f": 0.0005},
-    "SHK": {"top8": 0.0059, "po": 0.2919, "r16": 0.0516, "qf": 0.0029, "sf": 0.0002, "f": 0.0},
-    "SLA": {"top8": 0.0052, "po": 0.2692, "r16": 0.0579, "qf": 0.0046, "sf": 0.0003, "f": 0.0},
-    "FEY": {"top8": 0.0049, "po": 0.2572, "r16": 0.0556, "qf": 0.0048, "sf": 0.0003, "f": 0.0},
-    "AEK": {"top8": 0.0042, "po": 0.2551, "r16": 0.0434, "qf": 0.0029, "sf": 0.0001, "f": 0.0},
-    "VIK": {"top8": 0.0038, "po": 0.2702, "r16": 0.047, "qf": 0.0023, "sf": 0.0002, "f": 0.0},
-    "LSK": {"top8": 0.0009, "po": 0.1201, "r16": 0.0108, "qf": 0.0002, "sf": 0.0, "f": 0.0},
-    "SLB": {"top8": 0.0001, "po": 0.0418, "r16": 0.0017, "qf": 0.0, "sf": 0.0, "f": 0.0},
-    "SAB": {"top8": 0.0, "po": 0.0195, "r16": 0.0009, "qf": 0.0, "sf": 0.0, "f": 0.0},
+    "RMA": {"top8": 0.6214, "po": 0.3465, "r16": 0.8815, "qf": 0.5928, "sf": 0.3559, "f": 0.1988},
+    "BAR": {"top8": 0.6183, "po": 0.352, "r16": 0.8892, "qf": 0.6103, "sf": 0.3772, "f": 0.221},
+    "BAY": {"top8": 0.5851, "po": 0.3756, "r16": 0.8772, "qf": 0.6097, "sf": 0.3853, "f": 0.2322},
+    "PSG": {"top8": 0.5726, "po": 0.3861, "r16": 0.8693, "qf": 0.6041, "sf": 0.3862, "f": 0.2332},
+    "ARS": {"top8": 0.5686, "po": 0.3942, "r16": 0.8725, "qf": 0.5997, "sf": 0.3792, "f": 0.2229},
+    "LIV": {"top8": 0.5307, "po": 0.4134, "r16": 0.8306, "qf": 0.5273, "sf": 0.3, "f": 0.16},
+    "INT": {"top8": 0.5048, "po": 0.4364, "r16": 0.8004, "qf": 0.4752, "sf": 0.2482, "f": 0.1205},
+    "MCI": {"top8": 0.4951, "po": 0.4407, "r16": 0.8286, "qf": 0.5576, "sf": 0.3447, "f": 0.2011},
+    "ATM": {"top8": 0.3676, "po": 0.5191, "r16": 0.7072, "qf": 0.3927, "sf": 0.1956, "f": 0.0896},
+    "NAP": {"top8": 0.257, "po": 0.5625, "r16": 0.5809, "qf": 0.2658, "sf": 0.1106, "f": 0.0419},
+    "MUN": {"top8": 0.246, "po": 0.5603, "r16": 0.5711, "qf": 0.2669, "sf": 0.1126, "f": 0.0423},
+    "RBL": {"top8": 0.225, "po": 0.5614, "r16": 0.5292, "qf": 0.2274, "sf": 0.09, "f": 0.0306},
+    "ROM": {"top8": 0.2045, "po": 0.5623, "r16": 0.4948, "qf": 0.1985, "sf": 0.0705, "f": 0.0224},
+    "VIL": {"top8": 0.1968, "po": 0.5536, "r16": 0.487, "qf": 0.2041, "sf": 0.0777, "f": 0.0269},
+    "AVL": {"top8": 0.1957, "po": 0.5568, "r16": 0.4882, "qf": 0.2018, "sf": 0.0744, "f": 0.0251},
+    "DOR": {"top8": 0.1815, "po": 0.5538, "r16": 0.4533, "qf": 0.1729, "sf": 0.0596, "f": 0.0191},
+    "BET": {"top8": 0.1719, "po": 0.5622, "r16": 0.4396, "qf": 0.1611, "sf": 0.0544, "f": 0.0152},
+    "SPO": {"top8": 0.1592, "po": 0.5505, "r16": 0.4222, "qf": 0.1584, "sf": 0.0518, "f": 0.0155},
+    "POR": {"top8": 0.154, "po": 0.539, "r16": 0.3939, "qf": 0.1353, "sf": 0.0396, "f": 0.0114},
+    "BOD": {"top8": 0.1461, "po": 0.5469, "r16": 0.4133, "qf": 0.1521, "sf": 0.0507, "f": 0.0159},
+    "CLB": {"top8": 0.1441, "po": 0.5271, "r16": 0.4003, "qf": 0.1553, "sf": 0.0545, "f": 0.0165},
+    "STU": {"top8": 0.1237, "po": 0.5255, "r16": 0.3214, "qf": 0.0899, "sf": 0.0218, "f": 0.0048},
+    "LIL": {"top8": 0.1096, "po": 0.5156, "r16": 0.327, "qf": 0.1061, "sf": 0.0307, "f": 0.0065},
+    "FEN": {"top8": 0.1093, "po": 0.5087, "r16": 0.3088, "qf": 0.0904, "sf": 0.0235, "f": 0.0055},
+    "GAL": {"top8": 0.0838, "po": 0.4801, "r16": 0.2668, "qf": 0.0759, "sf": 0.0199, "f": 0.0047},
+    "PSV": {"top8": 0.0819, "po": 0.4738, "r16": 0.2562, "qf": 0.0699, "sf": 0.0176, "f": 0.0034},
+    "COM": {"top8": 0.0755, "po": 0.4559, "r16": 0.2528, "qf": 0.0754, "sf": 0.0215, "f": 0.0056},
+    "LEN": {"top8": 0.0688, "po": 0.4484, "r16": 0.2428, "qf": 0.0736, "sf": 0.0201, "f": 0.0045},
+    "SHK": {"top8": 0.0389, "po": 0.3725, "r16": 0.1383, "qf": 0.0271, "sf": 0.0045, "f": 0.0008},
+    "FEY": {"top8": 0.0364, "po": 0.346, "r16": 0.1395, "qf": 0.0308, "sf": 0.0052, "f": 0.0006},
+    "VIK": {"top8": 0.0359, "po": 0.359, "r16": 0.1346, "qf": 0.026, "sf": 0.0046, "f": 0.0005},
+    "SLA": {"top8": 0.0358, "po": 0.3613, "r16": 0.1443, "qf": 0.0305, "sf": 0.0059, "f": 0.0007},
+    "AEK": {"top8": 0.0319, "po": 0.3472, "r16": 0.1256, "qf": 0.0224, "sf": 0.0043, "f": 0.0004},
+    "LSK": {"top8": 0.0148, "po": 0.2472, "r16": 0.0654, "qf": 0.009, "sf": 0.0012, "f": 0.0},
+    "SLB": {"top8": 0.0045, "po": 0.1447, "r16": 0.0243, "qf": 0.0014, "sf": 0.0001, "f": 0.0},
+    "SAB": {"top8": 0.0034, "po": 0.1136, "r16": 0.022, "qf": 0.0026, "sf": 0.0003, "f": 0.0},
 }
 
 # Expected REMAINING matches per club, from the same Monte-Carlo. Counts both
 # legs of two-legged ties, so it is NOT just the sum of the reach-probabilities.
 EXP_GAMES: dict[str, float] = {
-    "PSG": 13.202,
-    "BAY": 13.162,
-    "ARS": 13.151,
-    "BAR": 13.085,
-    "MCI": 13.082,
-    "RMA": 12.906,
-    "LIV": 12.654,
-    "INT": 12.288,
-    "ATM": 12.088,
-    "MUN": 11.27,
-    "NAP": 11.243,
-    "RBL": 11.041,
-    "ROM": 10.796,
-    "AVL": 10.795,
-    "VIL": 10.785,
-    "DOR": 10.546,
-    "BET": 10.486,
-    "SPO": 10.394,
-    "BOD": 10.325,
-    "CLB": 10.234,
-    "POR": 10.214,
-    "LIL": 9.823,
-    "STU": 9.75,
-    "FEN": 9.704,
-    "GAL": 9.437,
-    "PSV": 9.363,
-    "COM": 9.327,
-    "LEN": 9.222,
-    "SHK": 8.693,
-    "SLA": 8.664,
-    "VIK": 8.639,
-    "FEY": 8.636,
-    "AEK": 8.603,
-    "LSK": 8.262,
-    "SLB": 8.087,
-    "SAB": 8.041,
+    "BAY": 12.728,
+    "PSG": 12.725,
+    "ARS": 12.714,
+    "BAR": 12.678,
+    "RMA": 12.552,
+    "MCI": 12.544,
+    "LIV": 12.303,
+    "INT": 12.041,
+    "ATM": 11.719,
+    "NAP": 11.081,
+    "MUN": 11.064,
+    "RBL": 10.847,
+    "ROM": 10.675,
+    "VIL": 10.672,
+    "AVL": 10.668,
+    "DOR": 10.498,
+    "BET": 10.45,
+    "SPO": 10.381,
+    "BOD": 10.342,
+    "CLB": 10.291,
+    "POR": 10.227,
+    "LIL": 9.965,
+    "STU": 9.922,
+    "FEN": 9.868,
+    "GAL": 9.69,
+    "PSV": 9.639,
+    "COM": 9.617,
+    "LEN": 9.574,
+    "SHK": 9.086,
+    "SLA": 9.084,
+    "VIK": 9.049,
+    "FEY": 9.044,
+    "AEK": 8.999,
+    "LSK": 8.646,
+    "SLB": 8.341,
+    "SAB": 8.277,
 }
 
 _EMPTY_QUAL = {"top8": 0.0, "po": 0.0, "r16": 0.0, "qf": 0.0, "sf": 0.0, "f": 0.0}
