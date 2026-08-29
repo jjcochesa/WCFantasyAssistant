@@ -8,9 +8,12 @@ gets BENCH_MINUTES (no blending with past rotation history — the point of
 hand-feeding a lineup is to override what the data thinks).
 Clubs not listed fall back to the stats pipeline (starter_rate + real minutes).
 
-Note for UCL: unlike the World Cup game, UEFA allows unlimited substitutions
-BETWEEN days within a matchday, so bench players still score. Bench depth is
-worth more here than a pure starters-only view suggests.
+Note for UCL: unlike the World Cup game, UEFA lets you substitute BETWEEN days
+within a matchday — up to 4 players per day, and only for players whose clubs
+have not yet played. So bench players still score and bench depth is worth more
+here than a pure starters-only view suggests, but it is capped, not unlimited,
+and on MD8 (and the final) every match kicks off together so there are no
+in-matchday subs at all.
 
 Refill each matchday once lineups are known.
 """

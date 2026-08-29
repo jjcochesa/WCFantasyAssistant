@@ -8,7 +8,7 @@ import data_engine as _de
 from data_engine import load_data, fetch_live_player_data, _norm_name, _match_key
 from scoring_rules import (
     SQUAD_SLOTS, BUDGET_GROUP, BUDGET_KNOCKOUT,
-    MAX_PER_COUNTRY_GROUP, MAX_PER_COUNTRY_KNOCKOUT,
+    MAX_PER_COUNTRY_GROUP, MAX_PER_COUNTRY_KNOCKOUT, MAX_PER_CLUB_BY_STAGE,
 )
 from data.team_stats import (
     TEAM_NAMES, FDR, CS_PCT, PROJ_GOALS, FIXTURES, CURRENT_ROUND, CURRENT_ROUND_DATE,
@@ -70,8 +70,14 @@ with st.sidebar:
     st.divider()
     st.caption("Per-90 rates: last season, all competitions + UCL record")
     st.divider()
-    budget = st.number_input("Your budget (€m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
-    country_cap = st.slider("Max players per club", 1, 11, MAX_PER_COUNTRY_GROUP)
+    budget = st.number_input(
+        "Your budget (€m)", 50.0, 120.0, BUDGET_GROUP, 0.5,
+        help=f"€{BUDGET_GROUP:.0f}m in the league phase, "
+             f"€{BUDGET_KNOCKOUT:.0f}m from the knockout play-offs on.")
+    country_cap = st.slider(
+        "Max players per club", 1, MAX_PER_CLUB_BY_STAGE["F"], MAX_PER_COUNTRY_GROUP,
+        help="Official caps: 3 in the league phase, 4 in the play-offs and R16, "
+             "5 in the QF, 6 in the SF, 8 in the final.")
 
     load_btn = st.button("Load / Refresh Data", type="primary", use_container_width=True)
 
@@ -667,7 +673,8 @@ with tab4:
 
     b1, b2 = st.columns(2)
     build_budget  = b1.number_input("Budget (€m)", 50.0, 120.0, budget, 0.5, key="build_b")
-    build_cap     = b2.slider("Max per club", 1, 11, country_cap, key="build_cap")
+    build_cap     = b2.slider("Max per club", 1, MAX_PER_CLUB_BY_STAGE["F"],
+                              country_cap, key="build_cap")
 
     # Horizon: optimise the squad over a RANGE of matchdays, not just the next
     # one. This is what a Wildcard is for — e.g. MD1-MD3 for the opening squad,
