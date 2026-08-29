@@ -45,7 +45,7 @@ with st.sidebar:
     # The advanced expander exists only for debugging / local JSON import.
     with st.expander("Data source (advanced)", expanded=False):
         data_mode = st.radio("Load from", [
-            "WC Squads (offline, all players)",
+            "UCL pool (official UEFA feed)",
             "Local JSON export",
             "Demo data (40 players)",
         ], index=0)
@@ -69,7 +69,7 @@ with st.sidebar:
     session_token = _SECRET_TOKEN or _sidebar_token or None
 
     st.divider()
-    st.caption("Weights: 65% NT / 35% club (flipped if <5 NT apps)")
+    st.caption("Per-90 rates: last season, all competitions + UCL record")
     st.divider()
     budget = st.number_input("Your budget (€m)", 50.0, 120.0, BUDGET_GROUP, 0.5)
     country_cap = st.slider("Max players per club", 1, 11, MAX_PER_COUNTRY_GROUP)
@@ -151,7 +151,9 @@ if load_btn or st.session_state.df is None:
         st.stop()
 
 # Always refresh live prices + ownership on every page render (cached 10 min)
-if st.session_state.df is not None and data_mode != "Demo data (40 players)":
+# Prices and ownership come from the UEFA feed with the pool itself, so the old
+# FIFA live overlay is skipped — it would only risk overwriting good values.
+if False and st.session_state.df is not None and data_mode != "Demo data (40 players)":
     live_data = _get_live_data(session_token or "")
     if live_data:
         st.session_state.df = _apply_live_data(st.session_state.df, live_data)
@@ -167,7 +169,7 @@ if not _ts_has_round_data():
     st.warning(
         f"**Awaiting {CURRENT_ROUND} team data.** The league-phase draw / fixture "
         "board hasn't been wired into `data/team_stats.py` yet, so projections "
-        "read zero. Player pool, prices and per-90 stats still load normally."
+        "read zero. The player pool and prices still load normally."
     )
 
 # Sidebar live data status badge
@@ -176,7 +178,7 @@ with live_status_placeholder:
         mins_ago = int((datetime.datetime.now() - st.session_state.live_refreshed_at).total_seconds() / 60)
         st.success(f"Live prices & ownership: {mins_ago}m ago")
     else:
-        st.warning("Prices & ownership: using estimates (no API)")
+        st.caption("Prices from the UEFA fantasy feed")
 
 # ── KPI strip (rendered after the rankings table — see tab1 below) ────────────
 
@@ -186,9 +188,8 @@ st.divider()
 SORT_LABELS = {
     "Projected points (this round)": "xPts_GS",
     "xPts per game": "xPts/game",
-    "Value (xPts/$m)": "value",
+    "Value (xPts/€m)": "value",
     "Tournament xPts (all remaining rounds)": "tournament_xpts",
-    "Ownership %": "own_%",
     "Price": "price",
 }
 
@@ -386,28 +387,53 @@ with tab1:
         view = view[view["pos"] == pos_filter]
     if nation_filter != "All":
         view = view[view["country"] == nation_filter]
-    view = _with_scout_bonus(view.sort_values("xPts_GS", ascending=False).reset_index(drop=True))
+    # Rank over a MATCHDAY WINDOW, not a single round — the opening squad has to
+    # cover MD1-MD3, so that total is the number that matters when picking it.
+    _mds = sorted(int(c.replace("xPts_md", "")) for c in df.columns
+                  if c.startswith("xPts_md"))
+    t1_horizon = []
+    if _mds:
+        _lo, _hi = min(_mds), max(_mds)
+        if _lo == _hi:
+            t1_horizon = [_lo]
+        else:
+            _f, _l = st.slider("Matchdays to total", _lo, _hi,
+                               (_lo, min(_lo + 2, _hi)), key="t1_horizon")
+            t1_horizon = list(range(_f, _l + 1))
+    _hcols = [f"xPts_md{m}" for m in t1_horizon if f"xPts_md{m}" in view.columns]
+
+    if _hcols:
+        view = view.copy()
+        view["md_total"] = view[_hcols].sum(axis=1).round(2)
+        view["md_value"] = (view["md_total"] / view["price"].replace(0, float("nan"))).round(2)
+        view = view.sort_values("md_total", ascending=False).reset_index(drop=True)
+        _span = f"MD{t1_horizon[0]}–MD{t1_horizon[-1]}"
+    else:
+        view = view.sort_values("xPts_GS", ascending=False).reset_index(drop=True)
+        _span = CURRENT_ROUND
     view.index += 1
 
     st.markdown(
         "<div style='font-size:12px;color:#aaa;padding:2px 0 6px'>"
-        "🪪 Identity &nbsp;│&nbsp; 🗓️ Opponents (3-letter) &nbsp;│&nbsp; "
-        "<span style='color:#4ade80'>🎯 Proj Pts → Adj Pts (+2 scout bonus if &lt;4.5% owned &amp; ≥4 pts)</span> &nbsp;│&nbsp; "
-        "📊 CS% / xG &nbsp;│&nbsp; "
-        "<span style='color:#4ade80'>⚽ Club·</span> <span style='color:#60a5fa'>🌍 NT· per-90</span>"
+        "🪪 Identity &nbsp;│&nbsp; 🗓️ Opponent + difficulty per matchday &nbsp;│&nbsp; "
+        f"<span style='color:#4ade80'>🎯 Points per matchday, totalled over {_span}</span>"
+        " &nbsp;│&nbsp; 📊 CS% / xG &nbsp;│&nbsp; 🏆 Qualification odds"
         "</div>",
         unsafe_allow_html=True,
     )
 
     COL_MAP = {
         "name":             "Name",
-        "team_code":        "Nation",
+        "team_code":        "Club",
         "pos":              "Pos",
         "price":            "Price",
         "opp":              "Opp",
-        "own_%":            "Own%",
-        "xPts_GS":          "Proj Pts",
-        "adj_total":        "Adj Pts",
+        # Points per matchday across the chosen window, then the total. There is
+        # no separate "adjusted" figure: the old +2 scout bonus keyed off
+        # ownership, which isn't part of how we pick here.
+        **{f"xPts_md{m}": f"MD{m}" for m in t1_horizon},
+        "md_total":         f"Total {_span}",
+        "md_value":         "Pts/€m",
         "tournament_xpts":  "Tourn xPts",
         "top8_pct":         "Top8%",
         "po_pct":           "PO%",
@@ -418,22 +444,6 @@ with tab1:
         "exp_games":        "Exp Games",
         "team_cs_pct":      "CS%",
         "team_xg":          "Team xG",
-        "wc_min":           "WC Min",
-        "xg90_wc":          "WC Gls/90",
-        "xa90_wc":          "WC Ast/90",
-        "sot90_wc":         "WC SOT/90",
-        "kp90_wc":          "WC KP/90",
-        "tackles90_wc":     "WC Tkl/90",
-        "xg90_club":        "Cl Gls/90",
-        "xa90_club":        "Cl Ast/90",
-        "sot90_club":       "Cl SOT/90",
-        "kp90_club":        "Cl KP/90",
-        "tackles90_club":   "Cl Tkl/90",
-        "xg90_nt":          "NT Gls/90",
-        "xa90_nt":          "NT Ast/90",
-        "sot90_nt":         "NT SOT/90",
-        "kp90_nt":          "NT KP/90",
-        "tackles90_nt":     "NT Tkl/90",
         "proj_min":         "Proj Min",
         "set_pieces":       "Set Pcs",
     }
@@ -451,26 +461,18 @@ with tab1:
         if _qc in disp.columns and len(disp) and (disp[_qc] >= 0.999).all():
             disp = disp.drop(columns=_qc)
 
-    per90_club = ["Cl Gls/90", "Cl Ast/90", "Cl SOT/90", "Cl KP/90", "Cl Tkl/90"]
-    per90_nt   = ["NT Gls/90", "NT Ast/90", "NT SOT/90", "NT KP/90", "NT Tkl/90"]
-    per90_wc   = ["WC Gls/90", "WC Ast/90", "WC SOT/90", "WC KP/90", "WC Tkl/90"]
-
-    # Hide WC per-90 for players with < 45 WC minutes — sample too small to be meaningful
-    if "WC Min" in disp.columns:
-        _low_wc = disp["WC Min"] < 45
-        for _c in [c for c in per90_wc if c in disp.columns]:
-            disp.loc[_low_wc, _c] = float("nan")
-    pts_cols   = ["Proj Pts", "Adj Pts"]
-    pct_cols   = [c for c in ["CS%"] if c in disp.columns]
-    xg_cols    = [c for c in ["Team xG"] if c in disp.columns]
+    md_cols  = [f"MD{m}" for m in t1_horizon if f"MD{m}" in disp.columns]
+    tot_col  = [c for c in [f"Total {_span}"] if c in disp.columns]
+    pts_cols = md_cols + tot_col
+    pct_cols = [c for c in ["CS%"] if c in disp.columns]
+    xg_cols  = [c for c in ["Team xG"] if c in disp.columns]
 
     qual_pct_cols = [c for c in ["Top8%", "PO%", "R16%", "QF%", "SF%", "Final%"]
                      if c in disp.columns]
     qual_xpts_cols = [c for c in ["Tourn xPts"] if c in disp.columns]
 
-    fmt_map = {"Price": "${:.1f}m", "Own%": "{:.1f}%", "Proj Min": "{:.0f}'", "WC Min": "{:.0f}'",
-               "Exp Games": "{:.2f}"}
-    fmt_map.update({c: "{:.2f}" for c in per90_club + per90_nt + per90_wc})
+    fmt_map = {"Price": "€{:.1f}m", "Proj Min": "{:.0f}'", "Exp Games": "{:.2f}",
+               "Pts/€m": "{:.2f}"}
     fmt_map.update({c: "{:.2f}" for c in xg_cols})
     fmt_map.update({c: "{:.0%}" for c in pct_cols})
     fmt_map.update({c: "{:.1f}" for c in pts_cols})
