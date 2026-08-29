@@ -57,7 +57,7 @@ def main():
     if args.board:
         board = {int(k): v for k, v in json.load(open(args.board)).items()}
 
-    schedule, home, goals, cs, fdr, source = {}, {}, {}, {}, {}, {}
+    schedule, home, goals, cs, fdr, source, model_fdr = {}, {}, {}, {}, {}, {}, {}
     for md in sorted(FIXTURES):
         smd, hmd, gmd, cmd = {}, [], {}, {}
         b = board.get(md, {})
@@ -76,6 +76,8 @@ def main():
             fmd[club] = fdr_band((gmd[opp] + cmd[opp]) / 2.0)
         schedule[md], home[md] = smd, sorted(hmd)
         goals[md], cs[md], fdr[md] = gmd, cmd, fmd
+        model_fdr[md] = dict(fmd)   # kept separate so a later import can be
+                                    # compared against the model, not itself
         source[md] = "board" if b else "model"
 
     payload = {
@@ -85,6 +87,7 @@ def main():
         "proj_goals": goals,
         "cs_pct": cs,
         "fdr": fdr,
+        "fdr_model": model_fdr,
         "source": source,
         "_note": ("goals/CS are Elo-derived unless a bookmaker board was supplied "
                   "for that matchday; see 'source'"),
