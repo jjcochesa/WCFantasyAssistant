@@ -15,6 +15,7 @@ from data.team_stats import (
     get_team_fdr, get_next_opponent, get_team_xg, get_team_cs,
     get_qual_probs, has_round_data as _ts_has_round_data,
     get_md_fixture, get_md_fdr, is_home,
+    available_matchdays as _ts_available_matchdays,
 )
 
 st.set_page_config(
@@ -861,6 +862,56 @@ with tab5:
 
 # ── TAB 6: Fixtures & FDR ─────────────────────────────────────────────────────
 with tab6:
+    # ── Fixture run: one column per matchday, every club, coloured by FDR ──────
+    # The club-level twin of the Rankings table. Sorted by mean difficulty over
+    # the window, so the clubs whose players are worth targeting rise to the top.
+    _fmds = _ts_available_matchdays()
+    if _fmds:
+        st.subheader("Fixtures to target")
+        _flo, _fhi = min(_fmds), max(_fmds)
+        if _flo == _fhi:
+            f_horizon = [_flo]
+        else:
+            _fa, _fb = st.slider("Matchdays", _flo, _fhi,
+                                 (_flo, min(_flo + 3, _fhi)), key="t6_horizon")
+            f_horizon = list(range(_fa, _fb + 1))
+
+        run_rows = []
+        for code, name in TEAM_NAMES.items():
+            row = {"Team": name}
+            for m in f_horizon:
+                opp = get_md_fixture(m, code)
+                row[f"Matchday {m}"] = (
+                    f"{opp} ({'H' if is_home(m, code) else 'A'})" if opp else "—")
+            row["Mean FDR"] = round(
+                sum(get_md_fdr(m, code) for m in f_horizon) / len(f_horizon), 2)
+            run_rows.append(row)
+        run_df = (pd.DataFrame(run_rows)
+                  .sort_values("Mean FDR")
+                  .set_index("Team"))
+
+        _name_to_code = {v: k for k, v in TEAM_NAMES.items()}
+
+        def _run_style(row):
+            # Colour only the opponent cells, each by that club's FDR that matchday.
+            code = _name_to_code.get(row.name, "")
+            styles = [""] * len(row)
+            idx = list(row.index)
+            for m in f_horizon:
+                col = f"Matchday {m}"
+                if col in idx:
+                    styles[idx.index(col)] = _fdr_color(get_md_fdr(m, code))
+            return styles
+
+        st.dataframe(
+            run_df.style.apply(_run_style, axis=1).format({"Mean FDR": "{:.2f}"}),
+            use_container_width=True, height=560,
+        )
+        st.caption("Colour is FDR for that club that matchday: "
+                   "1 easiest (dark green) → 5 hardest (dark red). "
+                   "Only the opponent cells are coloured.")
+        st.divider()
+
     st.subheader(f"Upcoming Round ({CURRENT_ROUND}) — Fixtures, CS% & Projected Goals")
     st.caption(f"CS% and xG from FPLJoe.com SBOBET/Betfair bookie markets ({CURRENT_ROUND_DATE}). CS% directly drives DEF/GK clean sheet points in model.")
 
