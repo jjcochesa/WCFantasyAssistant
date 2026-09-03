@@ -1537,7 +1537,9 @@ UCL_NAME_ALIASES = {
 }
 
 # UEFA's own club short-codes (cCode) that differ from our 3-letter codes.
-UCL_CODE_ALIASES = {"BVB": "DOR", "BRU": "CLB"}
+# LASK is four characters and Viking is VFK in the feed; without these two the
+# clubs look absent from the pool rather than merely misnamed.
+UCL_CODE_ALIASES = {"BVB": "DOR", "BRU": "CLB", "LASK": "LSK", "VFK": "VIK"}
 
 # UEFA encodes position as "skill": 1=GK 2=DEF 3=MID 4=FWD
 _UCL_SKILL_TO_POS = {1: "GK", 2: "DEF", 3: "MID", 4: "FWD"}

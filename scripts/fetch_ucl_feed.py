@@ -144,8 +144,9 @@ def coverage(players: list) -> None:
         if code:
             counts[code] = counts.get(code, 0) + 1
     missing = sorted(set(TEAM_NAMES) - set(counts))
-    print(f"\nClub coverage: {len(counts)}/{len(TEAM_NAMES)} clubs, "
-          f"{min(counts.values(), default=0)}-{max(counts.values(), default=0)} players each")
+    known = {c: n for c, n in counts.items() if c in TEAM_NAMES}
+    print(f"\nClub coverage: {len(known)}/{len(TEAM_NAMES)} clubs, "
+          f"{min(known.values(), default=0)}-{max(known.values(), default=0)} players each")
     if missing:
         print(f"  MISSING {len(missing)}: " +
               ", ".join(f"{c} ({TEAM_NAMES[c]})" for c in missing))
