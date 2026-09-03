@@ -51,15 +51,64 @@ SEARCH_NAMES = {
     "DOR": "Borussia Dortmund", "ROM": "AS Roma", "SPO": "Sporting CP",
     "AVL": "Aston Villa", "POR": "FC Porto", "MUN": "Manchester United",
     "CLB": "Club Brugge KV", "BET": "Real Betis", "PSV": "PSV Eindhoven",
-    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Bodo/Glimt", "NAP": "Napoli",
+    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Bodo Glimt", "NAP": "Napoli",
     "RBL": "RB Leipzig", "VIL": "Villarreal", "FEN": "Fenerbahce",
     "SHK": "Shakhtar Donetsk", "GAL": "Galatasaray", "SLA": "Slavia Praha",
     "SLB": "Slovan Bratislava", "STU": "VfB Stuttgart", "AEK": "AEK Athens",
-    "LSK": "LASK", "COM": "Como", "LEN": "RC Lens", "VIK": "Viking",
-    "SAB": "Sabah FK",
+    "LSK": "LASK", "COM": "Como", "LEN": "Lens", "VIK": "Viking",
+    "SAB": "Sabah",
+}
+
+# The country each club plays in. A name search alone is not safe: "Bayern
+# Munich" returns the women's team first, and "LASK" substring-matches Slask
+# Wroclaw in Poland. Both resolved silently to the wrong squad. Country is the
+# cheap discriminator that rules those out.
+TEAM_COUNTRY = {
+    "AEK": "Greece", "ARS": "England", "ATM": "Spain", "AVL": "England",
+    "BAR": "Spain", "BAY": "Germany", "BET": "Spain", "BOD": "Norway",
+    "CLB": "Belgium", "COM": "Italy", "DOR": "Germany", "FEN": "Turkey",
+    "FEY": "Netherlands", "GAL": "Turkey", "INT": "Italy", "LEN": "France",
+    "LIL": "France", "LIV": "England", "LSK": "Austria", "MCI": "England",
+    "MUN": "England", "NAP": "Italy", "POR": "Portugal", "PSG": "France",
+    "PSV": "Netherlands", "RBL": "Germany", "RMA": "Spain", "ROM": "Italy",
+    "SAB": "Azerbaijan", "SHK": "Ukraine", "SLA": "Czech-Republic",
+    "SLB": "Slovakia", "SPO": "Portugal", "STU": "Germany", "VIK": "Norway",
+    "VIL": "Spain",
+}
+
+# API-Football has renamed a few of these over the years; accept either spelling.
+COUNTRY_ALIASES = {
+    "turkey": {"turkey", "turkiye", "türkiye"},
+    "czech-republic": {"czech-republic", "czech republic", "czechia"},
 }
 
 _REQS = 0
+
+
+def _same_country(got: str, want: str) -> bool:
+    g = (got or "").strip().lower().replace("-", " ")
+    w = (want or "").strip().lower().replace("-", " ")
+    if not g or not w:
+        return False
+    if g == w:
+        return True
+    for canon, spellings in COUNTRY_ALIASES.items():
+        flat = {s.replace("-", " ") for s in spellings}
+        if w in flat and g in flat:
+            return True
+    return False
+
+
+def _is_not_the_first_team(name: str) -> bool:
+    """Women's, youth and reserve sides share their club's name and outrank it
+    in search results often enough to matter."""
+    n = f" {(name or '').lower().strip()} "
+    if any(t in n for t in (" w ", " women ", " feminin", " femenino", " ladies ")):
+        return True
+    if any(t in n for t in (" u19 ", " u20 ", " u21 ", " u23 ", " youth ",
+                            " academy ", " reserve", " ii ", " b ")):
+        return True
+    return False
 
 
 def _norm(name: str) -> str:
@@ -106,21 +155,48 @@ def resolve_team_ids(codes: list, headers: dict) -> dict:
         print(f"Resolving {len(missing)} team id(s)...")
     for code in missing:
         term = SEARCH_NAMES.get(code, CLUBS.get(code, code))
+        # The search field accepts only alphanumerics and spaces — a slash in
+        # "Bodo/Glimt" made the whole query fail.
+        term = " ".join("".join(ch if ch.isalnum() or ch.isspace() else " "
+                                for ch in term).split())
         data = _get("teams", {"search": term}, headers)
         resp = data.get("response") or []
         if not resp:
             print(f"  [WARN] no API-Football team found for {code} ({term!r})")
             continue
-        # Prefer an exact-ish name match, else the first hit.
-        best = resp[0]
-        for item in resp:
-            if _norm(item.get("team", {}).get("name", "")) == _norm(term):
-                best = item
-                break
-        tid = best.get("team", {}).get("id")
-        if tid:
-            cache[code] = tid
-            print(f"  {code:4s} -> {tid}  ({best['team'].get('name')})")
+
+        want_country = TEAM_COUNTRY.get(code)
+        # Rank candidates rather than taking the first hit. Country is the
+        # strongest signal, then an exact name match; women's/youth/reserve
+        # sides are pushed to the bottom because they share the club's name.
+        def rank(item):
+            t = item.get("team") or {}
+            name = t.get("name") or ""
+            return (
+                0 if (want_country and _same_country(t.get("country"), want_country)) else 1,
+                1 if _is_not_the_first_team(name) else 0,
+                0 if _norm(name) == _norm(term) else 1,
+                len(name),
+            )
+
+        best = min(resp, key=rank)
+        t = best.get("team") or {}
+        tid, tname, tcountry = t.get("id"), t.get("name"), t.get("country")
+        if not tid:
+            print(f"  [WARN] no usable team id for {code} ({term!r})")
+            continue
+        # Never cache a match we can positively identify as wrong — a silently
+        # wrong club poisons the per-90 model with another squad's numbers.
+        if want_country and not _same_country(tcountry, want_country):
+            print(f"  [WARN] {code}: best match {tname!r} is in {tcountry!r}, "
+                  f"expected {want_country!r} — NOT cached, fix SEARCH_NAMES")
+            continue
+        if _is_not_the_first_team(tname or ""):
+            print(f"  [WARN] {code}: best match {tname!r} looks like a women's, "
+                  f"youth or reserve side — NOT cached, fix SEARCH_NAMES")
+            continue
+        cache[code] = tid
+        print(f"  {code:4s} -> {tid}  ({tname}, {tcountry})")
     json.dump(cache, open(TEAM_ID_CACHE, "w"), indent=2)
     return cache
 
@@ -255,6 +331,26 @@ def main():
         print("Nothing to fetch — every requested club is already saved. "
               "Use --refresh to re-pull.")
         return
+
+    if args.refresh:
+        # A re-pull usually means the club resolved to the WRONG team, so the
+        # cached id and the records it produced both have to go — otherwise the
+        # bad id is reused and the wrong squad's players linger in the file
+        # under their own names, where nothing will ever overwrite them.
+        if os.path.exists(TEAM_ID_CACHE):
+            try:
+                idc = json.load(open(TEAM_ID_CACHE))
+                dropped = [c for c in todo if idc.pop(c, None) is not None]
+                json.dump(idc, open(TEAM_ID_CACHE, "w"), indent=2)
+                if dropped:
+                    print(f"Dropped cached team id(s) for {dropped} — will re-resolve")
+            except Exception as e:
+                print(f"[WARN] could not update {TEAM_ID_CACHE}: {e}")
+        stale = [k for k, v in all_players.items() if v.get("team") in set(todo)]
+        for k in stale:
+            del all_players[k]
+        if stale:
+            print(f"Cleared {len(stale)} player record(s) from {todo}")
 
     ids = resolve_team_ids(todo, headers)
 
