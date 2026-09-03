@@ -1495,6 +1495,7 @@ def _load_ucl_player_stats() -> None:
         print(f"[UCL stats] Could not load {UCL_STATS_FILE}: {e}")
         return
     _UCL_STATS = blob.get("players", {}) or {}
+    _build_ucl_stats_index()
     if _UCL_STATS:
         played = sum(1 for v in _UCL_STATS.values() if (v.get("minutes") or 0) > 0)
         print(f"[UCL stats] Loaded {len(_UCL_STATS)} players "
@@ -1502,12 +1503,73 @@ def _load_ucl_player_stats() -> None:
               f"{str(int(blob.get('season', 0)) + 1)[-2:]}, all competitions")
 
 
+def _abbrev(name: str) -> str:
+    """'Harry Kane' -> 'h kane'.
+
+    API-Football's player.name is abbreviated to an initial plus surname, while
+    the UEFA pool carries the full name, so the two never match on the full
+    string. Reducing the pool's name the same way is what bridges them.
+    """
+    parts = _norm_name(name).split()
+    if len(parts) < 2:
+        return _norm_name(name)
+    return " ".join([parts[0][0]] + parts[1:])
+
+
+_UCL_STATS_BY_KEY: dict = {}     # key -> record, only where unambiguous
+_UCL_STATS_BY_CLUB: dict = {}    # (club, key) -> record
+
+
+def _build_ucl_stats_index() -> None:
+    """Index each record under every name form it can be recognised by.
+
+    A bare abbreviation is ambiguous across clubs — two different 'L. Diaz' —
+    so an abbreviation is only trusted globally when exactly one player owns
+    it; otherwise the club has to agree.
+    """
+    global _UCL_STATS_BY_KEY, _UCL_STATS_BY_CLUB
+    _UCL_STATS_BY_KEY, _UCL_STATS_BY_CLUB = {}, {}
+    seen: dict = {}
+    for key, rec in _UCL_STATS.items():
+        club = rec.get("team")
+        forms = {key}
+        for field in ("full_name", "display_name"):
+            if rec.get(field):
+                forms.add(_norm_name(rec[field]))
+                forms.add(_abbrev(rec[field]))
+        forms.add(_abbrev(key))
+        for form in forms:
+            if not form:
+                continue
+            seen.setdefault(form, set()).add(id(rec))
+            _UCL_STATS_BY_KEY[form] = rec
+            if club:
+                _UCL_STATS_BY_CLUB[(club, form)] = rec
+    for form, owners in seen.items():
+        if len(owners) > 1:            # ambiguous: club-qualified lookup only
+            _UCL_STATS_BY_KEY.pop(form, None)
+
+
 def _ucl_season_stats(p) -> dict:
-    """That season's totals for this player, matched by name."""
+    """That season's totals for this player, matched by name.
+
+    Club-qualified forms are tried first: they are safe even when the name
+    alone is ambiguous.
+    """
     if not _UCL_STATS:
         return {}
-    return (_UCL_STATS.get(_norm_name(p.name))
-            or _UCL_STATS.get(_match_key(p.name)) or {})
+    club = getattr(p, "team_code", None)
+    forms = [_norm_name(p.name), _match_key(p.name), _abbrev(p.name)]
+    if club:
+        for f in forms:
+            rec = _UCL_STATS_BY_CLUB.get((club, f))
+            if rec:
+                return rec
+    for f in forms:
+        rec = _UCL_STATS_BY_KEY.get(f)
+        if rec:
+            return rec
+    return {}
 
 # UEFA spells clubs its own way; map what the feed says onto our 3-letter codes.
 UCL_NAME_ALIASES = {

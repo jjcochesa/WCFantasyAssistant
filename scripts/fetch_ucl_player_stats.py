@@ -127,6 +127,14 @@ def _norm(name: str) -> str:
     return " ".join(n.replace("-", " ").replace(".", "").replace("'", "").split())
 
 
+def _abbrev(name: str) -> str:
+    """'Harry Kane' -> 'h kane', matching how API-Football abbreviates."""
+    parts = _norm(name).split()
+    if len(parts) < 2:
+        return _norm(name)
+    return " ".join([parts[0][0]] + parts[1:])
+
+
 def _get(endpoint: str, params: dict, headers: dict) -> dict:
     global _REQS
     time.sleep(DELAY)
@@ -291,13 +299,19 @@ def fetch_club(code: str, tid: int, season: int, headers: dict) -> dict:
             name = pl.get("name") or ""
             if not name:
                 continue
-            key = _norm(name)
+            # API-Football's `name` is ABBREVIATED ("H. Kane"), while the UEFA
+            # pool carries the full name ("Harry Kane"), so keying on `name`
+            # alone matches almost nothing. firstname/lastname carry the full
+            # form; keep both so either side can match.
+            full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x).strip()
+            key = _norm(full or name)
             marker = pl.get("id") or key
             if marker in seen:
                 continue
             seen.add(marker)
             rec = out.setdefault(key, {
-                "display_name": name, "team": code, "player_id": pl.get("id"),
+                "display_name": name, "full_name": full or name,
+                "team": code, "player_id": pl.get("id"),
                 "appearances": 0.0, "lineups": 0.0, "minutes": 0.0, "goals": 0.0,
                 "assists": 0.0, "conceded": 0.0, "saves": 0.0, "shots": 0.0,
                 "shots_on": 0.0, "key_passes": 0.0, "tackles": 0.0,
@@ -323,6 +337,93 @@ def finalise(club: dict) -> dict:
     return club
 
 
+POOL_FILE = os.path.join(DATA, "ucl_players.json")
+
+
+def fill_missing(all_players: dict, season: int, headers: dict, limit: int,
+                 save) -> int:
+    """Fetch by NAME the pool players a by-club pull cannot reach.
+
+    Anyone who moved in from a club outside the 36 - Gordon from Newcastle,
+    Greenwood from Marseille, Enzo from Chelsea - played 2025/26 somewhere we
+    never queried, so they have no record however good the name matching is.
+    These are disproportionately the expensive players, so they are worth a
+    request each.
+    """
+    if not os.path.exists(POOL_FILE):
+        print(f"[WARN] no pool at {POOL_FILE}; run scripts/fetch_ucl_feed.py first")
+        return 0
+    pool = json.load(open(POOL_FILE))
+    sys.path.insert(0, os.path.normpath(os.path.join(HERE, "..")))
+    from data_engine import UCL_CODE_ALIASES
+
+    # Records pulled by club are keyed on API-Football's ABBREVIATED name
+    # ("h kane"), so a full pool name never equals one. Index both forms of
+    # both, or every player looks missing and we re-fetch the whole pool.
+    have = set()
+    for k, rec in all_players.items():
+        for form in (k, rec.get("full_name"), rec.get("display_name")):
+            if form:
+                have.add(_norm(form))
+                have.add(_abbrev(form))
+
+    todo = []
+    for e in pool:
+        name = e.get("pFName") or e.get("latinName") or e.get("pDName")
+        if not name or len(name) < 4:
+            continue
+        key = _norm(name)
+        if key in have or _abbrev(name) in have:
+            continue
+        raw = str(e.get("cCode") or "").upper()
+        todo.append((key, name, UCL_CODE_ALIASES.get(raw, raw)))
+
+    if limit:
+        todo = todo[:limit]
+    print(f"\nFilling {len(todo)} pool player(s) not reachable by club...")
+    found = 0
+    for i, (key, name, club) in enumerate(todo, 1):
+        term = " ".join("".join(c if c.isalnum() or c.isspace() else " "
+                                for c in name).split())
+        data = _get("players", {"search": term, "season": season}, headers)
+        resp = data.get("response") or []
+        if not resp:
+            print(f"  [{i:3d}/{len(todo)}] {name}: no match")
+            continue
+        best = None
+        for entry in resp:
+            pl = entry.get("player") or {}
+            full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x)
+            if _norm(full) == key or _norm(pl.get("name") or "") == key:
+                best = entry
+                break
+        best = best or resp[0]
+        pl = best.get("player") or {}
+        full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x).strip()
+        rec = {
+            "display_name": pl.get("name") or name, "full_name": full or name,
+            "team": club, "player_id": pl.get("id"), "via": "name-search",
+            "appearances": 0.0, "lineups": 0.0, "minutes": 0.0, "goals": 0.0,
+            "assists": 0.0, "conceded": 0.0, "saves": 0.0, "shots": 0.0,
+            "shots_on": 0.0, "key_passes": 0.0, "tackles": 0.0,
+            "interceptions": 0.0, "duels_won": 0.0, "yellow": 0.0, "red": 0.0,
+            "pens_scored": 0.0, "pens_missed": 0.0, "competitions": 0,
+            "_rating_sum": 0.0, "_rating_apps": 0.0,
+        }
+        for block in best.get("statistics") or []:
+            _add(rec, block)
+        finalise({key: rec})
+        all_players[key] = rec
+        found += 1
+        print(f"  [{i:3d}/{len(todo)}] {name} -> {rec['display_name']} "
+              f"({rec['minutes']:.0f} min, {rec['competitions']} comps)")
+        if i % 10 == 0:
+            save()
+    save()
+    print(f"\nFilled {found}/{len(todo)}")
+    return found
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--key", required=True, help="API-Football key")
@@ -331,6 +432,12 @@ def main():
     ap.add_argument("--clubs", help="Comma-separated club codes (default: all 36)")
     ap.add_argument("--refresh", action="store_true",
                     help="Re-pull clubs already saved instead of skipping them")
+    ap.add_argument("--fill-missing", action="store_true",
+                    help="After the club pull, fetch by name the pool players "
+                         "whose 2025/26 club is outside the 36 (transfers in)")
+    ap.add_argument("--limit", type=int, default=0,
+                    help="With --fill-missing, stop after this many players "
+                         "(use a small number first to check the response shape)")
     ap.add_argument("--out", default=OUTPUT)
     args = ap.parse_args()
 
@@ -361,8 +468,18 @@ def main():
             print(f"[WARN] {args.out} holds season {prev.get('season')}, "
                   f"not {args.season} — starting fresh")
 
+    def save():
+        json.dump({"season": args.season, "clubs": per_club,
+                   "api_requests": _REQS, "players": all_players},
+                  open(args.out, "w"), indent=2, ensure_ascii=False)
+
     todo = codes if args.refresh else [c for c in codes if c not in per_club]
     if not todo:
+        if args.fill_missing:
+            fill_missing(all_players, args.season, headers, args.limit, save)
+            print(f"\nSaved {len(all_players)} players -> {args.out}")
+            print(f"API requests used this run: {_REQS}")
+            return
         print("Nothing to fetch — every requested club is already saved. "
               "Use --refresh to re-pull.")
         return
@@ -388,11 +505,6 @@ def main():
             print(f"Cleared {len(stale)} player record(s) from {todo}")
 
     ids = resolve_team_ids(todo, headers)
-
-    def save():
-        json.dump({"season": args.season, "clubs": per_club,
-                   "api_requests": _REQS, "players": all_players},
-                  open(args.out, "w"), indent=2, ensure_ascii=False)
 
     print(f"\nPulling {args.season}/{str(args.season+1)[-2:]} stats "
           f"(all competitions) for {len(todo)} club(s)...")
