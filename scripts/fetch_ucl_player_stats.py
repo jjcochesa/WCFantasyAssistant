@@ -51,7 +51,7 @@ SEARCH_NAMES = {
     "DOR": "Borussia Dortmund", "ROM": "AS Roma", "SPO": "Sporting CP",
     "AVL": "Aston Villa", "POR": "FC Porto", "MUN": "Manchester United",
     "CLB": "Club Brugge KV", "BET": "Real Betis", "PSV": "PSV Eindhoven",
-    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Bodo Glimt", "NAP": "Napoli",
+    "FEY": "Feyenoord", "LIL": "Lille", "BOD": "Glimt", "NAP": "Napoli",
     "RBL": "RB Leipzig", "VIL": "Villarreal", "FEN": "Fenerbahce",
     "SHK": "Shakhtar Donetsk", "GAL": "Galatasaray", "SLA": "Slavia Praha",
     "SLB": "Slovan Bratislava", "STU": "VfB Stuttgart", "AEK": "AEK Athens",
@@ -75,6 +75,16 @@ TEAM_COUNTRY = {
     "SLB": "Slovakia", "SPO": "Portugal", "STU": "Germany", "VIK": "Norway",
     "VIL": "Spain",
 }
+
+# Clubs the name search cannot reach, with ids read off API-Football's own team
+# directory. Both are unreachable for the same reason: the stored name contains
+# something the search cannot match.
+#   BAY  stored as "Bayern München" — searching "Bayern Munich" finds only the
+#        women's side, which is spelled with "Munich"
+#   BOD  stored as "Bodo/Glimt" — the search field rejects the slash
+# These are still verified against name and country before use, so a wrong id
+# here fails loudly rather than silently pulling another club's squad.
+KNOWN_TEAM_IDS = {"BAY": 157, "BOD": 327}
 
 # API-Football has renamed a few of these over the years; accept either spelling.
 COUNTRY_ALIASES = {
@@ -154,6 +164,32 @@ def resolve_team_ids(codes: list, headers: dict) -> dict:
     if missing:
         print(f"Resolving {len(missing)} team id(s)...")
     for code in missing:
+        want_country = TEAM_COUNTRY.get(code)
+
+        # A known id is looked up by id rather than searched, then held to the
+        # same checks as a search hit — the point is to bypass a broken search,
+        # not to bypass validation.
+        if code in KNOWN_TEAM_IDS:
+            kid = KNOWN_TEAM_IDS[code]
+            data = _get("teams", {"id": kid}, headers)
+            resp = data.get("response") or []
+            t = (resp[0].get("team") or {}) if resp else {}
+            tname, tcountry = t.get("name"), t.get("country")
+            if not t:
+                print(f"  [WARN] {code}: known id {kid} returned nothing — NOT cached")
+                continue
+            if want_country and not _same_country(tcountry, want_country):
+                print(f"  [WARN] {code}: known id {kid} is {tname!r} in {tcountry!r}, "
+                      f"expected {want_country!r} — NOT cached")
+                continue
+            if _is_not_the_first_team(tname or ""):
+                print(f"  [WARN] {code}: known id {kid} is {tname!r}, which looks "
+                      f"like a women's, youth or reserve side — NOT cached")
+                continue
+            cache[code] = kid
+            print(f"  {code:4s} -> {kid}  ({tname}, {tcountry}) [known id]")
+            continue
+
         term = SEARCH_NAMES.get(code, CLUBS.get(code, code))
         # The search field accepts only alphanumerics and spaces — a slash in
         # "Bodo/Glimt" made the whole query fail.
@@ -165,7 +201,6 @@ def resolve_team_ids(codes: list, headers: dict) -> dict:
             print(f"  [WARN] no API-Football team found for {code} ({term!r})")
             continue
 
-        want_country = TEAM_COUNTRY.get(code)
         # Rank candidates rather than taking the first hit. Country is the
         # strongest signal, then an exact name match; women's/youth/reserve
         # sides are pushed to the bottom because they share the club's name.
