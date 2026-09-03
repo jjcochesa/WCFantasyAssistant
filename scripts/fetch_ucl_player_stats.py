@@ -167,6 +167,10 @@ def _add(dst: dict, block: dict) -> None:
 
 def fetch_club(code: str, tid: int, season: int, headers: dict) -> dict:
     out, page, total_pages = {}, 1, 1
+    # One player's `statistics` array already holds every competition, so a
+    # second row for the same player is a repeated page, not new data. Folding
+    # it in again would silently double their minutes, so skip it.
+    seen = set()
     while page <= total_pages:
         data = _get("players", {"team": tid, "season": season, "page": page}, headers)
         paging = data.get("paging") or {}
@@ -177,6 +181,10 @@ def fetch_club(code: str, tid: int, season: int, headers: dict) -> dict:
             if not name:
                 continue
             key = _norm(name)
+            marker = pl.get("id") or key
+            if marker in seen:
+                continue
+            seen.add(marker)
             rec = out.setdefault(key, {
                 "display_name": name, "team": code, "player_id": pl.get("id"),
                 "appearances": 0.0, "lineups": 0.0, "minutes": 0.0, "goals": 0.0,
@@ -192,12 +200,26 @@ def fetch_club(code: str, tid: int, season: int, headers: dict) -> dict:
     return out
 
 
+def finalise(club: dict) -> dict:
+    """Derive the fields the engine reads, and drop the running accumulators."""
+    for rec in club.values():
+        apps = rec.pop("_rating_apps", 0.0)
+        rsum = rec.pop("_rating_sum", 0.0)
+        rec["rating"] = round(rsum / apps, 2) if apps else 0.0
+        # UEFA counts "ball recoveries"; tackles + interceptions is the closest
+        # thing API-Football exposes.
+        rec["recoveries"] = rec["tackles"] + rec["interceptions"]
+    return club
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--key", required=True, help="API-Football key")
     ap.add_argument("--season", type=int, default=2025,
                     help="Season start year — 2025 means 2025/26 (default)")
     ap.add_argument("--clubs", help="Comma-separated club codes (default: all 36)")
+    ap.add_argument("--refresh", action="store_true",
+                    help="Re-pull clubs already saved instead of skipping them")
     ap.add_argument("--out", default=OUTPUT)
     args = ap.parse_args()
 
@@ -208,41 +230,64 @@ def main():
     if unknown:
         sys.exit(f"Unknown club code(s): {unknown}")
 
-    ids = resolve_team_ids(codes, headers)
+    # Resume: a run that dies partway (rate limit, dropped connection) has
+    # already spent those requests, so re-spending them is the expensive
+    # mistake. Reload what is on disk and only fetch the clubs still missing.
     all_players, per_club = {}, {}
+    if os.path.exists(args.out):
+        try:
+            prev = json.load(open(args.out))
+        except Exception as e:
+            print(f"[WARN] could not read {args.out} ({e}); starting fresh")
+            prev = {}
+        if prev.get("season") == args.season:
+            all_players = prev.get("players") or {}
+            per_club = prev.get("clubs") or {}
+            if per_club:
+                print(f"Resuming: {len(per_club)} club(s) already saved, "
+                      f"{len(all_players)} players on disk")
+        elif prev:
+            print(f"[WARN] {args.out} holds season {prev.get('season')}, "
+                  f"not {args.season} — starting fresh")
+
+    todo = codes if args.refresh else [c for c in codes if c not in per_club]
+    if not todo:
+        print("Nothing to fetch — every requested club is already saved. "
+              "Use --refresh to re-pull.")
+        return
+
+    ids = resolve_team_ids(todo, headers)
+
+    def save():
+        json.dump({"season": args.season, "clubs": per_club,
+                   "api_requests": _REQS, "players": all_players},
+                  open(args.out, "w"), indent=2, ensure_ascii=False)
+
     print(f"\nPulling {args.season}/{str(args.season+1)[-2:]} stats "
-          f"(all competitions) for {len(codes)} club(s)...")
-    for i, code in enumerate(codes, 1):
+          f"(all competitions) for {len(todo)} club(s)...")
+    for i, code in enumerate(todo, 1):
         tid = ids.get(code)
         if not tid:
-            print(f"  [{i:2d}/{len(codes)}] {code}: no team id, skipped")
+            print(f"  [{i:2d}/{len(todo)}] {code}: no team id, skipped")
             continue
-        club = fetch_club(code, tid, args.season, headers)
+        club = finalise(fetch_club(code, tid, args.season, headers))
         per_club[code] = len(club)
-        print(f"  [{i:2d}/{len(codes)}] {code}: {len(club)} players")
+        print(f"  [{i:2d}/{len(todo)}] {code}: {len(club)} players "
+              f"({_REQS} requests used)")
         for k, v in club.items():
-            if k in all_players and all_players[k]["minutes"] >= v["minutes"]:
+            if k in all_players and (all_players[k].get("minutes") or 0) >= v["minutes"]:
                 continue          # keep the club where they played more
             all_players[k] = v
+        save()                    # after every club, so an interrupted run keeps its work
 
-    for rec in all_players.values():
-        apps = rec.pop("_rating_apps", 0.0)
-        rsum = rec.pop("_rating_sum", 0.0)
-        rec["rating"] = round(rsum / apps, 2) if apps else 0.0
-        # UEFA counts "ball recoveries"; tackles + interceptions is the closest
-        # thing API-Football exposes.
-        rec["recoveries"] = rec["tackles"] + rec["interceptions"]
-
-    payload = {
-        "season": args.season,
-        "clubs": per_club,
-        "api_requests": _REQS,
-        "players": all_players,
-    }
-    json.dump(payload, open(args.out, "w"), indent=2, ensure_ascii=False)
-    with_mins = sum(1 for v in all_players.values() if v["minutes"] > 0)
+    save()
+    with_mins = sum(1 for v in all_players.values() if (v.get("minutes") or 0) > 0)
     print(f"\nSaved {len(all_players)} players ({with_mins} with minutes) -> {args.out}")
-    print(f"API requests used: {_REQS}")
+    print(f"API requests used this run: {_REQS}")
+    missing = [c for c in codes if c not in per_club]
+    if missing:
+        print(f"Still missing {len(missing)} club(s): {missing}")
+        print("Re-run the same command to pick up only those.")
     print("\nNext: commit data/ucl_player_stats.json and push.")
 
 

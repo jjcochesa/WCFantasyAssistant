@@ -120,6 +120,41 @@ def report(players: list) -> None:
         print("\nTwo more rows (to show how positions/prices vary):")
         for p in players[1:3]:
             print("  " + json.dumps(p, ensure_ascii=False)[:300])
+    coverage(players)
+
+
+def coverage(players: list) -> None:
+    """Which of the 36 clubs the pool actually covers.
+
+    The reason to re-pull is usually that clubs were missing: UEFA only adds a
+    play-off winner's squad once the tie is settled, so an early pull is short
+    the seven qualifiers. This says plainly whether they have arrived.
+    """
+    try:
+        sys.path.insert(0, os.path.normpath(os.path.join(os.path.dirname(__file__), "..")))
+        from data.team_stats import TEAM_NAMES
+        from data_engine import UCL_CODE_ALIASES
+    except Exception as e:
+        print(f"\n(club coverage unavailable: {e})")
+        return
+    counts = {}
+    for p in players:
+        raw = str(p.get("cCode") or p.get("tCode") or "").upper()
+        code = UCL_CODE_ALIASES.get(raw, raw)
+        if code:
+            counts[code] = counts.get(code, 0) + 1
+    missing = sorted(set(TEAM_NAMES) - set(counts))
+    print(f"\nClub coverage: {len(counts)}/{len(TEAM_NAMES)} clubs, "
+          f"{min(counts.values(), default=0)}-{max(counts.values(), default=0)} players each")
+    if missing:
+        print(f"  MISSING {len(missing)}: " +
+              ", ".join(f"{c} ({TEAM_NAMES[c]})" for c in missing))
+        print("  If these are play-off winners, re-pull once UEFA has added them.")
+    else:
+        print("  All 36 clubs present.")
+    unknown = sorted(set(counts) - set(TEAM_NAMES))
+    if unknown:
+        print(f"  Unrecognised club codes (need an alias in UCL_CODE_ALIASES): {unknown}")
 
 
 def main():
