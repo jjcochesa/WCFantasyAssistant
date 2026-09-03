@@ -159,9 +159,13 @@ def main():
     # Agreement with the model's OWN FDR. Read the untouched model baseline from
     # the projections file rather than team_stats — a previous import may already
     # have merged workbook values there, which would compare the data to itself.
-    baseline = {}
+    baseline, base_src = {}, "model"
     if os.path.exists(PROJ):
-        baseline = (json.load(open(PROJ)) or {}).get("fdr_model", {})
+        blob0 = json.load(open(PROJ)) or {}
+        baseline = blob0.get("fdr_model", {})
+        srcs = set((blob0.get("source") or {}).values())
+        base_src = "bookmaker board" if srcs == {"board"} else \
+                   "part board, part Elo" if "board" in srcs else "Elo-derived"
     same = adj = tot = 0
     for md_s, vals in fdr.items():
         for code, v in vals.items():
@@ -172,7 +176,7 @@ def main():
             same += (mine == v)
             adj += abs(mine - v) <= 1
     if tot:
-        print(f"\nagreement with the Elo-derived baseline: exact {same/tot:.0%}, "
+        print(f"\nagreement with the {base_src} baseline: exact {same/tot:.0%}, "
               f"within one band {adj/tot:.0%}  ({tot} club-matchdays)")
     else:
         print("\nno model baseline to compare against — rerun build_md_projections.py")

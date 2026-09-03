@@ -32,16 +32,33 @@ import scripts.build_league_phase as lp                # noqa: E402
 OUT = os.path.join(DATA, "ucl_md_projections.json")
 
 
-def fdr_band(threat: float) -> int:
-    """Same banding the rest of the app uses: opponent threat -> 1 (easiest) to 5."""
-    if threat < 0.45:
-        return 1
-    if threat < 0.62:
-        return 2
-    if threat < 0.85:
-        return 3
-    if threat < 1.20:
-        return 4
+# Absolute cuts, kept for reference. These were fitted to the Elo model's own
+# threat scale; a bookmaker board lives on a different scale, and applying these
+# to it puts 62% of all fixtures in bands 4-5, which is not a usable rating.
+ABSOLUTE_CUTS = [0.45, 0.62, 0.85, 1.20]
+
+# Share of fixtures in each band. FDR is a RELATIVE rating — "how hard is this
+# fixture compared with the others available this season" — so the bands are cut
+# at quantiles of the actual threat distribution rather than at fixed values.
+# This keeps the scale meaningful whatever the source numbers look like.
+BAND_SHARES = [0.15, 0.20, 0.30, 0.20, 0.15]
+
+
+def band_cuts(threats: list) -> list:
+    """Threat values at which the band changes, from the observed distribution."""
+    xs = sorted(threats)
+    cuts, run = [], 0.0
+    for share in BAND_SHARES[:-1]:
+        run += share
+        cuts.append(xs[min(int(run * len(xs)), len(xs) - 1)])
+    return cuts
+
+
+def fdr_band(threat: float, cuts: list = None) -> int:
+    """Opponent threat -> 1 (easiest) to 5 (hardest)."""
+    for i, c in enumerate(cuts if cuts is not None else ABSOLUTE_CUTS):
+        if threat < c:
+            return i + 1
     return 5
 
 
@@ -57,7 +74,7 @@ def main():
     if args.board:
         board = {int(k): v for k, v in json.load(open(args.board)).items()}
 
-    schedule, home, goals, cs, fdr, source, model_fdr = {}, {}, {}, {}, {}, {}, {}
+    schedule, home, goals, cs, source = {}, {}, {}, {}, {}
     for md in sorted(FIXTURES):
         smd, hmd, gmd, cmd = {}, [], {}, {}
         b = board.get(md, {})
@@ -70,15 +87,23 @@ def main():
             gmd[a] = round(float(b.get(a, {}).get("goals", lam_a)), 2)
             cmd[h] = round(float(b.get(h, {}).get("cs", math.exp(-gmd[a]))), 3)
             cmd[a] = round(float(b.get(a, {}).get("cs", math.exp(-gmd[h]))), 3)
-        # FDR from the opponent's threat, once goals/CS are settled for the round
-        fmd = {}
-        for club, opp in smd.items():
-            fmd[club] = fdr_band((gmd[opp] + cmd[opp]) / 2.0)
         schedule[md], home[md] = smd, sorted(hmd)
-        goals[md], cs[md], fdr[md] = gmd, cmd, fmd
-        model_fdr[md] = dict(fmd)   # kept separate so a later import can be
-                                    # compared against the model, not itself
+        goals[md], cs[md] = gmd, cmd
         source[md] = "board" if b else "model"
+
+    # FDR last, once every matchday's goals/CS are settled: the bands are cut on
+    # the whole league phase, so a 2 in MD1 means the same as a 2 in MD7.
+    def threat(md, club):
+        return (goals[md][club] + cs[md][club]) / 2.0
+
+    cuts = band_cuts([threat(md, opp) for md in schedule
+                      for opp in schedule[md].values()])
+    fdr, model_fdr = {}, {}
+    for md in sorted(FIXTURES):
+        fdr[md] = {club: fdr_band(threat(md, opp), cuts)
+                   for club, opp in schedule[md].items()}
+        model_fdr[md] = dict(fdr[md])   # kept separate so a later import can be
+                                        # compared against the model, not itself
 
     payload = {
         "dates": DATES,
@@ -89,8 +114,11 @@ def main():
         "fdr": fdr,
         "fdr_model": model_fdr,
         "source": source,
+        "fdr_cuts": [round(c, 3) for c in cuts],
         "_note": ("goals/CS are Elo-derived unless a bookmaker board was supplied "
-                  "for that matchday; see 'source'"),
+                  "for that matchday; see 'source'. FDR bands are cut at quantiles "
+                  "of the league phase's own threat distribution, so the rating is "
+                  "relative to the fixtures actually available"),
     }
     json.dump(payload, open(args.out, "w"), indent=2)
     print(f"Saved → {args.out}")
