@@ -39,6 +39,7 @@ HERE = os.path.dirname(__file__)
 DATA = os.path.normpath(os.path.join(HERE, "..", "data"))
 OUTPUT = os.path.join(DATA, "ucl_player_stats.json")
 TEAM_ID_CACHE = os.path.join(DATA, "apif_ucl_team_ids.json")
+PLAYER_ID_CACHE = os.path.join(DATA, "apif_ucl_player_ids.json")
 
 sys.path.insert(0, os.path.normpath(os.path.join(HERE, "..")))
 from data.ucl_draw import CLUBS  # noqa: E402
@@ -380,24 +381,76 @@ def fill_missing(all_players: dict, season: int, headers: dict, limit: int,
 
     if limit:
         todo = todo[:limit]
+
+    # /players?search= is refused without a league or team, and these players
+    # are wanted precisely because we do not know which league they were in.
+    # So: find the player id by surname on /players/profiles, which takes a
+    # bare search, then pull the season by id, which needs no league either.
+    id_cache = {}
+    if os.path.exists(PLAYER_ID_CACHE):
+        try:
+            id_cache = json.load(open(PLAYER_ID_CACHE))
+        except Exception:
+            id_cache = {}
+    seed = {}
+    legacy = os.path.join(DATA, "apif_player_ids.json")
+    if os.path.exists(legacy):
+        try:
+            seed = {k: v for k, v in json.load(open(legacy)).items()}
+        except Exception:
+            seed = {}
+
     print(f"\nFilling {len(todo)} pool player(s) not reachable by club...")
     found = 0
     for i, (key, name, club) in enumerate(todo, 1):
-        term = " ".join("".join(c if c.isalnum() or c.isspace() else " "
-                                for c in name).split())
-        data = _get("players", {"search": term, "season": season}, headers)
+        # The seeded ids come from earlier World Cup work and may be stale, so
+        # a miss on one falls through to a fresh profile search rather than
+        # writing the player off.
+        pid = id_cache.get(key) or seed.get(key) or seed.get(_abbrev(name))
+        searched = False
+        if pid:
+            probe = _get("players", {"id": pid, "season": season}, headers)
+            if not (probe.get("response") or []):
+                print(f"  [{i:3d}/{len(todo)}] {name}: cached id {pid} has no "
+                      f"{season} season, searching by name instead")
+                pid = None
+        if not pid:
+            searched = True
+            # Search the SURNAME, ASCII-folded: the search field rejects
+            # accented characters, and Python's isalnum() happily calls them
+            # alphanumeric, which is why "Enzo Fernández" was refused.
+            parts = _norm(name).split()
+            term = parts[-1] if len(parts) > 1 else _norm(name)
+            if len(term) < 3:
+                print(f"  [{i:3d}/{len(todo)}] {name}: surname too short to search")
+                continue
+            prof = _get("players/profiles", {"search": term}, headers)
+            cands = prof.get("response") or []
+            for entry in cands:
+                pl = entry.get("player") or {}
+                full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x)
+                # Only an exact full-name or abbreviation match is accepted. A
+                # wrong player is worse than a missing one.
+                if _norm(full) == key or _abbrev(full) == _abbrev(name) \
+                        or _norm(pl.get("name") or "") == _abbrev(name):
+                    pid = pl.get("id")
+                    break
+            if not pid:
+                print(f"  [{i:3d}/{len(todo)}] {name}: no confident match "
+                      f"among {len(cands)} profile(s) for {term!r}")
+                continue
+            id_cache[key] = pid
+            json.dump(id_cache, open(PLAYER_ID_CACHE, "w"), indent=2)
+
+        # The probe above already fetched the season for a good cached id;
+        # only spend another call when the id came from a fresh search.
+        data = _get("players", {"id": pid, "season": season}, headers) \
+            if searched else probe
         resp = data.get("response") or []
         if not resp:
-            print(f"  [{i:3d}/{len(todo)}] {name}: no match")
+            print(f"  [{i:3d}/{len(todo)}] {name}: id {pid} has no {season} season")
             continue
-        best = None
-        for entry in resp:
-            pl = entry.get("player") or {}
-            full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x)
-            if _norm(full) == key or _norm(pl.get("name") or "") == key:
-                best = entry
-                break
-        best = best or resp[0]
+        best = resp[0]
         pl = best.get("player") or {}
         full = " ".join(x for x in (pl.get("firstname"), pl.get("lastname")) if x).strip()
         rec = {
