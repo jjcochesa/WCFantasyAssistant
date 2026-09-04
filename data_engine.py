@@ -1495,6 +1495,7 @@ def _load_ucl_player_stats() -> None:
         print(f"[UCL stats] Could not load {UCL_STATS_FILE}: {e}")
         return
     _UCL_STATS = blob.get("players", {}) or {}
+    _repair_mojibake(_UCL_STATS)
     _build_ucl_stats_index()
     if _UCL_STATS:
         played = sum(1 for v in _UCL_STATS.values() if (v.get("minutes") or 0) > 0)
@@ -1516,8 +1517,46 @@ def _abbrev(name: str) -> str:
     return " ".join([parts[0][0]] + parts[1:])
 
 
+def _repair_mojibake(stats: dict) -> None:
+    """Undo UTF-8-read-as-Latin-1 in the fetched names.
+
+    API-Football sends UTF-8 but does not always declare a charset, and
+    requests then falls back to ISO-8859-1, so "Jovanović" arrives as
+    "JovanoviÄ\\x87". Re-encoding to latin-1 and decoding as UTF-8 reverses it
+    exactly. Only applied when that round trip succeeds, so a correctly decoded
+    name is left alone.
+    """
+    fixed = 0
+    for rec in stats.values():
+        for field in ("display_name", "full_name"):
+            v = rec.get(field)
+            if not v or not isinstance(v, str) or v.isascii():
+                continue
+            try:
+                repaired = v.encode("latin-1").decode("utf-8")
+            except (UnicodeEncodeError, UnicodeDecodeError):
+                continue
+            if repaired != v:
+                rec[field] = repaired
+                fixed += 1
+    if fixed:
+        print(f"[UCL stats] Repaired {fixed} mis-decoded name(s)")
+
+
+# Players the name forms cannot separate, resolved by hand. Each is a claim
+# about identity, so only entries verifiable from the data itself belong here.
+#   ARS "Gabriel"      -> the pool lists Gabriel Martinelli separately, and the
+#                         remaining Arsenal Gabriel at 6.0m is Gabriel Magalhaes
+#   INT "Pio Esposito" -> Francesco Pio, the 2276-minute record, not his
+#                         brother Sebastiano's 402
+UCL_PLAYER_ALIASES = {
+    ("ARS", "gabriel"): "gabriel magalhaes",
+    ("INT", "pio esposito"): "f esposito",
+}
+
 _UCL_STATS_BY_KEY: dict = {}     # key -> record, only where unambiguous
 _UCL_STATS_BY_CLUB: dict = {}    # (club, key) -> record
+_UCL_STATS_FIRST: dict = {}      # (club, first token) -> record, unique only
 
 
 def _build_ucl_stats_index() -> None:
@@ -1549,6 +1588,26 @@ def _build_ucl_stats_index() -> None:
         if len(owners) > 1:            # ambiguous: club-qualified lookup only
             _UCL_STATS_BY_KEY.pop(form, None)
 
+    # Last resort: a mononym in one source against a full name in the other,
+    # e.g. the pool's "Fermín López" against the record keyed plainly "fermin".
+    # Only kept where the first token identifies exactly one player at the club.
+    global _UCL_STATS_FIRST
+    _UCL_STATS_FIRST = {}
+    owners: dict = {}
+    for key, rec in _UCL_STATS.items():
+        club = rec.get("team")
+        if not club:
+            continue
+        for form in (key, _norm_name(rec.get("full_name") or ""),
+                     _norm_name(rec.get("display_name") or "")):
+            tok = form.split()[0] if form.split() else ""
+            if len(tok) > 2:           # skip bare initials like "h" in "h kane"
+                owners.setdefault((club, tok), set()).add(id(rec))
+                _UCL_STATS_FIRST[(club, tok)] = rec
+    for k, who in owners.items():
+        if len(who) > 1:
+            _UCL_STATS_FIRST.pop(k, None)
+
 
 def _ucl_season_stats(p) -> dict:
     """That season's totals for this player, matched by name.
@@ -1561,6 +1620,9 @@ def _ucl_season_stats(p) -> dict:
     club = getattr(p, "team_code", None)
     forms = [_norm_name(p.name), _match_key(p.name), _abbrev(p.name)]
     if club:
+        alias = UCL_PLAYER_ALIASES.get((club, _norm_name(p.name)))
+        if alias and alias in _UCL_STATS:
+            return _UCL_STATS[alias]
         for f in forms:
             rec = _UCL_STATS_BY_CLUB.get((club, f))
             if rec:
@@ -1569,6 +1631,12 @@ def _ucl_season_stats(p) -> dict:
         rec = _UCL_STATS_BY_KEY.get(f)
         if rec:
             return rec
+    if club:
+        tok = _norm_name(p.name).split()
+        if tok and len(tok[0]) > 2:
+            rec = _UCL_STATS_FIRST.get((club, tok[0]))
+            if rec:
+                return rec
     return {}
 
 # UEFA spells clubs its own way; map what the feed says onto our 3-letter codes.
