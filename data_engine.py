@@ -317,7 +317,8 @@ class Player:
     ucl_hist: dict = field(default_factory=dict)
     value: float = 0.0
     scout_flag: bool = False
-    starter_rate: float = 1.0  # FBref starts/mp (1.0 = unknown)
+    starter_rate: float = 1.0  # starts/appearances (1.0 is the "unknown" default)
+    starter_rate_known: bool = False  # True only when set from a real record
     projected_minutes: float = 90.0  # set from predicted XI or starter_rate
     predicted_starter: bool = False  # True if named in a predicted XI
 
@@ -722,6 +723,7 @@ def _compute_per90(p: Player) -> None:
         sr = fbref.get("starter_rate", 0.0)
         if sr > 0:
             p.starter_rate = sr
+            p.starter_rate_known = True
         # Backfill raw season totals from per-90 × minutes (stats.json is per-90 based,
         # so the count columns would otherwise show 0).
         cmin = fbref.get("minutes", 0) or 0
@@ -883,6 +885,7 @@ def _compute_per90(p: Player) -> None:
             apps = season.get("appearances") or 0
             if apps:
                 p.starter_rate = max(0.0, min(1.0, (season.get("lineups") or 0) / apps))
+                p.starter_rate_known = True
 
         # Save rate over every shot faced across both samples.
         if p.position == "GK":
@@ -1056,25 +1059,27 @@ def _assign_minutes(players: list) -> None:
             continue
 
         # 2. No XI for this team: starter_rate baseline.
+        #    A player we found no 2025/26 record for is an unknown, not a
+        #    nailed-on starter. The default of 1.0 means "unknown", so taking it
+        #    at face value promoted every unmatched player to a full 80 minutes —
+        #    which is how a 4.0m defender with no data at all came out as the
+        #    best value pick in the pool. Unknowns get an even prior instead.
+        known = getattr(p, "starter_rate_known", False)
         sr = max(0.0, min(1.0, p.starter_rate if p.starter_rate is not None else 1.0))
+        if not known:
+            sr = 0.5
         base_min = round(BENCH_MINUTES + sr * (STARTER_MINUTES - BENCH_MINUTES))
 
-        # 3. Overlay real WC minutes when the team has played.
-        wc_games = getattr(p, "wc_games", 0) or 0
-        wc_min   = getattr(p, "wc_minutes", 0) or 0
-        if wc_games > 0:
-            mpg = wc_min / wc_games                       # avg minutes per WC match
-            w   = wc_games / (wc_games + _cfg.WC_MINUTES_PRIOR_GAMES)
-            proj = (1 - w) * base_min + w * mpg
-            p.projected_minutes = round(min(float(STARTER_MINUTES),
-                                            max(float(BENCH_MINUTES), proj)))
-        elif p.team_code in teams_with_wc:
-            # Team played, this player did not feature -> out of the rotation.
-            p.projected_minutes = float(BENCH_MINUTES)
-        else:
-            # Team has not played yet -> keep the pre-tournament projection.
-            p.projected_minutes = base_min
-
+        # 3. No World Cup overlay. It was correct for the World Cup app and is
+        #    actively wrong here: team_code is now a CLUB, while wc_games counts
+        #    NATIONAL-TEAM matches. The old rule "this club has played, so a
+        #    player with no minutes is out of the rotation" therefore fired on
+        #    every UCL player who simply wasn't at the World Cup — 694 of 1007,
+        #    Kvaratskhelia, Osimhen, Hojlund, Szoboszlai and Mbeumo among them,
+        #    all pinned to bench minutes regardless of their club record.
+        #    Club rotation is what matters here, and starter_rate already
+        #    carries it, straight from the 2025/26 all-competition stats.
+        p.projected_minutes = base_min
         p.predicted_starter = p.projected_minutes >= 60
 
 
